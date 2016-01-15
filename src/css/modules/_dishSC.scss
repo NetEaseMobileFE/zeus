@@ -1,0 +1,34 @@
+.dish {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    background: linear-gradient(to right, rgba(120,120,120, 0), rgba(120,120,120, .5));
+
+    & + & {
+        margin-left: 100px;
+    }
+
+    .icon {
+        width: 150px;
+        height: 100px;
+        background-repeat: no-repeat;
+        transition: transform .3s ease-out;
+    }
+
+    .name {
+        margin-left: 20px;
+        flex: 1;
+        text-shadow: 0 0 3px rgba(0,0,0, .5);
+    }
+
+    &:first-child .icon {
+        background-image: resolve('cc/1.jpg');
+    }
+    &:last-child .icon {
+        background-image: resolve('cc/2.jpg');
+    }
+
+    &:hover .icon {
+        transform: rotateY(180deg);
+    }
+}

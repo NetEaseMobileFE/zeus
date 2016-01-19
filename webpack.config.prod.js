@@ -1,6 +1,15 @@
 var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var version, publicPath;
+
+if ( global.publish ) {
+	version = global.publish.version;
+	publicPath = global.publish.assetFullPath;
+} else {
+	version = '';
+	publicPath = '/static/';
+}
 
 
 module.exports = {
@@ -13,17 +22,17 @@ module.exports = {
 	},
 	output: {
 		path: path.join(__dirname, 'dist'),
-		filename: 'js/bundle.js',
-		chunkFilename: 'js/[id].bundle.js',
-		publicPath: 'http://img4.cache.netease.com/utf8/assets/'
+		filename: version + 'js/bundle.js',
+		chunkFilename: version + 'js/[id].bundle.js',
+		publicPath: publicPath
 	},
 	plugins: [
 		new webpack.optimize.CommonsChunkPlugin({
 			name: 'vendor',
-			filename: 'js/vendor.bundle.js',
+			filename: version + 'js/vendor.bundle.js',
 			minChunks: Infinity
 		}),
-		new ExtractTextPlugin('css/app.css', {
+		new ExtractTextPlugin(version + 'css/app.css', {
 			allChunks: false
 		}),
 		new webpack.optimize.OccurenceOrderPlugin(),
@@ -46,16 +55,16 @@ module.exports = {
 				include: path.join(__dirname, 'src')
 			}, {
 				test: /\.css$/,
-				loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss')
+				loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1!postcss')
 			}, {
 				test: /\.scss$/,
-				loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!sass')
+				loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1!postcss!sass')
 			}, {
 				test: /\.less$/,
-				loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!less')
+				loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1!postcss!less')
 			}, {
 				test: /\.styl$/,
-				loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!stylus')
+				loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1!postcss!stylus')
 			}, {
 				test: /\.png|jpe?g|gif$/, loader: "url-loader?limit=1&name=img/[hash].[ext]"
 			}

@@ -1,9 +1,11 @@
 var exec = require('child_process').exec;
 var fs = require('fs');
 var path = require('path');
+var posixPath = path.posix;
 
 var gulp = require('gulp');
 var gutil = require("gulp-util");
+var rimraf = require('rimraf');
 var vftp = require( 'vinyl-ftp' );
 var htmlreplace = require('gulp-html-replace');
 var imageisux = require('gulp-imageisux');
@@ -13,14 +15,14 @@ var webpack = require('webpack');
 // Configs
 var deployConfig = {
 	test: {
-		ftp: 't_c',
-		assetRootPath: 'test/',
-		htmlRootPath: 'test/'
+		htmlFtp: 't_c',
+		htmlRoot: 'test',
+		assetRoot: 'test'
 	},
 	pro: {
-		ftp: 'c_m',
-		assetRootPath: '3g',
-		htmlRootPath: 'apps/'
+		htmlFtp: 'c_m',
+		htmlRoot: 'apps',
+		assetRoot: '3g'
 	}
 };
 
@@ -34,18 +36,20 @@ process.env.NODE_ENV = 'production'; // 设定编译环境
 
 // Tasks
 gulp.task('clean', function(callback) {
-	exec('npm run clean', function(err, stdout) {
+	rimraf('dist', function(err) {
 		if (err) throw new gutil.PluginError("clean", err);
-		gutil.log(stdout);
 		callback();
 	});
 });
 
-gulp.task('analyse', function(callback) {
-	exec('node analyse', function(err, stdout) {
+gulp.task('analyse', function(callback) { // todo
+	rimraf('analyse.log', function(err) {
 		if (err) throw new gutil.PluginError("analyse", err);
-		gutil.log(stdout);
-		callback();
+		exec('node analyse', function(err, stdout) {
+			if (err) throw new gutil.PluginError("analyse", err);
+			gutil.log(stdout);
+			callback();
+		});
 	});
 });
 
@@ -58,43 +62,44 @@ gulp.task('webpack', ['clean'], function(callback) {
 });
 
 gulp.task('html', ['clean'], function() {
-	var fullpath = publishConfig.assetFullPathWithVersion;
+	var apr = publishConfig.assetPathRevised;
 
-	return gulp.src('./app/index.html')
+	return gulp.src('./src/*.html')
 		.pipe(htmlreplace({
-			'css': fullpath + '/css/app.css',
-			'js': fullpath + '/js/bundle.js',
-			'vendor': fullpath + '/js/vendor.bundle.js'
+			'css': apr + 'css/app.css',
+			'js': apr + 'js/bundle.js',
+			'vendor': apr + 'js/vendor.bundle.js'
 		}))
 		.pipe(gulp.dest('dist'));
 });
 
 gulp.task('img', function() {
+	var dest = '_min';
+
 	return gulp.src('dist/img/*')
-		.pipe(imageisux('_min', false))
-		.pipe(imageisuxPoll('_min'));
+		.pipe(imageisux(dest, false))
+		.pipe(imageisuxPoll(dest));
 });
 
 gulp.task('upload',  function () {
-	var conn = createConnection(profile.ftp.img);
-	var version = publishConfig.version;
+	var conn = createConnection(publishConfig.assetFtp);
 
-	gulp.src(['dist/' + version, '!dist/js/**/*.map'], { buffer: false, base: 'dist' })
-		.pipe(conn.dest(publishConfig.assetPath));
+	gulp.src(['dist/' + publishConfig.version, '!dist/js/**/*.map'], { buffer: false, base: 'dist' })
+		.pipe(conn.dest(publishConfig.assetDir));
 });
 
 gulp.task('uploadImg', ['img'], function () {
-	var conn = createConnection(profile.ftp.img);
+	var conn = createConnection(publishConfig.assetFtp);
 
 	gulp.src(['dist/img/_min/**'], { buffer: false })
-		.pipe(conn.dest(publishConfig.assetPath + '/img' ));
+		.pipe(conn.dest(publishConfig.assetDir + '/img'));
 });
 
 gulp.task('uploadHtml', function () {
-	var conn = createConnection(publishConfig.ftp);
+	var conn = createConnection(publishConfig.htmlFtp);
 
 	gulp.src(['dist/*.html'], { buffer: false })
-		.pipe(conn.dest(publishConfig.htmlPath));
+		.pipe(conn.dest(publishConfig.htmlDir));
 });
 
 gulp.task('default', ['upload'], function() {
@@ -107,17 +112,30 @@ gulp.task('default', ['upload'], function() {
 function initPublishConfig(mode) {
 	var dc = deployConfig[mode],
 		version = mode == 'test' ? '' : Date.now() + '/',
-		assetRootPath = dc.assetRootPath || '',
-		ftpName = dc.ftp,
-		ftpConfig = profile.ftp[ftpName];
+
+		assetFtp = profile.ftp.img,
+		assetRoot = dc.assetRoot || '',
+		assetDir = posixPath.join('/', assetRoot, projectName),
+		assetPath = assetFtp.origin + assetDir + '/',
+		assetPathRevised = assetPath + version,
+
+		htmlFtp = dc.htmlFtp,
+		htmlRoot = dc.htmlRoot || '',
+		htmlDir = posixPath.join('/', htmlRoot, projectName),
+		htmlPath = htmlFtp.origin + htmlDir + '/';
+
 
 	return {
-		ftp: ftpConfig,
 		version: version,
-		assetPath: assetRootPath + '/' + projectName,
-		assetFullPath: ftpConfig.origin + '/' + projectName + '/',
-		assetFullPathWithVersion: ftpConfig.origin + '/' + projectName + '/' + version,
-		htmlPath: dc.htmlRootPath + '/' + projectName
+
+		assetFtp: assetFtp,
+		assetDir: assetDir,
+		assetPath: assetPath,
+		assetPathRevised: assetPathRevised,
+
+		htmlFtp: htmlFtp,
+		htmlDir: htmlDir,
+		htmlPath: htmlPath
 	};
 }
 

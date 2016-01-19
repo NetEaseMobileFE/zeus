@@ -5,7 +5,7 @@ var version, publicPath;
 
 if ( global.publish ) {
 	version = global.publish.version;
-	publicPath = global.publish.assetFullPath;
+	publicPath = global.publish.assetPath;
 } else {
 	version = '';
 	publicPath = '/static/';

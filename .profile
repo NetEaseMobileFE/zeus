@@ -1,20 +1,13 @@
 {
     "developer": "bjhkli",
     "ftp": {
-        "__img__": {
-            "host": "220.181.29.249",
+        "img": {
+            "host": "61.135.251.132",
             "port": "16321",
             "secure": true,
             "username": "bjhkli",
             "password": "123qwe!@#",
             "origin": "http://img4.cache.netease.com"
-        },
-        "img": {
-            "host": "123.58.176.61",
-            "port": "21",
-            "username": "ftp",
-            "password": "ftp123",
-            "origin": "http://demo.galaxy.163.com"
         },
         "c_m": {
             "host": "220.181.29.249",

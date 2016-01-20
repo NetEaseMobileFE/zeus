@@ -19,28 +19,27 @@ var gulpIgnore = require('gulp-ignore');
  */
 var deployConfig = {
 	test: { 				// Publish mode. Default: 'test'
-		htmlFtp: 'img',		// Ftp name uesed to upload html files. Required
+		htmlFtp: 'test',		// Ftp name uesed to upload html files. Required
 		htmlRoot: 'test',	// Root dir where keep html files. Default: ''
-		assetFtp: 'img', 	// Same as htmlFtp. Default: 'img'
+		assetFtp: 'test', 	// Same as htmlFtp. Default: 'img'
 		assetRoot: 'test',	// Same as htmlRoot
-		revision: true		// If append revision to asset path. Default: true
+		revision: false		// If append revision to asset path. Default: true
 	},
 	pro: {
 		htmlFtp: 'c_m',
-		htmlRoot: 'apps',
-		assetRoot: '3g'
+		htmlRoot: 'test',
+		assetRoot: 'apps/test'
 	}
 };
 
 var projectName = JSON.parse(fs.readFileSync('package.json', 'utf-8')).name;
 var profile = JSON.parse(fs.readFileSync('.profile', 'utf-8'));
-var publishMode = gutil.env.t || 'test';
+var publishMode = gutil.env.p ? 'pro' : 'test';
 var publishConfig = global.publish = initPublishConfig(publishMode);
 var webpackConfig = require('./webpack.config.prod');
 
 // Set build env. Important!
 process.env.NODE_ENV = 'production';
-
 
 /**
  * Tasks
@@ -52,14 +51,12 @@ gulp.task('clean', function(callback) {
 	});
 });
 
-gulp.task('analyse', function(callback) { // todo
-	rimraf.sync('analyse.log', function(err) {
+gulp.task('analyse', function(callback) {
+	rimraf.sync('analyse.log');
+	exec('node analyse', function(err, stdout) {
 		if (err) throw new gutil.PluginError("analyse", err);
-		exec('node analyse', function(err, stdout) {
-			if (err) throw new gutil.PluginError("analyse", err);
-			gutil.log(stdout);
-			callback();
-		});
+		gutil.log(stdout);
+		callback();
 	});
 });
 
@@ -94,6 +91,7 @@ gulp.task('html', ['clean'], function() {
 gulp.task('isux', function() {
 	var dest = '_min';
 
+	rimraf.sync('dist/img/' + dest);
 	return gulp.src(['dist/img/**', '!dist/img/' + dest])
 		.pipe(imageisux(dest, false))
 		.pipe(imageisuxPoll(dest));

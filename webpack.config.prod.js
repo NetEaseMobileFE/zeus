@@ -1,15 +1,10 @@
 var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var version, publicPath;
 
-if ( global.publish ) {
-	version = global.publish.version;
-	publicPath = global.publish.assetPath;
-} else {
-	version = '';
-	publicPath = '/static/';
-}
+var publishConfig = global.publish || {};
+var revision = publishConfig.revision ? publishConfig.revision + '/' : '';
+var publicPath = publishConfig.assetPath || '/static/';
 
 
 module.exports = {
@@ -22,17 +17,17 @@ module.exports = {
 	},
 	output: {
 		path: path.join(__dirname, 'dist'),
-		filename: version + 'js/bundle.js',
-		chunkFilename: version + 'js/[id].bundle.js',
+		filename: revision + 'js/bundle.js',
+		chunkFilename: revision + 'js/[id].bundle.js',
 		publicPath: publicPath
 	},
 	plugins: [
 		new webpack.optimize.CommonsChunkPlugin({
 			name: 'vendor',
-			filename: version + 'js/vendor.bundle.js',
+			filename: revision + 'js/vendor.bundle.js',
 			minChunks: Infinity
 		}),
-		new ExtractTextPlugin(version + 'css/app.css', {
+		new ExtractTextPlugin(revision + 'css/app.css', {
 			allChunks: false
 		}),
 		new webpack.optimize.OccurenceOrderPlugin(),

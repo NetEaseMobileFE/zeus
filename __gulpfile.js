@@ -11,8 +11,8 @@ var htmlreplace = require('gulp-html-replace');
 var htmlmin = require('gulp-htmlmin');
 var imageisux = require('gulp-imageisux');
 var imageisuxPoll = require('./test');
+//var webpack = require('webpack');
 var webpack = require('webpack-stream');
-var gulpIgnore = require('gulp-ignore');
 
 /**
  * Change to your deploy configs.
@@ -23,7 +23,7 @@ var deployConfig = {
 		htmlRoot: 'test',	// Root dir where keep html files. Default: ''
 		assetFtp: 'img', 	// Same as htmlFtp. Default: 'img'
 		assetRoot: 'test',	// Same as htmlRoot
-		revision: true		// If append revision to asset path. Default: true
+		revision: false		// If append revision to asset path. Default: true
 	},
 	pro: {
 		htmlFtp: 'c_m',
@@ -63,8 +63,16 @@ gulp.task('analyse', function(callback) { // todo
 	});
 });
 
-// Compile js/css/img by webpack
-gulp.task('webpack', ['clean'], function() {
+// Build
+gulp.task('webpack', ['clean'], function(callback) {
+	webpack(webpackConfig, function(err, stats) {
+		if(err) throw new gutil.PluginError("webpack", err);
+		gutil.log("[webpack]", stats.toString());
+		callback();
+	})
+});
+var gulpIgnore = require('gulp-ignore');
+gulp.task('webpack2', ['clean'], function() {
 	var conn = createConnection(publishConfig.assetFtp);
 
 	return gulp.src('src/js/index.js')
@@ -74,7 +82,6 @@ gulp.task('webpack', ['clean'], function() {
 		.pipe(conn.dest(publishConfig.assetDir));
 });
 
-// Update assets' path in html files
 gulp.task('html', ['clean'], function() {
 	var apr = publishConfig.assetPathRevised;
 	var conn = createConnection(publishConfig.htmlFtp);
@@ -86,11 +93,10 @@ gulp.task('html', ['clean'], function() {
 			'vendor': apr + 'js/vendor.bundle.js'
 		}))
 		.pipe(htmlmin({ collapseWhitespace: true, removeComments: true}))
-		.pipe(gulp.dest('dist'))
-		.pipe(conn.dest(publishConfig.htmlDir));
+		.pipe(conn.dest(publishConfig.htmlDir))
+		.pipe(gulp.dest('dist'));
 });
 
-// Optimize images
 gulp.task('isux', function() {
 	var dest = '_min';
 
@@ -99,7 +105,15 @@ gulp.task('isux', function() {
 		.pipe(imageisuxPoll(dest));
 });
 
-gulp.task('img', ['isux'], function () {
+// Upload
+gulp.task('uploadAsset', ['webpack'], function () {
+	var conn = createConnection(publishConfig.assetFtp);
+
+	gulp.src(['dist/' + publishConfig.revision + '/**', '!**/*.map', '!dist/{img,img/**}'], { buffer: false, base: 'dist' })
+		.pipe(conn.dest(publishConfig.assetDir));
+});
+
+gulp.task('img', ['img'], function () {
 	var conn = createConnection(publishConfig.assetFtp);
 
 	gulp.src(['dist/img/_min/**'], { buffer: false })
@@ -107,7 +121,7 @@ gulp.task('img', ['isux'], function () {
 });
 
 // Start
-gulp.task('default', ['webpack', 'html'], function() {
+gulp.task('default', ['uploadAsset', 'uploadHtml'], function() {
 	gutil.log('Done!');
 });
 
@@ -151,7 +165,8 @@ function createConnection(ftpConfig) {
 		port: ftpConfig.port,
 		user: ftpConfig.username,
 		password: ftpConfig.password,
-		parallel: 5
+		parallel: 5,
+		log: gutil.log
 	};
 
 	if ( ftpConfig.secure ) {

@@ -10,20 +10,20 @@ var vftp = require( 'vinyl-ftp' );
 var htmlreplace = require('gulp-html-replace');
 var htmlmin = require('gulp-htmlmin');
 var imageisux = require('gulp-imageisux');
-var imageisuxPoll = require('./test');
-var webpack = require('webpack-stream');
+var imageisuxPoll = require('gulp-imageisux-poll');
+var webpackStream = require('webpack-stream');
 var gulpIgnore = require('gulp-ignore');
 
 /**
  * Change to your deploy configs.
  */
 var deployConfig = {
-	test: { 				// Publish mode. Default: 'test'
-		htmlFtp: 'test',		// Ftp name uesed to upload html files. Required
-		htmlRoot: 'test',	// Root dir where keep html files. Default: ''
-		assetFtp: 'test', 	// Same as htmlFtp. Default: 'img'
-		assetRoot: 'test',	// Same as htmlRoot
-		revision: false		// If append revision to asset path. Default: true
+	test: { 					// Publish mode. Default: 'test'
+		htmlFtp: 'galaxy',		// Ftp name uesed to upload html files. Required
+		htmlRoot: 'test',		// Root dir where keep html files. Default: ''
+		assetFtp: 'galaxy', 	// Same as htmlFtp. Default: 'img'
+		assetRoot: 'test',		// Same as htmlRoot
+		revision: false			// If append revision to asset path. Default: true
 	},
 	pro: {
 		htmlFtp: 'c_m',
@@ -51,27 +51,27 @@ gulp.task('clean', function(callback) {
 	});
 });
 
-gulp.task('analyse', function(callback) {
-	rimraf.sync('analyse.log');
-	exec('node analyse', function(err, stdout) {
-		if (err) throw new gutil.PluginError("analyse", err);
-		gutil.log(stdout);
-		callback();
-	});
-});
-
 // Compile js/css/img by webpack
-gulp.task('webpack', ['clean'], function() {
+gulp.task('asset', ['clean'], function() {
 	var conn = createConnection(publishConfig.assetFtp);
 
 	return gulp.src('src/js/index.js')
-		.pipe(webpack(webpackConfig))
+		.pipe(webpackStream(webpackConfig, null, function(err, stats) {
+			fs.writeFile('./analyse.log', JSON.stringify(stats.toJson({
+				chunks: true,
+				modules: true,
+				chunkModules: true,
+				reasons: true,
+				cached: true,
+				cachedAssets: true
+			}), null, 2));
+		}))
 		.pipe(gulp.dest('dist/'))
 		.pipe(gulpIgnore.exclude(['**/*.map', '**/{img,img/**}']))
 		.pipe(conn.dest(publishConfig.assetDir));
 });
 
-// Update assets' path in html files
+// Replace assets' path in html files
 gulp.task('html', ['clean'], function() {
 	var apr = publishConfig.assetPathRevised;
 	var conn = createConnection(publishConfig.htmlFtp);
@@ -105,8 +105,10 @@ gulp.task('img', ['isux'], function () {
 });
 
 // Start
-gulp.task('default', ['webpack', 'html'], function() {
+gulp.task('default', ['html', 'asset'], function() {
 	gutil.log('Done!');
+	gutil.log('HTML published at ' + gutil.colors.bgCyan.white(publishConfig.htmlPath));
+	gutil.log('Assets deployed at ' + gutil.colors.bgCyan.white(publishConfig.assetPathRevised));
 });
 
 
@@ -115,7 +117,7 @@ gulp.task('default', ['webpack', 'html'], function() {
  */
 function initPublishConfig(mode) {
 	var dc = deployConfig[mode],
-		revision = dc.revision ? Date.now() + '' : '',
+		revision = dc.revision === false ? '' : Date.now() + '',
 
 		assetFtp = profile.ftp[dc.assetFtp || 'img'],
 		assetRoot = dc.assetRoot || '',

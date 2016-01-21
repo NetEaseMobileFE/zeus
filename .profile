@@ -24,20 +24,13 @@
             "origin": "http://c.3g.163.com/webapp"
         },
         "t_c": {
-            "host": "220.181.8.33",
-            "port": "16321",
-            "username": "wangjun2012",
-            "password": "wangjun2012",
-            "origin": "http://t.c.m.163.com/qa"
-        },
-        "t_c_new": {
             "host": "220.181.98.57",
             "port": "2100",
             "username": "ynren1",
             "password": "ynren@163",
-            "origin": "http://t.c.m.163.com/teststatic"
+            "origin": "http://t.c.m.163.com"
         },
-        "test": {
+        "galaxy": {
             "host": "123.58.176.61",
             "port": "21",
             "username": "ftp",

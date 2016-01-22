@@ -1,11 +1,7 @@
 {
   "name": "webpack-postcss-boilerplate",
   "version": "0.0.1",
-<<<<<<< HEAD
-  "description": "A Webpack boilerplate with postcss. Usage of react-css-modules and assets resolving.",
-=======
   "description": "A Webpack boilerplate with postcss. Usage of react-css-modules and assets resolving",
->>>>>>> 0be1435f4997c00448470ccb72149f64f265b6a2
   "scripts": {
     "clean": "rimraf dist",
     "start": "node devServer.js"

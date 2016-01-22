@@ -73,7 +73,10 @@ module.exports = {
 		]
 	},
 	resolve: {
-		extensions: ['', '.js', '.jsx']
+		extensions: ['', '.js', '.jsx'],
+		alias: {
+			js: path.join(__dirname, "src/js")
+		}
 	},
 	postcss: function() {
 		return [
@@ -91,7 +94,7 @@ module.exports = {
 				filterBy: function(img) {
 					return /\/sp\-/.test(img.url);
 				},
-				groupBy: function(img) { // todo
+				groupBy: function(img) {
 					var match = img.url.match(/\/(sp\-[^\/]+)\//);
 					return match ? match[1] : null;
 				}

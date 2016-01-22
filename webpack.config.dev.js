@@ -14,11 +14,15 @@ module.exports = {
 		path: path.join(__dirname, 'dist'),
 		filename: 'js/bundle.js',
 		chunkFilename: 'js/[id].bundle.js',
-		publicPath: '/static/'
+		publicPath: '/static/',
+		pathinfo: true
 	},
 	plugins: [
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.NoErrorsPlugin(),
+		new webpack.DefinePlugin({
+			DEBUG: true
+		}),
 		new ExtractTextPlugin('css/app.css', {
 			allChunks: false
 		})
@@ -58,7 +62,10 @@ module.exports = {
 		]
 	},
 	resolve: {
-		extensions: ['', '.js', '.jsx']
+		extensions: ['', '.js', '.jsx'],
+		alias: {
+			js: path.join(__dirname, "src/js")
+		}
 	},
 	postcss: function() {
 		return [
@@ -67,7 +74,9 @@ module.exports = {
 				loadPaths: ['./src/img/'],
 				relative: true
 			}),
-			require("postcss-cssnext"),
+			require("postcss-cssnext")({
+				browsers: ["> 1%", "last 2 version", "Android >= 4.0"]
+			}),
 			require('postcss-sprites')({
 				stylesheetPath: './src/css',
 				spritePath: './src/img/sprite.png',

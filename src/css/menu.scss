@@ -1,0 +1,35 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.menu {
+    padding: 5px 20px 10px;
+    border: 2px dashed darkorange;
+    border-radius: 25px;
+}
+.menu + .menu {
+    margin-top: 30px;
+}
+
+.menu .title {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 200%;
+    font-weight: bold;
+}
+.menu .title i {
+    margin-top: 2px;
+    vertical-align: top;
+    display: inline-block;
+    background-repeat: no-repeat;
+}
+.menu:nth-child(1) .title i {
+    background-image: resolve('sp-num/1.png');
+}
+.menu:nth-child(2) .title i {
+    background-image: resolve('sp-num/2.png');
+}
+.menu:nth-child(3) .title i {
+    background-image: resolve('sp-num/3.png');
+}

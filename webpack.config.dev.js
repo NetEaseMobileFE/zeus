@@ -24,30 +24,41 @@ module.exports = {
 		})
 	],
 	module: {
-		loaders: [{
-			test: /\.jsx?/,
-			loaders: ['babel'],
-			include: path.join(__dirname, 'src')
-		},
+		loaders: [
+			{
+				test: /\.jsx?/,
+				loaders: ['babel'],
+				include: path.join(__dirname, 'src/js')
+			},
 			{
 				test: /\.css$/,
-				loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss')
+				loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss'),
+				include: path.join(__dirname, 'src/css')
 			},
 			{
 				test: /\.scss$/,
-				loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!sass')
+				loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!sass'),
+				include: path.join(__dirname, 'src/css')
 			},
 			{
 				test: /\.less$/,
-				loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!less')
+				loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!less'),
+				include: path.join(__dirname, 'src/css')
 			},
 			{
 				test: /\.styl$/,
-				loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!stylus')
+				loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!stylus'),
+				include: path.join(__dirname, 'src/css')
 			},
 			{
-				test: /\.png|jpe?g|gif$/, loader: "url-loader?limit=1&name=img/[hash].[ext]"
-			}]
+				test: /\.png|jpe?g|gif$/,
+				loader: "url-loader?limit=1&name=img/[hash].[ext]",
+				include: path.join(__dirname, 'src/img')
+			}
+		]
+	},
+	resolve: {
+		extensions: ['', '.js', '.jsx']
 	},
 	postcss: function() {
 		return [
@@ -63,9 +74,9 @@ module.exports = {
 				outputDimensions: true,
 				skipPrefix: true,
 				filterBy: function(img) {
-					return /\/sp\-[^\/]+\//.test(img.url);
+					return /\/sp\-/.test(img.url);
 				},
-				groupBy: function(img) { // todo
+				groupBy: function(img) {
 					var match = img.url.match(/\/(sp\-[^\/]+)\//);
 					return match ? match[1] : null;
 				}

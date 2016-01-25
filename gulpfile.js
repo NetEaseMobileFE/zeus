@@ -12,6 +12,7 @@ var imageisux = require('gulp-imageisux');
 var imageisuxPoll = require('gulp-imageisux-poll');
 var webpackStream = require('webpack-stream');
 var gulpIgnore = require('gulp-ignore');
+var fileInsert = require("gulp-file-insert");
 
 /**
  * Change to your deploy configs.
@@ -50,8 +51,17 @@ gulp.task('clean', function(callback) {
 	});
 });
 
+//var smoosher = require('gulp-smoosher');
+gulp.task('s', function () {
+	gulp.src('src/index.html')
+		.pipe(fileInsert({
+			"/*WEBPACKBOOTSTRAP*/": "dist/js/webpackBootstrap.js"
+		}))
+		.pipe(gulp.dest('dist'));
+});
+
 // Compile js/css/img by webpack
-gulp.task('asset', ['clean'], function() {
+gulp.task('assets', ['clean'], function() {
 	var conn = createConnection(publishConfig.assetFtp);
 
 	return gulp.src('src/js/index.js')
@@ -66,12 +76,12 @@ gulp.task('asset', ['clean'], function() {
 			}), null, 2));
 		}))
 		.pipe(gulp.dest('dist/'))
-		.pipe(gulpIgnore.exclude(['**/*.map', '**/{img,img/**}']))
+		.pipe(gulpIgnore.exclude(['**/*.map', '**/{img,img/**}', '**/webpackBootstrap.js']))
 		.pipe(conn.dest(publishConfig.assetDir));
 });
 
 // Replace assets' path in html files
-gulp.task('html', ['clean'], function() {
+gulp.task('html', ['assets'], function() {
 	var apr = publishConfig.assetPathRevised;
 	var conn = createConnection(publishConfig.htmlFtp);
 
@@ -81,9 +91,12 @@ gulp.task('html', ['clean'], function() {
 			'bundle': apr + 'js/bundle.js',
 			'vendor': apr + 'js/vendor.bundle.js'
 		}))
+		.pipe(fileInsert({
+			"/*WEBPACKBOOTSTRAP*/": "dist/js/webpackBootstrap.js"
+		}))
 		.pipe(htmlmin({ collapseWhitespace: true, removeComments: true}))
 		.pipe(gulp.dest('dist'))
-		.pipe(conn.dest(publishConfig.htmlDir));
+		//.pipe(conn.dest(publishConfig.htmlDir));
 });
 
 // Optimize images
@@ -104,7 +117,7 @@ gulp.task('img', ['isux'], function () {
 });
 
 // Start
-gulp.task('default', ['html', 'asset'], function() {
+gulp.task('default', ['html'], function() {
 	gutil.log('Done!');
 	gutil.log('HTML published at ' + gutil.colors.bgCyan.white(publishConfig.htmlPath));
 	gutil.log('Assets deployed at ' + gutil.colors.bgCyan.white(publishConfig.assetPathRevised));
@@ -128,7 +141,6 @@ function initPublishConfig(mode) {
 		htmlRoot = dc.htmlRoot || '',
 		htmlDir = posixPath.join('/', htmlRoot, projectName),
 		htmlPath = htmlFtp.origin + htmlDir + '/';
-
 
 	return {
 		revision: revision,

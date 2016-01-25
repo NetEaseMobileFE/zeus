@@ -18,7 +18,8 @@
     "postcss",
     "postcss-assets",
     "postcss-sprites",
-    "boilerplate"
+    "boilerplate",
+    "gulpjs"
   ],
   "author": "re54k",
   "license": "ISC",

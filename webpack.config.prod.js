@@ -14,7 +14,8 @@ module.exports = {
 		app: './src/js/index',
 		vendor: [
 			'react', 'react-dom'
-		]
+		],
+		webpackBootstrap: [] // Extract the webpackBootstrap from chunks
 	},
 	output: {
 		path: path.join(__dirname, 'dist'),
@@ -24,8 +25,8 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.optimize.CommonsChunkPlugin({
-			name: 'vendor',
-			filename: revision + 'js/vendor.bundle.js',
+			names: ['vendor', 'webpackBootstrap'],
+			filename: 'js/[name].js',
 			minChunks: Infinity
 		}),
 		new ExtractTextPlugin(revision + 'css/app.css', {
@@ -35,11 +36,6 @@ module.exports = {
 		new webpack.DefinePlugin({
 			'process.env': {
 				'NODE_ENV': JSON.stringify('production')
-			}
-		}),
-		new webpack.optimize.UglifyJsPlugin({
-			compressor: {
-				warnings: false
 			}
 		})
 	],

@@ -28,7 +28,7 @@ var deployConfig = {
 	pro: {
 		htmlFtp: 'c_m',
 		htmlRoot: 'test',
-		assetRoot: 'apps/test'
+		assetRoot: 'apps/test/hh'
 	}
 };
 
@@ -55,7 +55,7 @@ gulp.task('clean', function(callback) {
 gulp.task('s', function () {
 	gulp.src('src/index.html')
 		.pipe(fileInsert({
-			"/*WEBPACKBOOTSTRAP*/": "dist/js/webpackBootstrap.js"
+			"/*webpackBootstrap*/": "dist/js/webpackBootstrap.js"
 		}))
 		.pipe(gulp.dest('dist'));
 });
@@ -76,8 +76,8 @@ gulp.task('assets', ['clean'], function() {
 			}), null, 2));
 		}))
 		.pipe(gulp.dest('dist/'))
-		.pipe(gulpIgnore.exclude(['**/*.map', '**/{img,img/**}', '**/webpackBootstrap.js']))
-		.pipe(conn.dest(publishConfig.assetDir));
+		//.pipe(gulpIgnore.exclude(['**/*.map', '**/{img,img/**}', '**/webpackBootstrap.js']))
+		//.pipe(conn.dest(publishConfig.assetDir));
 });
 
 // Replace assets' path in html files
@@ -89,10 +89,10 @@ gulp.task('html', ['assets'], function() {
 		.pipe(htmlreplace({
 			'css': apr + 'css/app.css',
 			'bundle': apr + 'js/bundle.js',
-			'vendor': apr + 'js/vendor.bundle.js'
+			'vendor': publishConfig.assetPath + 'js/vendor.js'
 		}))
 		.pipe(fileInsert({
-			"/*WEBPACKBOOTSTRAP*/": "dist/js/webpackBootstrap.js"
+			"/*webpackBootstrap*/": "dist/js/webpackBootstrap.js"
 		}))
 		.pipe(htmlmin({ collapseWhitespace: true, removeComments: true}))
 		.pipe(gulp.dest('dist'))

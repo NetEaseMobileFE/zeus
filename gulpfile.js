@@ -76,8 +76,8 @@ gulp.task('assets', ['clean'], function() {
 			}), null, 2));
 		}))
 		.pipe(gulp.dest('dist/'))
-		//.pipe(gulpIgnore.exclude(['**/*.map', '**/{img,img/**}', '**/webpackBootstrap.js']))
-		//.pipe(conn.dest(publishConfig.assetDir));
+		.pipe(gulpIgnore.exclude(['**/*.map', '**/{img,img/**}', '**/webpackBootstrap.js']))
+		.pipe(conn.dest(publishConfig.assetDir));
 });
 
 // Replace assets' path in html files

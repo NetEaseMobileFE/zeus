@@ -27,7 +27,7 @@ var deployConfig = {
 	},
 	pro: {
 		htmlFtp: 'c_m',
-		htmlRoot: 'test',
+		htmlRoot: 'test',e
 		assetRoot: 'apps/test/hh'
 	}
 };
@@ -51,15 +51,6 @@ gulp.task('clean', function(callback) {
 	});
 });
 
-//var smoosher = require('gulp-smoosher');
-gulp.task('s', function () {
-	gulp.src('src/index.html')
-		.pipe(fileInsert({
-			"/*webpackBootstrap*/": "dist/js/webpackBootstrap.js"
-		}))
-		.pipe(gulp.dest('dist'));
-});
-
 // Compile js/css/img by webpack
 gulp.task('assets', ['clean'], function() {
 	var conn = createConnection(publishConfig.assetFtp);
@@ -76,8 +67,8 @@ gulp.task('assets', ['clean'], function() {
 			}), null, 2));
 		}))
 		.pipe(gulp.dest('dist/'))
-		//.pipe(gulpIgnore.exclude(['**/*.map', '**/{img,img/**}', '**/webpackBootstrap.js']))
-		//.pipe(conn.dest(publishConfig.assetDir));
+		.pipe(gulpIgnore.exclude(['**/*.map', '**/{img,img/**}', '**/webpackBootstrap.js']))
+		.pipe(conn.dest(publishConfig.assetDir));
 });
 
 // Replace assets' path in html files
@@ -94,9 +85,9 @@ gulp.task('html', ['assets'], function() {
 		.pipe(fileInsert({
 			"/*webpackBootstrap*/": "dist/js/webpackBootstrap.js"
 		}))
-		.pipe(htmlmin({ collapseWhitespace: true, removeComments: true}))
+		.pipe(htmlmin({ collapseWhitespace: true, removeComments: true }))
 		.pipe(gulp.dest('dist'))
-		//.pipe(conn.dest(publishConfig.htmlDir));
+		.pipe(conn.dest(publishConfig.htmlDir));
 });
 
 // Optimize images

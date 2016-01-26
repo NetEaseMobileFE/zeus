@@ -6,10 +6,11 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var publishConfig = global.publish || {};
 var revision = publishConfig.revision ? publishConfig.revision + '/' : '';
 var publicPath = publishConfig.assetPath || '/static/';
+var hash = publishConfig.hash ? '.[chunkhash]' : '';
 
 
 module.exports = {
-	devtool: 'source-map',
+	devtool: 'source-map-hidden',
 	entry: {
 		app: './src/js/index',
 		vendor: [
@@ -26,7 +27,7 @@ module.exports = {
 	plugins: [
 		new webpack.optimize.CommonsChunkPlugin({
 			names: ['vendor', 'webpackBootstrap'],
-			filename: 'js/[name].js',
+			filename: 'js/[name]' + hash + '.js',
 			minChunks: Infinity
 		}),
 		new ExtractTextPlugin(revision + 'css/app.css', {

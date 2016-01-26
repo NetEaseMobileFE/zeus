@@ -27,7 +27,7 @@ var deployConfig = {
 	},
 	pro: {
 		htmlFtp: 'c_m',
-		htmlRoot: 'test',e
+		htmlRoot: 'test',
 		assetRoot: 'apps/test/hh'
 	}
 };

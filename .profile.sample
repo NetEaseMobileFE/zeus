@@ -14,14 +14,14 @@
             "port": "16321",
             "username": "wangjun2012",
             "password": "wangjun2012",
-            "origin": "http://c.3g.163.com/nc/qa"
+            "origin": "http://c.m.163.com/nc/qa"
         },
         "c_m_new": {
             "host": "220.181.29.249",
             "port": "16321",
             "username": "ybduan",
             "password": "unbug@163.com",
-            "origin": "http://c.3g.163.com/webapp"
+            "origin": "http://c.m.163.com/webapp"
         },
         "t_c": {
             "host": "220.181.98.57",

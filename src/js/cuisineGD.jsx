@@ -5,7 +5,7 @@ import styles from '../css/cuisineGD.less';
 
 class Cuisine extends Component {
 	render() {
-		return (
+		return  (
 			<ul styleName="dishes">
 				<li styleName="dish">
 					<i styleName="icon"/>

@@ -22,9 +22,9 @@ class Menu extends Component {
 	}
 
 	_getCuisines(delay) {
-		return new Promise(resolve => {
+		return new Promise((resolve) => {
 			setTimeout(() => {
-				require.ensure([], require => {
+				require.ensure([], (require) => {
 					resolve({
 						CuisineHN: require('./cuisineHN.jsx').default,
 						CuisineSC: require('./cuisineSC.jsx').default,

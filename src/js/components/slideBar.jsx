@@ -13,12 +13,10 @@ class SlideBar extends Component {
             menu:[
                 {
                     link:'/appList',
-                    name:'报名列表',
-                    id: 1
+                    name:'报名列表'
                 },{
                     link:'/create',
-                    name:'管理员管理',
-                    id: 2
+                    name:'管理员管理'
                 }
             ]
         });
@@ -30,9 +28,9 @@ class SlideBar extends Component {
         return (
             <aside styleName="menu">
                 <ul>
-                    {state.menu.map((elm)=>(
+                    {state.menu.map((elm,index)=>(
                         <li styleName={elm.link === pathname && 'active'}
-                            key={elm.id}>
+                            key={index}>
                             <Link to={elm.link}>{elm.name}</Link>
                         </li>
                     ))}

@@ -12,11 +12,11 @@ import App from './components/App';
 // 路由:https://github.com/rackt/react-router-redux
 const store = configureStore({
   app: {
-    name: 'jruif',
+    name: 'jruif'
   },
   create: {
-    formType: '1',
-  },
+    formType: '1'
+  }
 });
 render(
   <Provider store={store}>

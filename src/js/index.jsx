@@ -8,6 +8,7 @@ import DetailPage from './components/DetailPage';
 import Create from './components/Create';
 import NotFoundView from './components/NotFoundView';
 import App from './components/App';
+require('es6-promise').polyfill();
 
 // 路由:https://github.com/rackt/react-router-redux
 const store = configureStore({

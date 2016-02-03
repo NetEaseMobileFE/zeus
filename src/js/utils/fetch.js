@@ -1,8 +1,7 @@
 /**
  * Created by jruif on 16/2/2.
  *
- * 异步加载action
- * 与服务器异步通信最好能使用一个接口
+ * AJAX
  */
 import fetch from 'isomorphic-fetch';
 import extend from 'lodash.assign';
@@ -25,13 +24,12 @@ export function ajax(opt) {
     },
   };
   let _opt = extend({}, opt);
-  return (dispatch, getState) => {
-    let state = getState();
+  return () => {
     let options = extend({}, DEFAULT, _opt);
     // todo..
     if (options.method === 'GET') {
       if (_opt.body) {
-        _opt.url = `options.url?${transformRequest(options.body)}`;
+        _opt.url = `options.url?t=${Date.now()}&${transformRequest(options.body)}`;
       }
       options.body = void(0);
     }
@@ -46,14 +44,14 @@ export function ajax(opt) {
         }
       })
       .then((result) => {
-         /*
-           HTTP/1.1 200 OK
-           {
+        /*
+          HTTP/1.1 200 OK
+          {
             "code": 1,
             "msg": null,
             "data": ...
-           }
-           错误请求返回
+          }
+          错误请求返回
           {
             "code": 3,
             "msg": "server err",
@@ -67,11 +65,10 @@ export function ajax(opt) {
         error.response = result;
         throw error;
       })
-      // .then(result => dispatch(receive(state.question, result)))
       .catch((fail) => {
         console.log(fail);
         let error = new Error(fail);
-        dispatch(error);
+        throw error
       });
   };
 }

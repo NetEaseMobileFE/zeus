@@ -1,0 +1,87 @@
+// Foundation for Sites by ZURB
+// foundation.zurb.com
+// Licensed under MIT Open Source
+// J.ruif 定制版
+
+// Third-party libraries
+//@import 'vendor/normalize';
+//@import 'util/util';
+//@import 'global';
+
+// Components
+@import 'grid/grid';
+@import 'typography/typography';
+@import 'forms/forms';
+@import 'components/visibility';
+@import 'components/float';
+@import 'components/button';
+@import 'components/button-group';
+@import 'components/badge';
+@import 'components/breadcrumbs';
+@import 'components/callout';
+@import 'components/close-button';
+@import 'components/label';
+@import 'components/media-object';
+@import 'components/menu';
+@import 'components/pagination';
+@import 'components/reveal';
+@import 'components/switch';
+@import 'components/table';
+@import 'components/title-bar';
+@import 'components/top-bar';
+@import 'components/thumbnail';
+//可移除组件
+ @import 'components/drilldown';
+ @import 'components/tabs';
+ @import 'components/slider';
+ @import 'components/sticky';
+ @import 'components/progress-bar';
+ @import 'components/dropdown-menu';
+ @import 'components/accordion-menu';
+ @import 'components/accordion';
+ @import 'components/dropdown';
+ @import 'components/flex-video';
+ @import 'components/off-canvas';
+ @import 'components/orbit';
+ @import 'components/tooltip';
+
+@mixin foundation-everything {
+  @include foundation-global-styles;
+  @include foundation-grid;
+  @include foundation-typography;
+  @include foundation-button;
+  @include foundation-forms;
+  @include foundation-visibility-classes;
+  @include foundation-float-classes;
+  @include foundation-badge;
+  @include foundation-breadcrumbs;
+  @include foundation-button-group;
+  @include foundation-callout;
+  @include foundation-close-button;
+  @include foundation-label;
+  @include foundation-media-object;
+  @include foundation-menu;
+  @include foundation-pagination;
+  @include foundation-reveal;
+  @include foundation-switch;
+  @include foundation-table;
+  @include foundation-thumbnail;
+  @include foundation-title-bar;
+  @include foundation-top-bar;
+  //可移除组件
+  @include foundation-tabs;
+  @include foundation-accordion;
+  @include foundation-accordion-menu;
+  @include foundation-tooltip;
+  @include foundation-drilldown-menu;
+  @include foundation-dropdown;
+  @include foundation-dropdown-menu;
+  @include foundation-flex-video;
+  @include foundation-off-canvas;
+  @include foundation-orbit;
+  @include foundation-progress-bar;
+  @include foundation-slider;
+  @include foundation-sticky;
+}
+
+//@include foundation-everything;

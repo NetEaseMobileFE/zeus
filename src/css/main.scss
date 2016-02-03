@@ -4,5 +4,25 @@
 @import "lib/foundation";
 
 .root {
-    background-color: #9da0a4;
+    width: 100%;
+    .main{
+        margin-top: 15px;
+        padding: 0 20px;
+        @include clearfix;
+        aside{
+            width: 200px;
+            min-height: 300px;
+            float: left;
+            border:1px solid $medium-gray;
+            text-align: center;
+        }
+        .content{
+            margin-left: 220px;
+            overflow: hidden;
+        }
+    }
+}
+
+ul{
+    list-style: none;
 }

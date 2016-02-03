@@ -1,0 +1,22 @@
+@import '../lib/util/util';
+@import '../lib/global';
+@import "../lib/foundation";
+
+.menu ul{
+    padding: 0;
+    margin: 0;
+    li{
+        a{
+            color: $back-color;
+            text-decoration: none;
+            display: block;
+            padding: 15px 0;
+        }
+        &.active{
+            background-color: $main-color;
+            a{
+                color: $white;
+            }
+        }
+    }
+}

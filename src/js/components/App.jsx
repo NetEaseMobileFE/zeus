@@ -8,29 +8,34 @@ import SlideBar from './SlideBar';
 import Header from './Header';
 
 @CSSModules(styles)
-class App extends Component {
-  render() {
-    const { data, children } = this.props;
-    return (
-      <div styleName="root">
-        <Header info={data}/>
-        <SlideBar/>
-        <section>
-          {children}
-        </section>
-      </div>
-    );
-  }
+class App extends Component{
+    render(){
+        const {route,data,children} = this.props;
+        return (
+            <div styleName="root">
+                <Header info={data}/>
+                <section styleName="main">
+                    <SlideBar route={route}/>
+                    <section styleName="content">
+                        {children}
+                    </section>
+                </section>
+            </div>
+        );
+    }
 }
 
 // Api: https://facebook.github.io/react/docs/reusable-components.html
 App.propTypes = {
-  data: PropTypes.object.isRequired,
-  actions: PropTypes.object.isRequired,
-  children: PropTypes.element,
+    data: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired,
+    children: PropTypes.element
 };
 
 export default connect(
-  (state) => ({ data: state.app }),
-  (dispatch) => ({ actions: bindActionCreators(Actions, dispatch) })
+    state => ({
+        data: state.app,
+        route:state.routeReducer
+    }),
+    dispatch => ({ actions: bindActionCreators(Actions, dispatch) })
 )(App);

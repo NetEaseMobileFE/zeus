@@ -13,7 +13,7 @@
     "semi": 1,
     "react/prop-types": 1,
     "react/jsx-no-bind": 1,
-    "comma-dangle": 1,
+    "comma-dangle": 0,
     "new-cap": 1,
     "no-else-return": 1,
     "prefer-const": 0,

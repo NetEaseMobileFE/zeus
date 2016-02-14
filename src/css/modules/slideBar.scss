@@ -1,21 +1,32 @@
-@import '../lib/util/util';
-@import '../lib/global';
-@import "../lib/foundation";
+@import "leadin";
 
-.menu ul{
-    padding: 0;
-    margin: 0;
-    li{
-        a{
-            color: $back-color;
-            text-decoration: none;
-            display: block;
-            padding: 15px 0;
-        }
-        &.active{
-            background-color: $main-color;
+.menu {
+    min-height: 300px;
+    padding-bottom: 50px;
+    background-color: $white;
+    ul{
+        padding: 0;
+        margin: 0;
+        li{
+            transition: all .3s;
             a{
-                color: $white;
+                color: $back-color;
+                text-decoration: none;
+                display: block;
+                padding: 15px 0;
+                transition: all .3s;
+            }
+            &.active{
+                background-color: $main-color;
+                a{
+                    color: $white;
+                }
+            }
+            &:hover{
+                background-color: $btn-hover;
+                a{
+                    color: $white;
+                }
             }
         }
     }

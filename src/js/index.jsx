@@ -13,9 +13,6 @@ import App from './components/App';
 const store = configureStore({
   app: {
     name: 'jruif'
-  },
-  create: {
-    formType: '1'
   }
 });
 render(

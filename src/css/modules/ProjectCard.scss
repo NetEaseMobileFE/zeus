@@ -1,0 +1,31 @@
+@import "leadin";
+
+.project-card{
+    margin-top: -10px;
+    @include clearfix;
+    li{
+        width: 180px;
+        float: left;
+        margin-right: 20px;
+        h5{
+            font-size: 18px;
+            font-weight: 100;
+            margin-bottom: 16px;
+            line-height: 39px;
+        }
+        .card-money{
+            margin-bottom: 0;
+        }
+        input[type='text'],input[type='number']{
+            width: 120px;
+            display: inline-block;
+            margin-right: 10px;
+            margin-bottom: 0;
+        }
+    }
+    .card-add{
+        margin-top: 40px;
+        margin-left: 20px;
+        width: 50px;
+    }
+}

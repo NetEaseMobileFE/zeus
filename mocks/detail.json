@@ -1,0 +1,25 @@
+{
+  "code": 1,
+  "msg": null,
+  "data": {
+    "id": 36,
+    "type": 0,  
+    "name": "马拉松-1",  
+    "signUpStart": 1453788598000, 
+    "signUpEnd": 1469945398000, 
+    "gameStart": 1470377398000, 
+    "gameEnd": 1453810198000, 
+    "items": [{"name":"Free_Marathon","price":0}], 
+    "limitNum": 100,  
+    "introduce": "introduce", 
+    "disclaimer": "赛事声明", 
+    "pictures": ["/images/xxx.jpg","/images/2.jpg"],  
+    "requiredItems": ["name","idCard"], 
+    "addItems": ["age","hobby"],  
+    "account": "admin", 
+    "state": 10,  
+    "signUpNum": 23, 
+    "weight": 50, 
+    "transferAccount": "bjtest@163.com" 
+  }
+}

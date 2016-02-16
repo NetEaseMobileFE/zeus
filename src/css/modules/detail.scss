@@ -1,3 +1,21 @@
 @import '../lib/util/util';
 @import '../lib/global';
 @import "../lib/foundation";
+
+@include foundation-flex-grid;
+@include foundation-button-group;
+@include foundation-button;
+@include foundation-form-select;
+@include foundation-form-text;
+.row{
+  margin: 1.15rem 0;
+}
+.button-group .button {
+  margin: 0 0.2rem;
+}
+.input {
+  display: inline-block;
+}
+.users{
+  display: block;
+}

@@ -13,3 +13,6 @@ export const MODAL_OK = 'MODAL_OK';         // 弹窗动作 确定
 export const MODAL_CANCEL = 'MODAL_CANCEL'; // 弹窗动作 取消
 export const LOADING_START = 'LOADING_START'; // 显示loading动画
 export const LOADING_ENDED = 'LOADING_ENDED'; // 结束loading动画
+
+
+export const REQUEST_DETAIL = 'REQUEST_DETAIL';

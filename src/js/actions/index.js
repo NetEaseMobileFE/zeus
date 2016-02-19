@@ -12,23 +12,3 @@ export function login() {
     },
   };
 }
-
-export function loadDetail(id) {
-  return (dispatch, getState) => {
-    const detail = getState().details[id] || {};
-    if (detail.id){
-      return detail
-    }
-
-    return fetch(`http://localhost:3000/detail.json`)
-      .then(response => {
-        return response.json()
-      })
-      .then((json) => {
-        dispatch({
-          type: type.REQUEST_DETAIL,
-          data: json.data
-        })
-      })
-  }
-}

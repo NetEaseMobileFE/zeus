@@ -1,0 +1,51 @@
+{
+    "code": 1,
+    "msg": null,
+    "data": [
+        {
+            "code": "3LscOqFv7e",
+            "creater": "admin",
+            "cid": 36,
+            "productName": "Free_Marathon",
+            "productPrice": 0,
+            "user": "test1",
+            "state": 10
+        },
+        {
+            "code": "cqqVZ1UG8Q",
+            "creater": "admin",
+            "cid": 36,
+            "productName": "Free_Marathon",
+            "productPrice": 0,
+            "user": "testAccount",
+            "state": 10
+        },
+        {
+            "code": "1qqVZ1UG8Q",
+            "creater": "admin",
+            "cid": 36,
+            "productName": "Free_Marathon",
+            "productPrice": 0,
+            "user": "testAccount",
+            "state": 10
+        },
+        {
+            "code": "2qqVZ1UG8Q",
+            "creater": "admin",
+            "cid": 36,
+            "productName": "Free_Marathon",
+            "productPrice": 0,
+            "user": "testAccount",
+            "state": 10
+        },
+        {
+            "code": "3qqVZ1UG8Q",
+            "creater": "admin",
+            "cid": 36,
+            "productName": "Free_Marathon",
+            "productPrice": 0,
+            "user": "testAccount",
+            "state": 10
+        }
+    ]
+}

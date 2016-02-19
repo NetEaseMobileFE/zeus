@@ -6,6 +6,7 @@
  */
 import fetch from 'isomorphic-fetch';
 import extend from 'lodash.assign';
+import * as modal from './modal';
 
 let url = '/admin/competition';
 let $_ = {};
@@ -39,7 +40,7 @@ function stringifyJSON(obj){
     return JSON.stringify(obj);
 }
 
-export function ajax(opt) {
+export function ajax(opt,callback) {
     const DEFAULT = {
         method: 'GET',
         credentials: 'same-origin',
@@ -49,7 +50,7 @@ export function ajax(opt) {
         }
     };
     let _opt = extend({}, opt);
-    if(opt.url.indexOf(url) === -1){
+    if(opt.url.indexOf('admin/') === -1){
         _opt.url = url + _opt.url;
     }
     return (dispatch, getState) => {
@@ -95,10 +96,9 @@ export function ajax(opt) {
                 error.response = result;
                 throw error;
             })
-            // .then(result => dispatch(receive(state.question, result)))
+            .then(callback.bind(this))
             .catch((fail) => {
-                let error = new Error(fail);
-                console.log(error);
+                dispatch(modal.error(fail.response || {msg:'未知错误,请联系程序猿 或 刷新页面'}));
             });
     };
 }

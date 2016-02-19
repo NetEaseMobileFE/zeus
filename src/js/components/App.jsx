@@ -22,9 +22,7 @@ class App extends Component{
                         {children}
                     </section>
                 </section>
-                <Modal msg={modal.msg}
-                       modal={modal.modal}
-                       invalidate={modal.didInvalidate}
+                <Modal modal={modal}
                        actions={modalAction}/>
             </div>
         );

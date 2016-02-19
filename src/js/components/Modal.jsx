@@ -16,14 +16,14 @@ class Modal extends Component {
     modal_ok(){
         let { modal_cancel } = this.props.actions;
         modal_cancel();
-        this.props.modal.onOk();
+        this.props.modal.config.onOk();
     }
 
     render(){
-        let { msg, modal,invalidate } = this.props;
+        let { msg, config, didInvalidate } = this.props.modal;
         let { modal_cancel } = this.props.actions;
         return(
-            <div styleName="modal">
+            <div styleName={["modal",didInvalidate ? "in" : ""].join(" ")}>
                 <div styleName="modal-overlay"></div>
                 <div styleName="modal-plane">
                     <div styleName="modal-header">
@@ -39,7 +39,7 @@ class Modal extends Component {
                     </div>
                     <div styleName="modal-footer">
                         {
-                            modal.type === 'alert' ? '':<button styleName="alert button hollow" onClick={modal_cancel}>取消</button>
+                            config.type !== 'alert' && (<button styleName="alert button hollow" onClick={modal_cancel}>取消</button>)
                         }
                         <button styleName="alert button" onClick={this.modal_ok.bind(this)}>确定</button>
                     </div>
@@ -50,9 +50,7 @@ class Modal extends Component {
 }
 
 Modal.propTypes={
-    msg:PropTypes.string.isRequired,
     actions:PropTypes.object.isRequired,
-    invalidate:PropTypes.bool.isRequired,
     modal:PropTypes.object.isRequired
 };
 

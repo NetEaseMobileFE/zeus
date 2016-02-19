@@ -2,7 +2,7 @@
  * Created by jruif on 16/2/18.
  */
 
-import { REQUEST,RECEIVE,ERROR,MODAL_OK,MODAL_CANCEL } from '../actions/actionType'
+import { REQUEST,RECEIVE,SUCCESS,ERROR,MODAL_OK,MODAL_CANCEL } from '../actions/actionType'
 
 export function modal_ok(){
     return{
@@ -29,6 +29,16 @@ export function receive(question, result) {
         type: RECEIVE,
         question,
         result
+    }
+}
+export function success(result,onOk=function(){},onCancel=function(){}) {
+    return {
+        type: SUCCESS,
+        result,
+        modal:{
+            onOk,
+            onCancel
+        }
     }
 }
 export function error(result,onOk=function(){},onCancel=function(){}) {

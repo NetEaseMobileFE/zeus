@@ -6,11 +6,15 @@
  */
 
 export const LOGIN = 'LOGIN';           // 登录信息
+export const SUCCESS = 'SUCCESS';           // 出错
 export const ERROR = 'ERROR';           // 出错
 export const REQUEST = 'REQUEST';       // 发送请求
 export const RECEIVE = 'RECEIVE';       // 收到请求
 export const MODAL_OK = 'MODAL_OK';         // 弹窗动作 确定
 export const MODAL_CANCEL = 'MODAL_CANCEL'; // 弹窗动作 取消
+
+// 首页
+export const UPDATE_APP_LIST = "UPDATE_APP_LIST";
 
 // 创建表单
 export const ADD_ITEM = 'ADD_ITEM';     // 添加 子元素

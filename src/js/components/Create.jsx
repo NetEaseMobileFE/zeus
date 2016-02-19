@@ -6,16 +6,17 @@ import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import ReactDOMServer from 'react-dom/server';
 import { connect } from 'react-redux';
-import * as createActions from '../actions/create';
-import * as Ajax from '../actions/fetch';
 import CSSModules from 'react-css-modules';
 import extend from 'lodash.assign';
-import Datetime from 'react-datetime';
+import moment from 'moment';
+import * as createActions from '../actions/create';
+import * as Ajax from '../actions/fetch';
+import * as Modal from '../actions/modal';
 import DropzoneComponent from 'react-dropzone-component';
 import ProjectCard from './createForm/ProjectCard.jsx';
 import OtherItems from './createForm/OtherItems.jsx';
 import WYBinfo from './createForm/WYBinfo.jsx';
-import moment from 'moment';
+import Datetime from 'react-datetime';
 import 'moment/locale/zh-cn';
 import '!style!css!../../css/modules/datetime.css';
 import '!style!css!sass!../../css/modules/upload.scss';
@@ -28,18 +29,21 @@ import styles from '../../css/modules/create.scss';
 class Create extends Component {
     constructor(props, context) {
         super(props, context);
-        let { type,items } = this.props.data;
-        const { updateForm } = this.props.actions;
         this.cache = {};
         this.picturesPaths = [];
+    }
+
+    componentWillMount(){
+        let { type,items } = this.props.data;
+        const { updateForm } = this.props.actions;
         this.types = {
             1: {
                 text: '活动',
-                    project: []
+                project: []
             },
             2: {
                 text: '赛事',
-                    project: [{
+                project: [{
                     name: '全程马拉松',
                     price: 300
                 }, {
@@ -120,7 +124,9 @@ class Create extends Component {
 
     // 使出焦点时,更新 store 中的 state 值
     updateValue(event) {
-        const { updateForm } = this.props.actions;
+        const { updateForm,reset } = this.props.actions;
+
+        reset();
         let [name, value] = [event.target.name, event.target.value];
         let reg = new RegExp(name, 'g');
         if (!reg.test(['signUpStart', 'signUpEnd', 'gameStart', 'gameEnd'].join('|'))
@@ -135,6 +141,9 @@ class Create extends Component {
     updateTime(name, mom) {
         const { updateForm } = this.props.actions;
         updateForm(name, mom.valueOf());
+        if(name === 'gameStart'){
+            updateForm('gameEnd', mom.valueOf() + 24 * 60 * 60 * 1000);
+        }
     }
 
     uploadEventHandlers() {
@@ -181,12 +190,16 @@ class Create extends Component {
         event.preventDefault();
         const { ajax } = this.props.ajax;
         const { reset } = this.props.actions;
+        const { success,modal_ok } = this.props.modal;
         ajax({
             url:'/save',
             method:'POST'
-        }).then(function(result){
+        },function(result){
             // todo: 弹出alert -> 跳转到 详情页/列表页
-            reset();
+            success(result,function(){
+                reset();
+                modal_ok();
+            });
         });
     }
 
@@ -233,13 +246,13 @@ class Create extends Component {
                         <div styleName="small-8 medium-4 columns">
                             <Datetime input={true} locale="zh-cn"
                                       inputProps={{placeholder:'起始日期',name:'signUpStart',readOnly:true}}
-                                      defaultValue={data.signUpStart}
+                                      value={data.signUpStart}
                                       onBlur={this.updateTime.bind(this,'signUpStart')}/>
                         </div>
                         <div styleName="small-8 medium-4 columns">
                             <Datetime input={true} locale="zh-cn"
                                       inputProps={{placeholder:'结束日期',name:'signUpEnd',readOnly:true}}
-                                      defaultValue={data.signUpEnd}
+                                      value={data.signUpEnd}
                                       onBlur={this.updateTime.bind(this,'signUpEnd')}/>
                         </div>
                     </div>
@@ -250,13 +263,15 @@ class Create extends Component {
                         <div styleName="small-8 medium-4 columns">
                             <Datetime input={true} locale="zh-cn"
                                       inputProps={{placeholder:'起始日期',name:'gameStart',readOnly:true}}
-                                      defaultValue={data.gameStart}
+                                      value={data.gameStart}
+                                      onChange={this.updateTime.bind(this,'gameEnd')}
                                       onBlur={this.updateTime.bind(this,'gameStart')}/>
                         </div>
                         <div styleName="small-8 medium-4 columns">
                             <Datetime input={true} locale="zh-cn"
                                       inputProps={{placeholder:'结束日期',name:'gameEnd',readOnly:true}}
-                                      defaultValue={data.gameEnd}
+                                      value={data.gameEnd}
+                                      onChange={this.updateTime.bind(this,'gameEnd')}
                                       onBlur={this.updateTime.bind(this,'gameEnd')}/>
                         </div>
                     </div>
@@ -344,6 +359,7 @@ class Create extends Component {
 Create.propTypes = {
     actions: PropTypes.object.isRequired,
     data: PropTypes.object.isRequired,
+    modal: PropTypes.object.isRequired,
     ajax: PropTypes.object.isRequired
 };
 
@@ -351,6 +367,7 @@ export default connect(
     (state) => ({data: state.create}),
     (dispatch) => ({
         actions: bindActionCreators(createActions, dispatch),
+        modal: bindActionCreators(Modal, dispatch),
         ajax: bindActionCreators(Ajax, dispatch)
     })
 )(Create);

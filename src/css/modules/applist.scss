@@ -1,0 +1,13 @@
+@import "leadin";
+
+@include panel;
+@include text-align;
+@include table(odd);
+
+table {
+    text-align: center;
+    width: 100%;
+    th{
+        text-align: center;
+    }
+}

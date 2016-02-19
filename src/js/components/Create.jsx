@@ -7,15 +7,19 @@ import { bindActionCreators } from 'redux';
 import ReactDOMServer from 'react-dom/server';
 import { connect } from 'react-redux';
 import * as createActions from '../actions/create';
+import * as Ajax from '../actions/fetch';
 import CSSModules from 'react-css-modules';
-import styles from '../../css/modules/create.scss';
+import extend from 'lodash.assign';
 import Datetime from 'react-datetime';
-import DropzoneComponent from 'react-dropzone-component'
-import ProjectCard from './form/ProjectCard.jsx'
-import moment from 'moment'
-import 'moment/locale/zh-cn'
-import '!style!css!../../css/modules/datetime.css'
-import '!style!css!sass!../../css/modules/upload.scss'
+import DropzoneComponent from 'react-dropzone-component';
+import ProjectCard from './createForm/ProjectCard.jsx';
+import OtherItems from './createForm/OtherItems.jsx';
+import WYBinfo from './createForm/WYBinfo.jsx';
+import moment from 'moment';
+import 'moment/locale/zh-cn';
+import '!style!css!../../css/modules/datetime.css';
+import '!style!css!sass!../../css/modules/upload.scss';
+import styles from '../../css/modules/create.scss';
 
 
 @CSSModules(styles, {
@@ -24,50 +28,55 @@ import '!style!css!sass!../../css/modules/upload.scss'
 class Create extends Component {
     constructor(props, context) {
         super(props, context);
-    }
-    componentWillMount() {
-        this.setState({
-            types: [
-                {
-                    value: '2',
-                    text: '活动',
+        let { type,items } = this.props.data;
+        const { updateForm } = this.props.actions;
+        this.cache = {};
+        this.picturesPaths = [];
+        this.types = {
+            1: {
+                text: '活动',
                     project: []
-                }, {
-                    value: '1',
-                    text: '赛事',
+            },
+            2: {
+                text: '赛事',
                     project: [{
-                        name:'全程马拉松',
-                        price: 300
-                    },{
-                        name:'半程马拉松',
-                        price: 200
-                    },{
-                        name:'10公里',
-                        price: 100
-                    }]
-                }
-            ],
-            choose: '2',
-            text: '活动',
-            project: []
-        });
-    }
-
-    uploadComponentConfig(){
-        return {
-            iconFiletypes: ['.jpg', '.png', '.gif'],
-            showFiletypeIcon: true,
-            postUrl: '/uploadHandler'
+                    name: '全程马拉松',
+                    price: 300
+                }, {
+                    name: '半程马拉松',
+                    price: 200
+                }, {
+                    name: '10公里',
+                    price: 100
+                }]
+            }
+        };
+        if(items.length === 0){
+            updateForm('items',this.types[type].project);
         }
     }
 
-    uploadDjsConfig(){
+    // 图片上传 属性 配置
+    uploadComponentConfig() {
         return {
+            iconFiletypes: ['.jpg', '.png', '.gif'],
+            showFiletypeIcon: true,
+            postUrl: '/admin/competition/imageUpload'
+        }
+    }
+
+    // 图片上传 UI 配置
+    uploadDjsConfig() {
+        var self = this;
+        return {
+            paramName:'Filedata',
             addRemoveLinks: true,
-            dictRemoveFile:'✘',
-            dictDefaultMessage:'拖拽或点击上传文件',
+            dictRemoveFile: '✘',
+            dictCancelUpload:'✘',
+            dictDefaultMessage: '拖拽或点击上传文件',
             params: {
-                myParameter: "I'm a parameter!"
+                // 其他参数
+                //myParameter: "I'm a parameter!"
             },
             previewTemplate: ReactDOMServer.renderToString(
                 <div className="dz-preview dz-file-preview">
@@ -87,68 +96,122 @@ class Create extends Component {
                     <div className="dz-error-message">
                         <span data-dz-errormessage></span>
                     </div>
-                    <input type="text" name=""/>
+                    <input type="text" name="description"/>
                 </div>
             )
         }
     }
 
+    // 切换类型
     switchType(event) {
         let target = event.target;
         const { updateForm } = this.props.actions;
-        this.state.types.map((elm)=>{
-            if(target.value === elm.value){
-                this.setState({
-                    choose: elm.value,
-                    text: elm.text,
-                    project: elm.project
-                });
-                console.log(this.state.project)
-            }
+        updateForm(target.name, target.value);
+        updateForm('items', this.types[target.value].project);
+    }
+
+    // input/textarea 等获得焦点时
+    focusInput(event) {
+        let target = event.target;
+        extend(this.cache, {
+            [target.name]: target.value
         });
-        updateForm(target.name,target.value);
     }
 
-    updateValue(event){
+    // 使出焦点时,更新 store 中的 state 值
+    updateValue(event) {
         const { updateForm } = this.props.actions;
-        updateForm(event.target.name,event.target.value);
+        let [name, value] = [event.target.name, event.target.value];
+        let reg = new RegExp(name, 'g');
+        if (!reg.test(['signUpStart', 'signUpEnd', 'gameStart', 'gameEnd'].join('|'))
+            && this.cache[name] !== value) {
+            this.cache[name] = value;
+            updateForm(name, value);
+        }
     }
 
-    uploadEventHandlers(){
-        let name = 'pictures';
+    // @param { name }
+    // @param { Moment } moment 实例
+    updateTime(name, mom) {
         const { updateForm } = this.props.actions;
+        updateForm(name, mom.valueOf());
+    }
+
+    uploadEventHandlers() {
+        //[{"path": "pic1", "description": "introduce"},{"path": "pic2", "description": "introduce"}]
+        let [name, self] = ['pictures', this];
+        const { addItem,removeItem } = this.props.actions;
         return {
-            success(file,result){
-                updateForm(name,result.data);
+            success(file, result){
+                addItem(name, {
+                    path: result.data,
+                    description: ''
+                });
+                self.picturesPaths.push(result.data);
+                file.previewElement.getElementsByTagName('input')[0].dataset.path = result.data;
             },
             removedfile(file){
-                updateForm(name,JSON.parse(file.xhr.response).data)
+                let path = JSON.parse(file.xhr.response).data;
+                let index = null;
+                self.picturesPaths.map((elm, i)=> {
+                    if (elm === path) {
+                        removeItem(name, i);
+                        index = i;
+                    }
+                });
+                self.picturesPaths.splice(index, 1);
             }
         }
+    }
+
+    updateDescription(event) {
+        event.stopPropagation();
+        let target = event.target;
+        const { updateForm } = this.props.actions;
+        this.picturesPaths.map((elm, index)=> {
+            if (elm === target.dataset.path) {
+                updateForm('pictures', {
+                    [target.name]: target.value
+                }, index);
+            }
+        });
+    }
+
+    submitForm(event){
+        event.preventDefault();
+        const { ajax } = this.props.ajax;
+        const { reset } = this.props.actions;
+        ajax({
+            url:'/save',
+            method:'POST'
+        }).then(function(result){
+            // todo: 弹出alert -> 跳转到 详情页/列表页
+            reset();
+        });
     }
 
     render() {
         const { actions,data } = this.props;
         let self = this;
-        let state = self.state;
+        let curType = self.types[data.type];
         return (
             <div styleName="panel">
                 <div styleName="row">
                     <div styleName="columns"><h4>创建活动</h4></div>
                     <div styleName="shrink columns text-right"></div>
                 </div>
-                <form onBlur={this.updateValue.bind(this)}>
+                <form onBlur={this.updateValue.bind(this)} onFocus={this.focusInput.bind(this)}>
                     <div styleName="row">
                         <div styleName="small-2 columns"></div>
                         {
-                            state.types.map((elm, index)=>(
+                            Object.keys(self.types).map((elm, index)=>(
                                 <div styleName="small-2 columns" key={ index }>
                                     <label styleName="align-spaced">
                                         <input type="radio" name="type"
-                                               value={ elm.value } data-text={ elm.text }
-                                               checked={ elm.value === state.choose }
+                                               value={ elm } data-text={ self.types[elm].text }
+                                               checked={ elm === data.type }
                                                onChange={self.switchType.bind(self)}/>
-                                        {elm.text}
+                                        {self.types[elm].text}
                                     </label>
                                 </div>
                             ))
@@ -156,10 +219,10 @@ class Create extends Component {
                     </div>
                     <div styleName="row">
                         <div styleName="small-4 medium-2 columns">
-                            <label styleName="text-right middle" data-suffix=":">{state.text}名称</label>
+                            <label styleName="text-right middle" data-suffix=":">{curType.text}名称</label>
                         </div>
                         <div styleName="small-8 medium-8 columns">
-                            <input type="text" placeholder={`请填写${state.text}名称`}
+                            <input type="text" placeholder={`请填写${curType.text}名称`}
                                    name="name" defaultValue={data.name}/>
                         </div>
                     </div>
@@ -169,44 +232,49 @@ class Create extends Component {
                         </div>
                         <div styleName="small-8 medium-4 columns">
                             <Datetime input={true} locale="zh-cn"
-                                      inputProps={{placeholder:'起始日期',name:'signUpStart'}}
-                                      defaultValue={data.signUpStart}/>
+                                      inputProps={{placeholder:'起始日期',name:'signUpStart',readOnly:true}}
+                                      defaultValue={data.signUpStart}
+                                      onBlur={this.updateTime.bind(this,'signUpStart')}/>
                         </div>
                         <div styleName="small-8 medium-4 columns">
                             <Datetime input={true} locale="zh-cn"
-                                      inputProps={{placeholder:'结束日期',name:'signUpEnd'}}
-                                      defaultValue={data.signUpEnd}/>
+                                      inputProps={{placeholder:'结束日期',name:'signUpEnd',readOnly:true}}
+                                      defaultValue={data.signUpEnd}
+                                      onBlur={this.updateTime.bind(this,'signUpEnd')}/>
                         </div>
                     </div>
                     <div styleName="row">
                         <div styleName="small-4 medium-2 columns">
-                            <label styleName="text-right middle" data-suffix=":">{state.text}日期</label>
+                            <label styleName="text-right middle" data-suffix=":">{curType.text}日期</label>
                         </div>
                         <div styleName="small-8 medium-4 columns">
                             <Datetime input={true} locale="zh-cn"
-                                      inputProps={{placeholder:'起始日期',name:'gameStart'}}
-                                      defaultValue={data.gameStart}/>
+                                      inputProps={{placeholder:'起始日期',name:'gameStart',readOnly:true}}
+                                      defaultValue={data.gameStart}
+                                      onBlur={this.updateTime.bind(this,'gameStart')}/>
                         </div>
                         <div styleName="small-8 medium-4 columns">
                             <Datetime input={true} locale="zh-cn"
-                                      inputProps={{placeholder:'结束日期',name:'gameEnd'}}
-                                      defaultValue={data.gameEnd}/>
+                                      inputProps={{placeholder:'结束日期',name:'gameEnd',readOnly:true}}
+                                      defaultValue={data.gameEnd}
+                                      onBlur={this.updateTime.bind(this,'gameEnd')}/>
                         </div>
                     </div>
                     <div styleName="row">
                         <div styleName="small-4 medium-2 columns">
-                            <label styleName="text-right middle" data-suffix=":">{state.text}官网</label>
+                            <label styleName="text-right middle" data-suffix=":">{curType.text}官网</label>
                         </div>
                         <div styleName="small-8 medium-8 columns">
-                            <input type="text" defaultValue="http://"/>
+                            <input type="text" name="siteUrl" defaultValue="http://"/>
                         </div>
                     </div>
                     <div styleName="row">
                         <div styleName="small-4 medium-2 columns">
-                            <label styleName="text-right middle" data-suffix=":">{state.text}项目</label>
+                            <label styleName="text-right middle" data-suffix=":">{curType.text}项目</label>
                             <label styleName="text-right middle" data-suffix=":">报名费用</label>
                         </div>
-                        <ProjectCard project={state.project} action={actions}/>
+                        <ProjectCard project={data.items}
+                                     actions={actions} type={data.type}/>
                     </div>
                     <div styleName="row">
                         <div styleName="small-4 medium-2 columns">
@@ -222,7 +290,7 @@ class Create extends Component {
                     </div>
                     <div styleName="row">
                         <div styleName="small-4 medium-2 columns">
-                            <label styleName="text-right middle" data-suffix=":">{state.text}介绍</label>
+                            <label styleName="text-right middle" data-suffix=":">{curType.text}介绍</label>
                         </div>
                         <div styleName="small-8 medium-8 columns">
                             <textarea rows="5" name="introduce"/>
@@ -240,63 +308,31 @@ class Create extends Component {
                         <div styleName="small-4 medium-2 columns">
                             <label styleName="text-right middle" data-suffix=":">上传图片</label>
                         </div>
-                        <div styleName="small-8 medium-8 columns">
+                        <div styleName="small-8 medium-8 columns" onBlur={self.updateDescription.bind(self)}>
                             <DropzoneComponent config={this.uploadComponentConfig()}
                                                eventHandlers={this.uploadEventHandlers()}
                                                djsConfig={this.uploadDjsConfig()}/>
                         </div>
                     </div>
-                    <div styleName="row margin-top-20">
+                    <div styleName="row">
                         <div styleName="small-4 medium-2 columns">
                             <label styleName="text-right middle" data-suffix=":">报名填写信息</label>
                         </div>
                         <div styleName="small-8 medium-8 columns">
-                            <div styleName="row align-middle other">
-                                <label styleName="small-3 columns"><input type="checkbox"/>是否参加过马拉松是</label>
-                                <label styleName="small-3 columns"><input type="checkbox"/>是否参加过马拉松</label>
-                                <label styleName="small-3 columns"><input type="checkbox"/>是否参加过马拉松</label>
-                                <label styleName="small-3 columns"><input type="checkbox"/>是否参加过马拉松</label>
-                                <label styleName="small-3 columns"><input type="checkbox"/>是否参加过马拉松</label>
-                                <label styleName="small-3 columns"><input type="checkbox"/>是否参加过马拉松</label>
-                                <label styleName="small-3 columns"><input type="checkbox"/>是否参加过马拉松</label>
-                                <div styleName="input-group small-3 columns">
-                                    <span styleName="input-group-label">
-                                        <input type="checkbox"/>
-                                    </span>
-                                    <input styleName="input-group-field" type="text"/>
-                                </div><div styleName="input-group small-3 columns">
-                                    <span styleName="input-group-label">
-                                        <input type="checkbox"/>
-                                    </span>
-                                    <input styleName="input-group-field" type="text"/>
-                                </div><div styleName="input-group small-3 columns">
-                                    <span styleName="input-group-label">
-                                        <input type="checkbox"/>
-                                    </span>
-                                    <input styleName="input-group-field" type="text"/>
-                                </div><div styleName="input-group small-3 columns">
-                                    <span styleName="input-group-label">
-                                        <input type="checkbox"/>
-                                    </span>
-                                    <input styleName="input-group-field" type="text"/>
-                                </div><div styleName="input-group small-3 columns">
-                                    <span styleName="input-group-label">
-                                        <input type="checkbox"/>
-                                    </span>
-                                    <input styleName="input-group-field" type="text"/>
-                                </div><div styleName="input-group small-3 columns">
-                                    <span styleName="input-group-label">
-                                        <input type="checkbox"/>
-                                    </span>
-                                    <input styleName="input-group-field" type="text"/>
-                                </div><div styleName="input-group small-3 columns">
-                                    <span styleName="input-group-label">
-                                        <input type="checkbox"/>
-                                    </span>
-                                    <input styleName="input-group-field" type="text"/>
-                                </div>
-                            </div>
+                            <OtherItems actions={actions}
+                                        requiredItems={data.requiredItems}
+                                        addItems={data.addItems}/>
                         </div>
+                    </div>
+                    <div styleName="row">
+                        <div styleName="small-4 medium-2 columns">
+                            <h5 styleName="text-right middle" data-suffix=":">网易宝信息</h5>
+                        </div>
+                    </div>
+                    <WYBinfo actions={actions} data={data}/>
+                    <div styleName="row submit-button">
+                        <div styleName="small-2 columns"></div>
+                        <button type="submit" styleName="button small-2 columns" onClick={self.submitForm.bind(self)}>提交</button>
                     </div>
                 </form>
             </div>
@@ -307,10 +343,14 @@ class Create extends Component {
 // Api: https://facebook.github.io/react/docs/reusable-components.html
 Create.propTypes = {
     actions: PropTypes.object.isRequired,
-    data: PropTypes.object.isRequired
+    data: PropTypes.object.isRequired,
+    ajax: PropTypes.object.isRequired
 };
 
 export default connect(
     (state) => ({data: state.create}),
-    (dispatch) => ({actions: bindActionCreators(createActions, dispatch)})
+    (dispatch) => ({
+        actions: bindActionCreators(createActions, dispatch),
+        ajax: bindActionCreators(Ajax, dispatch)
+    })
 )(Create);

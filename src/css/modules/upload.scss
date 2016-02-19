@@ -15,6 +15,11 @@ div.filepicker {
     border: 2px dashed #C7C7C7;
 }
 
+
+.filepicker.dz-started{
+    text-align: left;
+}
+
 /* Icon */
 .filepicker-file-icon
 {
@@ -60,4 +65,29 @@ div.filepicker {
     border-width: 11px 0 0 11px;
     border-style: solid;
     border-color: white transparent transparent #920035;
+}
+
+.dropzone .dz-preview .dz-remove {
+    position: absolute;
+    right: 0;
+    top: 0;
+    text-decoration: none;
+    width: 20px;
+    z-index: 99;
+    &:hover{
+        color:$main-color;
+    }
+}
+
+.dropzone input[name="description"]{
+    margin: 10px 0 0;
+}
+
+.dropzone .dz-preview .dz-image{
+    width: 100%;
+    text-align: center;
+    background-color: #fff;
+}
+.dropzone .dz-preview .dz-image img{
+    display: inline-block;
 }

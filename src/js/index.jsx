@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router, Route, IndexRoute, Redirect, browserHistory } from 'react-router';
+import { Router, Route, IndexRoute, Redirect, hashHistory } from 'react-router';
 import configureStore from './configureStore';
 import AppList from './components/AppList';
 import DetailPage from './components/DetailPage';
@@ -17,8 +17,8 @@ const store = configureStore({
 });
 render(
   <Provider store={store}>
-    <Router history={browserHistory}>
-      <Route path="/" component={App}>
+    <Router history={hashHistory}>
+      <Route component={App}>
         <IndexRoute component={AppList}/>
         <Route path="appList" component={AppList}/>
         <Route path="appList/:id" component={DetailPage} />

@@ -1,0 +1,37 @@
+@import "leadin";
+
+.other{
+    padding: 0;
+    @include clearfix;
+    li{
+        float: left;
+        margin: 0 20px 20px 0;
+        .input-group{
+            width: 150px;
+        }
+        button{
+            margin: 0;
+        }
+    }
+    label{
+        line-height: 39px;
+    }
+    input{
+        margin-bottom: 0;
+    }
+}
+
+.input-group {
+    margin-bottom: 0;
+    .input-group-label{
+        background-color:transparent ;
+        border: none;
+        padding: 0 10px 0 0;
+        input{
+            margin-bottom: 0;
+        }
+    }
+    .input-group-field{
+        margin-bottom: 0;
+    }
+}

@@ -6,11 +6,13 @@ import { routeReducer } from 'react-router-redux';
 import applyList from './applyList';
 import create from './create';
 import app from './app';
+import modal from './modal';
 const rootReducer = combineReducers({
   routeReducer,
   applyList,
   create,
   app,
+  modal
 });
 
 export default rootReducer;

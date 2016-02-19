@@ -4,13 +4,15 @@ import { connect } from 'react-redux';
 import CSSModules from 'react-css-modules';
 import styles from '../../css/main.scss';
 import * as Actions from '../actions';
+import * as ModalActions from '../actions/modal';
 import SlideBar from './SlideBar';
 import Header from './Header';
+import Modal from './Modal.jsx';
 
 @CSSModules(styles)
 class App extends Component{
     render(){
-        const {route,data,children} = this.props;
+        const {route,data,children,modal,modalAction} = this.props;
         return (
             <div styleName="root">
                 <Header info={data}/>
@@ -20,6 +22,10 @@ class App extends Component{
                         {children}
                     </section>
                 </section>
+                <Modal msg={modal.msg}
+                       modal={modal.modal}
+                       invalidate={modal.didInvalidate}
+                       actions={modalAction}/>
             </div>
         );
     }
@@ -29,13 +35,18 @@ class App extends Component{
 App.propTypes = {
     data: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
+    modalAction: PropTypes.object.isRequired,
     children: PropTypes.element
 };
 
 export default connect(
     state => ({
         data: state.app,
-        route:state.routeReducer
+        route: state.routeReducer,
+        modal: state.modal
     }),
-    dispatch => ({ actions: bindActionCreators(Actions, dispatch) })
+    dispatch => ({
+        actions: bindActionCreators(Actions, dispatch),
+        modalAction: bindActionCreators(ModalActions, dispatch)
+    })
 )(App);

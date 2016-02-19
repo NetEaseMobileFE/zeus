@@ -1,5 +1,6 @@
 @import "leadin";
-//@import "Datetime";
+@include panel;
+@include text-align;
 
 [data-suffix]:after{
     content: attr(data-suffix);
@@ -9,59 +10,7 @@
 input[type='radio']{
     margin-right: 10px;
 }
-.project-card{
-    margin-top: -10px;
-    @include clearfix;
-    li{
-        width: 180px;
-        float: left;
-        margin-right: 20px;
-        h5{
-            font-size: 18px;
-            font-weight: 100;
-            margin-bottom: 16px;
-            line-height: 39px;
-        }
-        .card-money{
-            margin-bottom: 0;
-        }
-        input[type='text']{
-            width: 120px;
-            display: inline-block;
-            margin-right: 10px;
-            margin-bottom: 0;
-        }
-    }
-    .card-add{
-        margin-top: 40px;
-        margin-left: 20px;
-        width: 50px;
-    }
-}
 
-
-.other{
-    label{
-
-    }
-    input{
-        margin-bottom: 0;
-    }
-}
-.input-group {
-    margin-bottom: 0;
-    .input-group-label{
-        background-color:transparent ;
-        border: none;
-        padding: 0 10px 0 0;
-        input{
-            margin-bottom: 0;
-        }
-    }
-    .input-group-field{
-        margin-bottom: 0;
-    }
-}
-.margin-top-20{
-    margin-top: 20px;
+.submit-button{
+    margin: 100px 0 50px;
 }

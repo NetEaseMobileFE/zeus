@@ -1,5 +1,5 @@
 @import "leadin";
-
+@include text-align;
 .project-card{
     margin-top: -10px;
     @include clearfix;
@@ -25,7 +25,7 @@
     }
     .card-add{
         margin-top: 40px;
-        margin-left: 20px;
+        margin-right: 0;
         width: 50px;
     }
 }

@@ -1,18 +1,20 @@
 /**
  * Created by jruif on 16/2/14.
  */
-import {ADD_ITEM,REMOVE_ITEM,UPDATE_ITEM,UPDATE_FORM} from './actionType'
+import {ADD_ITEM,REMOVE_ITEM,UPDATE_ITEM,UPDATE_FORM,RESET} from './actionType'
 
-export function addItem(name){
+export function addItem(name,value){
     return {
         type:ADD_ITEM,
-        name
+        name,
+        value
     }
 }
 
-export function removeItem(index){
+export function removeItem(name,index){
     return {
         type:REMOVE_ITEM,
+        name,
         index
     }
 }
@@ -30,5 +32,11 @@ export function updateForm(name,value,index){
         type:UPDATE_FORM,
         name,
         value
+    }
+}
+
+export function reset(){
+    return {
+        type: RESET
     }
 }

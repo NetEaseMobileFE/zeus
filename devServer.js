@@ -21,7 +21,7 @@ app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname, './src/index.html'));
 });
 
-app.post('/uploadHandler',MulterImpl.init({}).array('file'), function (req, res) {
+app.post('/imageUpload',MulterImpl.init({}).array('Filedata'), function (req, res) {
     // This block is only relevant to users
     // interested in custom parameters - you
     // can delete/ignore it as you wish

@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { Router, Route, IndexRoute, Redirect, hashHistory } from 'react-router';
 import configureStore from './configureStore';
 import AppList from './components/AppList';
-import DetailPage from './containers/DetailPage';
+import DetailPage, { Participants, Activity, InviteCodes } from './components/detail';
 import Create from './components/Create';
 import NotFoundView from './components/NotFoundView';
 import App from './components/App';
@@ -25,7 +25,12 @@ render(
       <Route path="/" component={App}>
         <IndexRoute component={AppList}/>
         <Route path="appList" component={AppList}/>
-        <Route path="appList/:id" component={DetailPage} />
+        <Route path="match/:id" component={DetailPage}>
+          <IndexRoute component={Activity}/>
+          <Route path="detail" component={Activity}/>
+          <Route path="codes" component={InviteCodes}/>
+          <Route path="participants" component={Participants}/>
+        </Route>
         <Route path="create" component={Create} />
         <Route path="/404" component={NotFoundView} />
         <Redirect from="*" to="/404" />

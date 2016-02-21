@@ -1,0 +1,20 @@
+{
+  "code": 1,
+  "msg": null,
+  "data": [
+    {
+
+      "productName": "全程马拉松",
+      "total": 400,
+      "nums": 12,
+      "codesNums": 1
+    },
+    {
+
+      "productName": "全程马拉松",
+      "total": 400,
+      "nums": 12,
+      "codesNums": 1
+    }
+  ]
+}

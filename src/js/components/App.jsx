@@ -29,6 +29,7 @@ class App extends Component {
 App.propTypes = {
   data: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired,
+  route: PropTypes.object.isRequired,
   children: PropTypes.element
 };
 

@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import CSSModules from 'react-css-modules';
 import styles from '../../../css/modules/detail.scss';
 
-import { format } from '../../utils/moment'
+import { toggleBill } from '../../actions/detail';
+import { format } from '../../utils/moment';
 
 @CSSModules(styles, {
   allowMultiple: true
@@ -13,16 +14,14 @@ export default class Activity extends Component {
     super(props);
   }
   render() {
-    const { detail, bill, showBill, handleViewJoinersClick, handleViewBillClick } = this.props;
+    const { detail, bill, showBill, handleViewBillClick } = this.props;
     let items = [];
     try {
       items = JSON.parse(detail.items);
-    } catch(e) {
-
-    }
+    } catch (e) {}
     return (
       <div>
-        <h2>活动详情</h2>
+        <h3>活动详情</h3>
         <div styleName="row">
           <div styleName="shrink columns text-right">赛事名称：</div>
           <div styleName="columns">{detail.name}</div>
@@ -52,7 +51,7 @@ export default class Activity extends Component {
           <div styleName="columns">
           {
             items.map((item) => {
-              return `${item.name} ${item.price}元/人 `
+              return `${item.name} ${item.price}元/人 `;
             })
           }
           </div>
@@ -76,16 +75,54 @@ export default class Activity extends Component {
         </div>
         <div>
           {showBill}
-          {bill}
+          <div>总收入： {
+            bill.length > 0 && bill.reduce((pre, curr) => {
+              return pre.total + curr.total;
+            })
+          }</div>
+          <table>
+            <thead>
+              <tr><th>项目</th><th>收入</th><th>花钱人数</th><th>邀请码人数</th></tr>
+            </thead>
+            <tbody>
+              {
+                bill.map((item, i) => {
+                  return (<tr key={i}>
+                    <td>{item.productName}</td>
+                    <td>{item.total}</td>
+                    <td>{item.nums}</td>
+                    <td>{item.codesNums}</td>
+                  </tr>);
+                })
+              }
+            </tbody>
+          </table>
         </div>
         <div styleName="button-group">
           <a onClick={handleViewBillClick} styleName="secondary button">账单查询</a>
-          <a onClick={handleViewJoinersClick} styleName="button">查看报名</a>
           <a styleName="success button">隐藏报名数</a>
           <a styleName="warning button">修改</a>
           <a styleName="alert button">取消报名</a>
         </div>
       </div>
-      )
+    );
   }
 }
+Activity.propTypes = {
+  detail: PropTypes.object.isRequired, 
+  bill: PropTypes.array.isRequired, 
+  showBill: PropTypes.bool.isRequired, 
+  handleViewBillClick: PropTypes.func.isRequired
+};
+function mapStateToProps(state, props) {
+  const { id, detail } = props;
+  const showBill = state.details.showBill;
+  const bill = state.details.bill;
+  return {
+    id,
+    bill,
+    detail,
+    showBill
+  };
+}
+export default connect(mapStateToProps, { handleViewBillClick: toggleBill })(Activity);

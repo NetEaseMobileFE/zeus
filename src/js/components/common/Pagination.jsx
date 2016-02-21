@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
 import CSSModules from 'react-css-modules';
 import styles from '../../../css/widgets/pagination.scss';
 
@@ -15,7 +14,7 @@ export default class Pagination extends Component {
     const { curPage, total, toPage } = this.props;
     const nextPage = curPage + delta;
     if (nextPage < 1 || nextPage > total) {
-      return
+      return;
     }
     toPage(nextPage);
   }
@@ -27,7 +26,7 @@ export default class Pagination extends Component {
         <a styleName={'button' + (curPage === 1 ? ' disabled' : '')} onClick={this.handleClick.bind(this, -1)}>上一页</a>
         <a styleName={'button' + (curPage === total ? ' disabled' : '')} onClick={this.handleClick.bind(this, 1)}>下一页</a>
       </div>
-    )
+    );
   }
 }
 Pagination.propTypes = {

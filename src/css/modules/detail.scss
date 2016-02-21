@@ -2,6 +2,7 @@
 @import '../lib/global';
 @import "../lib/foundation";
 
+@include foundation-form-prepostfix;
 @include foundation-text-alignment;
 @include foundation-button-group;
 @include foundation-form-select;
@@ -12,12 +13,16 @@
 @include foundation-button;
 @include foundation-table;
 @include foundation-label;
+@include foundation-tabs;
 
 .row{
   margin: 1.15rem 0;
 }
 .button-group .button {
   margin: 0 0.2rem;
+}
+.button {
+  -webkit-user-select: none;
 }
 .input {
   display: inline-block;
@@ -27,8 +32,42 @@
 }
 .row select{
   width: 100%;
-  margin-bottom: 1rem;
+}
+.row input{
+  margin-bottom: 0;
 }
 .row textarea{
   width: 100%;
+}
+.tabs{
+  padding: 0;
+  a {
+    text-decoration: none;
+  }
+  .is-active a{
+    background: #e6e6e6;
+  }
+}
+.tabs, .tabs-content{
+  border-color: #cacaca;
+}
+.joiner {
+  .item {
+    .row {
+      margin-bottom: 1.15rem;
+    }
+  }
+  .columns.middle{
+    display: flex;
+    align-items: center;
+  }
+  .columns {
+    padding-right: .45rem;
+  }
+
+  .search-area {
+    .button {
+      margin: 0;
+    }
+  }
 }

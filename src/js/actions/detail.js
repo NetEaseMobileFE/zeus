@@ -1,6 +1,7 @@
 import * as type from './actionType';
 import fetch from 'isomorphic-fetch';
 import extend from 'lodash.assign';
+import ajax from '../utils/fetch';
 
 // 获取活动详情
 export function loadDetail(id) {
@@ -10,17 +11,18 @@ export function loadDetail(id) {
       return detail;
     }
 
-    return fetch(`http://localhost:3000/detail.json`)
-    // return fetch(`http://baoming.ws.netease.com/admin/competition/get?cid=${id}`)
-      .then(response => response.json())
-      .then((json) => {
-        dispatch({
-          type: type.REQUEST_DETAIL,
-          data: json.data,
-          id
-        });
-        return Promise.resolve(json);
+    // return fetch(`http://localhost:3000/detail.json`)
+    return ajax({
+      url: `http://baoming.ws.netease.com/admin/competition/get?cid=${id}`
+    })
+    .then((json) => {
+      dispatch({
+        type: type.REQUEST_DETAIL,
+        data: json.data,
+        id
       });
+      return Promise.resolve(json);
+    });
   };
 }
 
@@ -29,15 +31,17 @@ export function toggleBill(id) {
   return (dispatch, getState) => {
     const showBill = getState().details.showBill;
     if (!showBill) {
-      return fetch('http://localhost:3000/bill.json')
-        .then(response => response.json())
-        .then((json) => {
-          dispatch({
-            type: type.REQUEST_BILL,
-            bill: json.data
-          });
-          return Promise.resolve(json);
+      // return fetch('http://localhost:3000/bill.json')
+      return ajax({
+        url: `http://baoming.ws.netease.com/admin/competition/competitionReport?id=${id}`
+      })
+      .then((json) => {
+        dispatch({
+          type: type.REQUEST_BILL,
+          bill: json.data
         });
+        return Promise.resolve(json);
+      });
     }
     dispatch({
       type: type.TOGGLE_BILL,
@@ -46,16 +50,18 @@ export function toggleBill(id) {
   };
 }
 function requestCodes(id, pageNum = 1, dispatch) {
-  return fetch(`http://localhost:3000/inviteCodes.json`)
-    .then(response => response.json())
-    .then((json) => {
-      dispatch({
-        type: type.REQUEST_CODES,
-        data: json.data,
-        id
-      });
-      return Promise.resolve(json);
+  // return fetch(`http://localhost:3000/inviteCodes.json`)
+  return ajax({
+    url: `http://baoming.ws.netease.com/admin/invitecode/list?cid=${id}&pageNum=${pageNum}`
+  })
+  .then((json) => {
+    dispatch({
+      type: type.REQUEST_CODES,
+      data: json.data,
+      id
     });
+    return Promise.resolve(json);
+  });
 }
 
 // 获取邀请码
@@ -68,15 +74,17 @@ export function loadInviteCodes(id, pageNum) {
 // 获取邀请码总数
 export function fetchCodesCount(id) {
   return (dispatch) => {
-    return fetch(`http://localhost:3000/count.json`)
-      .then(response => response.json())
-      .then((json) => {
-        dispatch({
-          type: type.REQUEST_CODES_COUNT,
-          count: json.data
-        });
-        return Promise.resolve(json);
+    // return fetch(`http://localhost:3000/count.json`)
+    return ajax({
+      url: `http://baoming.ws.netease.com/admin/invitecode/totalCount?cid=${id}`
+    })
+    .then((json) => {
+      dispatch({
+        type: type.REQUEST_CODES_COUNT,
+        count: json.data
       });
+      return Promise.resolve(json);
+    });
   };
 }
 // 邀请码分页
@@ -103,39 +111,28 @@ export function changeCodesPage(next, recordsPerPage) {
 }
 
 
-function transformRequest(obj) {
-  let str = [];
-  Object.keys(obj).forEach((key) => {
-    str.push(`${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`);
-  });
-  return str.join('&');
-}
 // 生成邀请码
 export function genCode(data) {
   return (dispatch, getState) => {
-    const URL = `http://localhost:3000/genCode.json?${transformRequest(extend({}, { nums: 1 }, data))}`;
+    // const URL = `http://localhost:3000/genCode.json?${transformRequest(extend({}, { nums: 1 }, data))}`;
     const count = getState().inviteCodes.count;
     // return fetch(`http://localhost:3000/inviteCodes.json`)
-    return fetch(URL, {
-      // url: `http://helloworld.com/admin/invitecode/generateInvitecode`, 
-      // method: 'POST',
-      credentials: 'same-origin',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded',
-      }
-    }).then(response => response.json())
-      .then((json) => {
-        dispatch({
-          type: type.GENERATE_CODE,
-          data: json.data,
-          id: json.data[0].cid
-        });
-        dispatch({
-          type: type.REQUEST_CODES_COUNT,
-          count: count + 1
-        });
+    return ajax(URL, {
+      url: `http://baoming.ws.netease.com/admin/invitecode/generateInvitecode`, 
+      method: 'POST',
+      body: extend({}, { nums: 1 }, data)
+    })
+    .then((json) => {
+      dispatch({
+        type: type.GENERATE_CODE,
+        data: json.data,
+        id: json.data[0].cid
       });
+      dispatch({
+        type: type.REQUEST_CODES_COUNT,
+        count: count + 1
+      });
+    });
   };
 }
 

@@ -90,8 +90,8 @@ export default class Activity extends Component {
                   return (<tr key={i}>
                     <td>{item.productName}</td>
                     <td>{item.total}</td>
-                    <td>{item.nums}</td>
-                    <td>{item.codesNums}</td>
+                    <td>{item.signUpNums}</td>
+                    <td>{item.codeNums}</td>
                   </tr>);
                 })
               }
@@ -99,7 +99,7 @@ export default class Activity extends Component {
           </table>
         </div>
         <div styleName="button-group">
-          <a onClick={handleViewBillClick} styleName="secondary button">账单查询</a>
+          <a onClick={handleViewBillClick.bind(this, this.props.id)} styleName="secondary button">账单查询</a>
           <a styleName="success button">隐藏报名数</a>
           <a styleName="warning button">修改</a>
           <a styleName="alert button">取消报名</a>

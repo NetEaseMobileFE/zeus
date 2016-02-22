@@ -21,6 +21,7 @@ let $_ = {};
     });
 }();
 
+
 function transformRequest(obj) {
     let str = [];
     Object.keys(obj).forEach((key) => {
@@ -57,11 +58,20 @@ export function ajax(opt,callback) {
         let state = getState();
         let options = extend({}, DEFAULT, _opt);
         // todo..
-        options.body = stringifyJSON(extend({},state.create));
+        switch(opt.queryType){
+            case 'create':
+                options.body = stringifyJSON(extend({},state.create));
+                break;
+            case 'applist':
+                options.body = extend({},state.applyList.param);
+                break;
+            default:
+                break;
+        }
+        // end
         if (options.method === 'GET') {
-            if (_opt.body) {
-                _opt.url = `${options.url}?${transformRequest(options.body)}`;
-            }
+            extend(options.body,{_:Date.now()});
+            _opt.url = `${options.url}?${transformRequest(options.body)}`;
             options.body = void(0);
         }
         return fetch(_opt.url, options)

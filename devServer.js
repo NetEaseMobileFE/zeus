@@ -36,7 +36,7 @@ app.post('/imageUpload',MulterImpl.init({}).array('Filedata'), function (req, re
     });
 });
 
-app.listen(3000, 'localhost', function (err) {
+app.listen(3100, 'localhost', function (err) {
     if (err) {
         console.log(err);
         return;

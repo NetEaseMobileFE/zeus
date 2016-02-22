@@ -6,8 +6,11 @@ import { UPDATE_APP_LIST } from '../actions/actionType';
 import extend from 'lodash.assign';
 
 const INIT_STATE = {
-    param:'',
-    pageNum:1,
+    param:{
+        type:1,
+        pageNum:1,
+    },
+    // 做个缓存,设个过期时间
     data:[
         {
             "id": 37,

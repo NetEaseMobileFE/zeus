@@ -27,12 +27,19 @@ class AppList extends Component {
         ]
     }
     componentDidMount(){
+        this.search();
+    }
+    updateValue(){
+
+    }
+    search(){
         let { ajax } = this.props.ajax;
-        let { applyList } = this.props.actions;
+        let { updateList } = this.props.actions;
         ajax({
-            url:'/admin/signUp/search'
+            url:'/list',
+            queryType:'applist'
         },function(result){
-            applyList(result.data);
+            updateList(result.data);
         });
     }
     render() {
@@ -42,17 +49,17 @@ class AppList extends Component {
         return (
             <div styleName="panel">
                 <div styleName="row">
-                    <div styleName="columns"><h4>首页</h4></div>
+                    <div styleName="columns"><h4>> 首页</h4></div>
                     <div styleName="columns">
                         <div styleName="input-group ">
-                            <input styleName="input-group-field" type="text" name="condition"/>
+                            <input styleName="input-group-field" type="text" name="condition" onBlur={this.updateValue.bind(this)}/>
                             <div styleName="input-group-button">
-                                <input type="submit" styleName="button" value="搜 索"/>
+                                <input type="submit" styleName="button" value="搜 索" onClick={this.search.bind(this)}/>
                             </div>
                         </div>
                     </div>
                     <div styleName="shrink columns text-right">
-                        <button styleName="button alert" onClick={ () => route.push('/create') }>创建活动</button>
+                        <Link styleName="button alert" to="/create">创建活动</Link>
                     </div>
                 </div>
                 <div styleName="row">
@@ -71,11 +78,11 @@ class AppList extends Component {
                             data.map((elm,index)=>(
                                 <tr key={`content-${index}`}>
                                     <td>{index+1}</td>
-                                    <td><Link to="/create">{elm.name}</Link></td>
+                                    <td><Link to="/create">{elm.name || '-'}</Link></td>
                                     <td>{moment(elm.gameStart).local('zh-cn').format('lll')}</td>
-                                    <td>{elm.weight}</td>
-                                    <td>{self.curState[elm.state]}</td>
-                                    <td>{elm.signUpNum}/{elm.limitNum}</td>
+                                    <td>{elm.weight || '-'}</td>
+                                    <td>{self.curState[elm.state] || '-'}</td>
+                                    <td>{elm.signUpNum || "0"}/{elm.limitNum || "0"}</td>
                                 </tr>
                             ))
                         }

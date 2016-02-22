@@ -70,7 +70,7 @@ export function ajax(opt,callback) {
         }
         // end
         if (options.method === 'GET') {
-            extend(options.body,{_:Date.now()});
+            options.body = extend({},options.body,{_:Date.now()});
             _opt.url = `${options.url}?${transformRequest(options.body)}`;
             options.body = void(0);
         }

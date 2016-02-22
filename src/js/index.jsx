@@ -29,6 +29,7 @@ render(
           <Route path="participants" component={Participants}/>
         </Route>
         <Route path="create" component={Create} />
+        <Route path="modification/:id" component={Create} />
         <Route path="/404" component={NotFoundView} />
         <Redirect from="*" to="/404" />
       </Route>

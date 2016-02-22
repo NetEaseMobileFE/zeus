@@ -12,6 +12,7 @@ import moment from 'moment';
 import * as AppListAction from '../actions/applist';
 import * as Ajax from '../actions/fetch';
 import styles from '../../css/modules/applist.scss';
+import Pagination from './common/Pagination.jsx'
 
 @CSSModules(styles, {
     allowMultiple: true
@@ -32,6 +33,9 @@ class AppList extends Component {
     updateValue(){
 
     }
+    handlePageChangeClick(){
+
+    }
     search(){
         let { ajax } = this.props.ajax;
         let { updateList } = this.props.actions;
@@ -41,18 +45,26 @@ class AppList extends Component {
         },function(result){
             updateList(result.data);
         });
+
+        ajax({
+            url:'/totalCount'
+        },function(result){
+            updateList(result.data,'pagination');
+        })
     }
     render() {
-        const { route } = this.props;
-        const { data,param,pageNum } = this.props.applist;
-        let self = this;
+        const { route,delta } = this.props;
+        const { data,param,pagination } = this.props.applist;
+        let [self,count] = [this,data.length];
         return (
-            <div styleName="panel">
+            <div styleName="panel applist">
                 <div styleName="row">
                     <div styleName="columns"><h4>> 首页</h4></div>
                     <div styleName="columns">
                         <div styleName="input-group ">
-                            <input styleName="input-group-field" type="text" name="condition" onBlur={this.updateValue.bind(this)}/>
+                            <input styleName="input-group-field" type="text" name="condition"
+                                   defaultValue={param}
+                                   onBlur={this.updateValue.bind(this)}/>
                             <div styleName="input-group-button">
                                 <input type="submit" styleName="button" value="搜 索" onClick={this.search.bind(this)}/>
                             </div>
@@ -78,7 +90,7 @@ class AppList extends Component {
                             data.map((elm,index)=>(
                                 <tr key={`content-${index}`}>
                                     <td>{index+1}</td>
-                                    <td><Link to="/create">{elm.name || '-'}</Link></td>
+                                    <td><Link to={`/match/${elm.id}`}>{elm.name || '-'}</Link></td>
                                     <td>{moment(elm.gameStart).local('zh-cn').format('lll')}</td>
                                     <td>{elm.weight || '-'}</td>
                                     <td>{self.curState[elm.state] || '-'}</td>
@@ -88,6 +100,7 @@ class AppList extends Component {
                         }
                         </tbody>
                     </table>
+                    <Pagination total={Math.ceil(count / pagination)} curPage={param.pageNum} toPage={this.handlePageChangeClick} />
                 </div>
             </div>
         );

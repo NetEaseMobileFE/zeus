@@ -44,9 +44,8 @@ class OtherItems extends Component {
             };
             return key;
         });
-        requiredItems.map((elm)=> {
-            let key = Object.keys(elm)[0];
-            otherItems[key].value = elm[key];
+        Object.keys(requiredItems).map((elm)=> {
+            otherItems[elm].value = requiredItems[elm];
         });
         return otherItems;
     }
@@ -92,12 +91,14 @@ class OtherItems extends Component {
         let target = event.target;
         if (target.name === 'requiredItems') {
             event.stopPropagation();
-            let [otherItems,requiredItems] = [this.state.otherItems, []];
+            let [otherItems,requiredItems] = [this.state.otherItems, {}];
             otherItems[target.value].value = target.checked;
             // 抽取 requiredItems
             Object.keys(otherItems).map((elm)=> {
                 if (otherItems[elm].value) {
-                    requiredItems.push({[elm]: true});
+                    extend(requiredItems,{
+                        [elm]: true
+                    });
                 }
             });
             // 更新 store.state中的状态值
@@ -133,7 +134,7 @@ class OtherItems extends Component {
                                         </span>
                                         <input styleName="input-group-field"
                                                name={elm} type="text" data-index={index}
-                                               defaultValue={state.otherItems[elm].text}/>
+                                               value={state.otherItems[elm].text}/>
                                     </div>) : (
                                     <label>
                                         {
@@ -156,7 +157,7 @@ class OtherItems extends Component {
 }
 OtherItems.propTypes = {
     actions: PropTypes.object.isRequired,
-    requiredItems: PropTypes.array.isRequired,
+    requiredItems: PropTypes.object.isRequired,
     addItems: PropTypes.array.isRequired
 };
 

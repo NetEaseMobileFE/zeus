@@ -32,7 +32,7 @@ export default class Activity extends Component {
         </div>
         <div styleName="row">
           <div styleName="shrink columns">活动状态：</div>
-          <div styleName="columns"><span styleName={'label ' + (detail.state === 10 ? 'secondary' : 'success')}>{STATE_MAP[detail.state]}</span></div>
+          <div styleName="columns">{detail.state}</div>
         </div>
         <div styleName="row">
           <div styleName="shrink columns">报名人数：</div>
@@ -129,4 +129,4 @@ function mapStateToProps(state, props) {
     showBill
   };
 }
-export default connect(mapStateToProps, { handleViewBillClick: toggleBill, deleteMatch })(Activity);
+export default connect(mapStateToProps, { handleViewBillClick: toggleBill })(Activity);

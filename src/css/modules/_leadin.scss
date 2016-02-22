@@ -12,6 +12,7 @@ modules 公用文件
 $closebutton-size: 18px;
 @include foundation-close-button;
 @include foundation-button;
+@include foundation-table;
 
 @mixin text-align{
     /*

@@ -2,14 +2,15 @@
  * Created by jruif on 16/2/2.
  */
 
-import { UPDATE_APP_LIST } from '../actions/actionType';
+import { UPDATE_APP_LIST,UPDATE_LIST_PAGINATION } from '../actions/actionType';
 import extend from 'lodash.assign';
 
 const INIT_STATE = {
     param:{
-        type:1,
+        type:null,
         pageNum:1,
     },
+    pagination:null,
     // 做个缓存,设个过期时间
     data:[
         {
@@ -45,6 +46,10 @@ export default function applyList(state = INIT_STATE, action) {
         case UPDATE_APP_LIST:
             return extend({}, state, {
                 data: action.value
+            });
+        case UPDATE_LIST_PAGINATION:
+            return extend({},state,{
+                pagination:action.value
             });
         default:
             return state;

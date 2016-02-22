@@ -1,7 +1,7 @@
 @import "leadin";
+
 @include panel;
 @include text-align;
-
 [data-suffix]:after{
     content: attr(data-suffix);
     margin: 0 5px;

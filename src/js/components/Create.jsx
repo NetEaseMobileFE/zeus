@@ -29,8 +29,10 @@ import styles from '../../css/modules/create.scss';
 class Create extends Component {
     constructor(props, context) {
         super(props, context);
+        let { data } = this.props;
         this.cache = {};
         this.picturesPaths = [];
+        this.state = extend({},data);
     }
 
     componentWillMount(){
@@ -57,6 +59,27 @@ class Create extends Component {
         };
         if(items.length === 0){
             updateForm('items',this.types[type].project);
+        }
+    }
+
+    componentDidMount(){
+        const { route,actions } = this.props;
+        const { ajax } = this.props.ajax;
+        const { modificationInit } = this.props.actions;
+        if( route.location.pathname.indexOf('modification')>-1 ){
+            ajax({
+                url:'/get',
+                body:{
+                    cid:this.props.routeParams.id
+                }
+            },function(rs){
+                ['addItems','items','pictures','requiredItems'].map((elm)=>{
+                    extend(rs.data,{
+                        [elm]:JSON.parse(rs.data[elm])
+                    });
+                });
+                modificationInit(rs.data);
+            });
         }
     }
 
@@ -202,18 +225,25 @@ class Create extends Component {
             });
         });
     }
-
+    updateStateValue(event){
+        let target = event.target;
+        this.setState({
+            [target.name]: target.value
+        });
+    }
     render() {
         const { actions,data } = this.props;
         let self = this;
-        let curType = self.types[data.type];
+        let curType = self.types[this.state.type];
         return (
             <div styleName="panel">
                 <div styleName="row">
                     <div styleName="columns"><h4>创建活动</h4></div>
                     <div styleName="shrink columns text-right"></div>
                 </div>
-                <form onBlur={this.updateValue.bind(this)} onFocus={this.focusInput.bind(this)}>
+                <form onBlur={this.updateValue.bind(this)}
+                      onFocus={this.focusInput.bind(this)}
+                      onChange={this.updateStateValue.bind(this)}>
                     <div styleName="row">
                         <div styleName="small-2 columns"></div>
                         {
@@ -222,7 +252,7 @@ class Create extends Component {
                                     <label styleName="align-spaced">
                                         <input type="radio" name="type"
                                                value={ elm } data-text={ self.types[elm].text }
-                                               checked={ elm === data.type }
+                                               checked={ elm === self.state.type }
                                                onChange={self.switchType.bind(self)}/>
                                         {self.types[elm].text}
                                     </label>
@@ -236,7 +266,7 @@ class Create extends Component {
                         </div>
                         <div styleName="small-8 medium-8 columns">
                             <input type="text" placeholder={`请填写${curType.text}名称`}
-                                   name="name" defaultValue={data.name}/>
+                                   name="name" value={self.state.name}/>
                         </div>
                     </div>
                     <div styleName="row">
@@ -246,13 +276,13 @@ class Create extends Component {
                         <div styleName="small-8 medium-4 columns">
                             <Datetime input={true} locale="zh-cn"
                                       inputProps={{placeholder:'起始日期',name:'signUpStart',readOnly:true}}
-                                      value={data.signUpStart}
+                                      value={this.state.signUpStart}
                                       onBlur={this.updateTime.bind(this,'signUpStart')}/>
                         </div>
                         <div styleName="small-8 medium-4 columns">
                             <Datetime input={true} locale="zh-cn"
                                       inputProps={{placeholder:'结束日期',name:'signUpEnd',readOnly:true}}
-                                      value={data.signUpEnd}
+                                      value={this.state.signUpEnd}
                                       onBlur={this.updateTime.bind(this,'signUpEnd')}/>
                         </div>
                     </div>
@@ -263,14 +293,14 @@ class Create extends Component {
                         <div styleName="small-8 medium-4 columns">
                             <Datetime input={true} locale="zh-cn"
                                       inputProps={{placeholder:'起始日期',name:'gameStart',readOnly:true}}
-                                      value={data.gameStart}
+                                      value={this.state.gameStart}
                                       onChange={this.updateTime.bind(this,'gameEnd')}
                                       onBlur={this.updateTime.bind(this,'gameStart')}/>
                         </div>
                         <div styleName="small-8 medium-4 columns">
                             <Datetime input={true} locale="zh-cn"
                                       inputProps={{placeholder:'结束日期',name:'gameEnd',readOnly:true}}
-                                      value={data.gameEnd}
+                                      value={this.state.gameEnd}
                                       onChange={this.updateTime.bind(this,'gameEnd')}
                                       onBlur={this.updateTime.bind(this,'gameEnd')}/>
                         </div>
@@ -280,7 +310,7 @@ class Create extends Component {
                             <label styleName="text-right middle" data-suffix=":">{curType.text}官网</label>
                         </div>
                         <div styleName="small-8 medium-8 columns">
-                            <input type="text" name="siteUrl" defaultValue="http://"/>
+                            <input type="text" name="siteUrl" value={self.siteUrl}/>
                         </div>
                     </div>
                     <div styleName="row">
@@ -289,7 +319,7 @@ class Create extends Component {
                             <label styleName="text-right middle" data-suffix=":">报名费用</label>
                         </div>
                         <ProjectCard project={data.items}
-                                     actions={actions} type={data.type}/>
+                                     actions={actions} type={self.state.type}/>
                     </div>
                     <div styleName="row">
                         <div styleName="small-4 medium-2 columns">
@@ -297,7 +327,7 @@ class Create extends Component {
                         </div>
                         <div styleName="small-6 medium-6 columns">
                             <input type="number" styleName="text-right"
-                                   name="limitNum" defaultValue={data.limitNum}/>
+                                   name="limitNum" value={self.state.limitNum}/>
                         </div>
                         <div styleName="small-2 medium-2 columns">
                             <label styleName="middle">人</label>
@@ -308,7 +338,7 @@ class Create extends Component {
                             <label styleName="text-right middle" data-suffix=":">{curType.text}介绍</label>
                         </div>
                         <div styleName="small-8 medium-8 columns">
-                            <textarea rows="5" name="introduce"/>
+                            <textarea rows="5" name="introduce" value={self.state.introduce}/>
                         </div>
                     </div>
                     <div styleName="row">
@@ -316,7 +346,7 @@ class Create extends Component {
                             <label styleName="text-right middle" data-suffix=":">免责说明</label>
                         </div>
                         <div styleName="small-8 medium-8 columns">
-                            <textarea rows="5" name="disclaimer"/>
+                            <textarea rows="5" name="disclaimer" value={self.state.disclaimer}/>
                         </div>
                     </div>
                     <div styleName="row">
@@ -335,8 +365,8 @@ class Create extends Component {
                         </div>
                         <div styleName="small-8 medium-8 columns">
                             <OtherItems actions={actions}
-                                        requiredItems={data.requiredItems}
-                                        addItems={data.addItems}/>
+                                        requiredItems={this.state.requiredItems}
+                                        addItems={this.state.addItems}/>
                         </div>
                     </div>
                     <div styleName="row">
@@ -360,11 +390,15 @@ Create.propTypes = {
     actions: PropTypes.object.isRequired,
     data: PropTypes.object.isRequired,
     modal: PropTypes.object.isRequired,
+    route: PropTypes.object.isRequired,
     ajax: PropTypes.object.isRequired
 };
 
 export default connect(
-    (state) => ({data: state.create}),
+    (state) => ({
+        data: state.create,
+        route: state.routeReducer
+    }),
     (dispatch) => ({
         actions: bindActionCreators(createActions, dispatch),
         modal: bindActionCreators(Modal, dispatch),

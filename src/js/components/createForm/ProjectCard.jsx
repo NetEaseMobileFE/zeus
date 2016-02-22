@@ -11,6 +11,14 @@ import styles from '../../../css/modules/ProjectCard.scss';
 class ProjectCard extends Component {
     constructor(props, context) {
         super(props, context);
+        let { project }=this.props;
+        this.state = { project };
+    }
+    componentWillReceiveProps(nextProps){
+        let project = nextProps.project;
+        this.setState({
+            project
+        });
     }
     addItem(){
         const { addItem } = this.props.actions;
@@ -18,6 +26,7 @@ class ProjectCard extends Component {
     }
     removeItem(index){
         const { removeItem } = this.props.actions;
+        let project = this.state.project;
         removeItem('items',index);
     }
     updateForm(index,event){
@@ -28,15 +37,28 @@ class ProjectCard extends Component {
             [target.name]:target.value
         },index);
     }
+    changeValue(index,event){
+        event.stopPropagation();
+        let [target,project] = [event.target,this.state.project];
+        this.setState({
+            project:[
+                ...project.slice(0,index),
+                {name:[target.name],value:[target.value]},
+                ...project.slice(index+1)
+            ]
+        })
+    }
     render() {
-        let { project, type }=this.props;
+        let { project,type }=this.props;
         return (
             <ul styleName="small-8 medium-8 columns project-card">
-                {project.map((elm,index) => (
-                    <li styleName="callout" key={`${type}-${index}`} onBlur={this.updateForm.bind(this,index)}>
-                        <h5><input type="text" placeholder='请输入名称' name="name" defaultValue={ elm.name }/></h5>
+                {this.state.project.map((elm,index) => (
+                    <li styleName="callout" key={`${type}-${index}`}
+                        onBlur={this.updateForm.bind(this,index)}
+                        onChange={this.changeValue.bind(this,index)}>
+                        <h5><input type="text" placeholder='请输入名称' name="name" value={ elm.name }/></h5>
                         <p styleName="card-money">
-                            <input type="number" styleName="text-right" name="price" defaultValue={ elm.price || 0 }/>
+                            <input type="number" styleName="text-right" name="price" value={ elm.price || 0 }/>
                             <span>元</span>
                         </p>
                         <a styleName="close-button" onClick={this.removeItem.bind(this,index)}>
@@ -52,7 +74,7 @@ class ProjectCard extends Component {
     }
 }
 ProjectCard.propTypes = {
-    type: PropTypes.string.isRequired,
+    type: PropTypes.oneOfType([PropTypes.string,PropTypes.number]).isRequired,
     project: PropTypes.array.isRequired,
     actions: PropTypes.object.isRequired
 };

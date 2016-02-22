@@ -16,7 +16,7 @@ class SlideBar extends Component {
                     name:'报名列表'
                 },{
                     link:'/create',
-                    name:'管理员管理'
+                    name:'创建活动'
                 }
             ]
         });

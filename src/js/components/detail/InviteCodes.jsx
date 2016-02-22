@@ -14,7 +14,7 @@ import styles from '../../../css/modules/detail.scss';
 export default class InviteCodes extends Component {
   constructor(props) {
     super(props);
-    this.RECORDS_PER_PAGE = 2;
+    this.RECORDS_PER_PAGE = 10;
     this.handlePageChangeClick = this.handlePageChangeClick.bind(this);
   }
   componentDidMount() {
@@ -37,6 +37,7 @@ export default class InviteCodes extends Component {
   }
   render() {
     const { detail, codes, count, current } = this.props;
+    const delta = this.RECORDS_PER_PAGE;
     let items = [];
     try {
       items = JSON.parse(detail.items);
@@ -66,7 +67,7 @@ export default class InviteCodes extends Component {
           </thead>
           <tbody>
           {
-            codes.slice((current - 1) * 2, current * 2).map((code, i) => {
+            codes.slice((current - 1) * delta, current * delta).map((code, i) => {
               return (
                 <tr key={i}>
                   <td>{i}</td>
@@ -80,7 +81,7 @@ export default class InviteCodes extends Component {
           }
           </tbody>
         </table>
-        <Pagination total={Math.ceil(count / 2)} curPage={current} toPage={this.handlePageChangeClick} />
+        <Pagination total={Math.ceil(count / delta)} curPage={current} toPage={this.handlePageChangeClick} />
       </div>
     );
   }

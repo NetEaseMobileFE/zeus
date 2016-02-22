@@ -9,8 +9,24 @@ function transformRequest(obj) {
   return str.join('&');
 }
 
-export function ajax(opt) {
-  return fetch(_opt.url, options)
+export default function ajax(opt) {
+  let options = extend({}, {
+    method: 'GET',
+    credentials: 'same-origin',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    }
+  }, opt);
+
+  if (options.method === 'GET') {
+    if (options.body) {
+      options.url = `${options.url}?${transformRequest(options.body)}`;
+    }
+    options.body = void(0);
+  }
+
+  return fetch(options.url, options)
     .then((response) => {
       if (response.status >= 200 && response.status < 300 || response.status === 302) {
         return response.json();
@@ -42,34 +58,9 @@ export function ajax(opt) {
       error.response = result;
       throw error;
     })
-    // .then(result => dispatch(receive(state.question, result)))
     .catch((fail) => {
       console.log(fail);
       let error = new Error(fail);
       dispatch(error);
     });
-}
-
-export function ajax(opt) {
-  const DEFAULT = {
-    method: 'GET',
-    credentials: 'same-origin',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-  };
-  let _opt = extend({}, opt);
-  return (dispatch, getState) => {
-    let state = getState();
-    let options = extend({}, DEFAULT, _opt);
-    // todo..
-    if (options.method === 'GET') {
-      if (_opt.body) {
-        _opt.url = `options.url?${transformRequest(options.body)}`;
-      }
-      options.body = void(0);
-    }
-    return 
-  };
 }

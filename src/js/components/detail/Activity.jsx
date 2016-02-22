@@ -1,20 +1,24 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import CSSModules from 'react-css-modules';
 import styles from '../../../css/modules/detail.scss';
-
-import { toggleBill } from '../../actions/detail';
+import { toggleBill, deleteMatch } from '../../actions/detail';
 import { format } from '../../utils/moment';
-
+import STATE_MAP from './state';
 @CSSModules(styles, {
   allowMultiple: true
 })
 export default class Activity extends Component {
   constructor(props) {
     super(props);
+    this.handleDeleteClick = this.handleDeleteClick.bind(this);
+  }
+  handleDeleteClick() {
+    this.props.deleteMatch(this.props.id);
   }
   render() {
-    const { detail, bill, showBill, handleViewBillClick } = this.props;
+    const { id, detail, bill, showBill, handleViewBillClick } = this.props;
     let items = [];
     try {
       items = JSON.parse(detail.items);
@@ -28,7 +32,7 @@ export default class Activity extends Component {
         </div>
         <div styleName="row">
           <div styleName="shrink columns">活动状态：</div>
-          <div styleName="columns">{detail.state}</div>
+          <div styleName="columns"><span styleName={'label ' + (detail.state === 10 ? 'secondary' : 'success')}>{STATE_MAP[detail.state]}</span></div>
         </div>
         <div styleName="row">
           <div styleName="shrink columns">报名人数：</div>
@@ -101,8 +105,8 @@ export default class Activity extends Component {
         <div styleName="button-group">
           <a onClick={handleViewBillClick.bind(this, this.props.id)} styleName="secondary button">账单查询</a>
           <a styleName="success button">隐藏报名数</a>
-          <a styleName="warning button">修改</a>
-          <a styleName="alert button">取消报名</a>
+          <Link styleName="warning button" to={`modification/${id}`}>修改</Link>
+          <a styleName="alert button" onClick={this.handleDeleteClick}>取消报名</a>
         </div>
       </div>
     );
@@ -125,4 +129,4 @@ function mapStateToProps(state, props) {
     showBill
   };
 }
-export default connect(mapStateToProps, { handleViewBillClick: toggleBill })(Activity);
+export default connect(mapStateToProps, { handleViewBillClick: toggleBill, deleteMatch })(Activity);

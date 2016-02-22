@@ -4,6 +4,7 @@ import CSSModules from 'react-css-modules';
 import extend from 'lodash.assign';
 
 import styles from '../../../css/modules/detail.scss';
+import STATE_MAP from './state';
 import { format } from '../../utils/moment';
 import Pagination from '../common/Pagination';
 import { loadParticipants, searchParticipants, clearSearchResults, deleteParticipant, fetchParticipantsCount, changeParticipantsPage, expandInfo, editInfo, saveInfo } from '../../actions/detail';
@@ -15,7 +16,7 @@ export default class Participants extends Component {
   constructor(props) {
     super(props);
     this.tempInfo = {};
-    this.RECORDES_PER_PAGE = 2;
+    this.RECORDES_PER_PAGE = 10;
     this.handleEditBlur = this.handleEditBlur.bind(this);
     this.handleEditSelect = this.handleEditSelect.bind(this);
     this.handleClearClick = this.handleClearClick.bind(this);
@@ -39,7 +40,7 @@ export default class Participants extends Component {
     if (!value) {
       return;
     }
-    this.props.searchParticipants({ condition: value }).then((json) => {
+    this.props.searchParticipants(this.props.id, value).then((json) => {
       if (!json.data || json.data.length === 0){
         alert('未找到搜索结果');
       }
@@ -49,6 +50,7 @@ export default class Participants extends Component {
   // 清除查询结果
   handleClearClick() {
     this.props.clearSearchResults();
+    this.refs.searchInput.value = '';
   }
   // 翻页
   handleChangePageClick(next){
@@ -97,7 +99,8 @@ export default class Participants extends Component {
 
   // 删除报名人信息
   handleDeleteClick(id) {
-    this.props.deleteParticipant(this.props.id, id);
+    const value = confirm('是否取消此用户报名？')
+    value && this.props.deleteParticipant(this.props.id, id);
   }
   render() {
     const { editId, expandId, showResult, participants, current, count } = this.props;
@@ -107,7 +110,7 @@ export default class Participants extends Component {
           <h2>报名用户管理</h2>
           <div styleName="row search-area">
             <div styleName="shrink columns">
-              <a styleName="button">下载报名信息</a>
+              <a styleName="button disabled">下载报名信息</a>
             </div>
             <div styleName="large-2 columns">
               <input styleName="input" ref="searchInput" type="text" placeholder="输入姓名或电话查询" />
@@ -125,7 +128,7 @@ export default class Participants extends Component {
                 const edit = +person.id === editId;
                 const expand = expandId === +person.id;
                 return (
-                  <div styleName={'row item align-middle' + (expand ? ' callout secondary' : '')} key={person.id}>
+                  <div data-id={person.id} styleName={'row item align-middle' + (expand ? ' callout secondary' : '')} key={person.id}>
                     <div styleName="medium-10 columns">
                       <div styleName="row align-middle">
                         <div styleName="text-center hollow secondary" onClick={this.handleExpandClick.bind(this, person.id)}>{expand ? '↑' : '↓'}</div>
@@ -152,7 +155,7 @@ export default class Participants extends Component {
                             <input type="text" data-key="productName" readOnly={!edit} defaultValue={person.productName} />
                           </label>
                         </div>
-                        <div styleName="columns"><span styleName="label">{person.state}</span></div>
+                        <div styleName="columns"><span styleName="label">{STATE_MAP[person.state]}</span></div>
                       </div>
                       {
                         expand && (
@@ -194,7 +197,14 @@ export default class Participants extends Component {
                               </div>
                               <div styleName="columns">
                                 <label>衣服尺码： 
-                                  <input type="text" data-key="dressSize" readOnly={!edit} defaultValue={person.dressSize} />
+                                  <select disabled={!edit} defaultValue={person.dressSize} data-key="dressSize">
+                                    <option value="0">S</option>
+                                    <option value="1">M</option>
+                                    <option value="2">L</option>
+                                    <option value="3">XL</option>
+                                    <option value="4">XXL</option>
+                                    <option value="5">XXXL</option>
+                                  </select> 
                                 </label>
                               </div>
                               <div styleName="columns">
@@ -243,12 +253,12 @@ export default class Participants extends Component {
                     <div styleName="medium-2 row">
                       <div styleName="medium-6">
                       {
-                        !edit ? <a styleName="button warning" onClick={this.handleEditClick.bind(this, person.id, i)}>编辑</a> : <a styleName="button success" onClick={this.handleSaveClick.bind(this, person.id, false)}>保存</a>
+                        !edit ? <a styleName={'button warning' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleEditClick.bind(this, person.id, i)}>编辑</a> : <a styleName="button success" onClick={this.handleSaveClick.bind(this, person.id, false)}>保存</a>
                       }
                       </div>
                       <div styleName="medium-6">
                       {
-                        !edit ? <a styleName="button alert" onClick={this.handleDeleteClick.bind(this, person.id)}>删除</a> : <a styleName="button" onClick={this.handleSaveClick.bind(this, person.id, true)}>取消</a>
+                        !edit ? <a styleName={'button alert' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleDeleteClick.bind(this, person.id)}>删除</a> : <a styleName="button" onClick={this.handleSaveClick.bind(this, person.id, true)}>取消</a>
                       }
                       </div>
                     </div>
@@ -256,7 +266,7 @@ export default class Participants extends Component {
                 );
               })
             }
-            <Pagination recordsPerPage={this.RECORDES_PER_PAGE} total={Math.ceil(count / 2)} curPage={current} toPage={this.handleChangePageClick} />
+            <Pagination recordsPerPage={this.RECORDES_PER_PAGE} total={Math.ceil(count / this.RECORDES_PER_PAGE)} curPage={current} toPage={this.handleChangePageClick} />
 
           </div>
           

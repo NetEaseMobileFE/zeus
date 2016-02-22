@@ -65,14 +65,6 @@ export function inviteCodes(state = { id: '', data: [], current: 1, count: 0 }, 
 export function participants(state = { id: '', data: [], current: 1, count: 0, searchResults: [] }, action) {
   switch (action.type) {
     case actions.REQUEST_PARTICIPANTS:
-      if (+state.id === +action.id) {
-        return extend({}, state, {
-          data: [
-            ...state.data,
-            ...action.data
-          ]
-        });
-      }
       return extend({}, state, {
         id: action.id,
         data: action.data

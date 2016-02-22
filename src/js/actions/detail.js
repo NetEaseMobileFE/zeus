@@ -13,7 +13,8 @@ export function loadDetail(id) {
 
     // return fetch(`http://localhost:3000/detail.json`)
     return ajax({
-      url: `http://baoming.ws.netease.com/admin/competition/get?cid=${id}`
+      url: 'http://baoming.ws.netease.com/admin/competition/get',
+      body: { cid: id }
     })
     .then((json) => {
       dispatch({
@@ -25,7 +26,6 @@ export function loadDetail(id) {
     });
   };
 }
-
 // 显隐账单
 export function toggleBill(id) {
   return (dispatch, getState) => {
@@ -33,7 +33,8 @@ export function toggleBill(id) {
     if (!showBill) {
       // return fetch('http://localhost:3000/bill.json')
       return ajax({
-        url: `http://baoming.ws.netease.com/admin/competition/competitionReport?id=${id}`
+        url: `http://baoming.ws.netease.com/admin/competition/competitionReport`,
+        body: { id }
       })
       .then((json) => {
         dispatch({
@@ -49,10 +50,29 @@ export function toggleBill(id) {
     });
   };
 }
+// 删除赛事
+export function deleteMatch(id) {
+  return (dispatch, getState) => {
+    return ajax({
+      url: 'http://baoming.ws.netease.com/admin/competition/delete',
+      body: { id }
+    })
+    .then((json) => {
+      dispatch({
+        type: type.REQUEST_DETAIL,
+        data: extend({}, getState().details[id], { state: 10 }),
+        id
+      })
+    })
+  }
+}
+
+
 function requestCodes(id, pageNum = 1, dispatch) {
   // return fetch(`http://localhost:3000/inviteCodes.json`)
   return ajax({
-    url: `http://baoming.ws.netease.com/admin/invitecode/list?cid=${id}&pageNum=${pageNum}`
+    url: `http://baoming.ws.netease.com/admin/invitecode/list`,
+    body: { cid: id, pageNum }
   })
   .then((json) => {
     dispatch({
@@ -67,7 +87,6 @@ function requestCodes(id, pageNum = 1, dispatch) {
 // 获取邀请码
 export function loadInviteCodes(id, pageNum) {
   return (dispatch) => {
-    // return fetch(`http://localhost:3000/inviteCodes.json`)
     return requestCodes(id, pageNum, dispatch);
   };
 }
@@ -76,7 +95,8 @@ export function fetchCodesCount(id) {
   return (dispatch) => {
     // return fetch(`http://localhost:3000/count.json`)
     return ajax({
-      url: `http://baoming.ws.netease.com/admin/invitecode/totalCount?cid=${id}`
+      url: `http://baoming.ws.netease.com/admin/invitecode/totalCount`,
+      body: { cid: id }
     })
     .then((json) => {
       dispatch({
@@ -117,10 +137,12 @@ export function genCode(data) {
     // const URL = `http://localhost:3000/genCode.json?${transformRequest(extend({}, { nums: 1 }, data))}`;
     const count = getState().inviteCodes.count;
     // return fetch(`http://localhost:3000/inviteCodes.json`)
-    return ajax(URL, {
+    const body = extend({}, { nums: 1 }, data)
+    console.log(body)
+    return ajax({
       url: `http://baoming.ws.netease.com/admin/invitecode/generateInvitecode`, 
       method: 'POST',
-      body: extend({}, { nums: 1 }, data)
+      body: body
     })
     .then((json) => {
       dispatch({
@@ -136,38 +158,55 @@ export function genCode(data) {
   };
 }
 
-function requestParticipants(id, pageNum = 1, dispatch) {
-  return fetch(`http://localhost:3000/participants.json`)
-    .then(response => response.json())
-    .then((json) => {
-      dispatch({
-        type: type.REQUEST_PARTICIPANTS,
-        data: json.data,
-        id
-      });
-      return Promise.resolve(json);
+function requestParticipants(id, pageNum = 1, dispatch, getState) {
+  // return fetch(`http://localhost:3000/participants.json`)
+  return ajax({
+    url: `http://baoming.ws.netease.com/admin/signUp/list`,
+    body: { cid: id, pageNum }
+  })
+  .then((json) => {
+    const participants = getState().participants;
+    let temp = json.data;
+    if (+participants.id === +id) {
+      temp = [
+        ...participants.data,
+        ...json.data
+      ]
+    }
+    dispatch({
+      type: type.REQUEST_PARTICIPANTS,
+      data: temp,
+      id
     });
+    return Promise.resolve(json);
+  });
 }
 
 // 获取报名人
 export function loadParticipants(id, pageNum) {
-  return (dispatch) => {
-    return requestParticipants(id, pageNum, dispatch);
+  return (dispatch, getState) => {
+    return requestParticipants(id, pageNum, dispatch, getState);
   };
 }
 
 // 搜索报名人
 export function searchParticipants(id, condition) {
   return (dispatch) => {
-    return fetch(`http://localhost:3000/search.json`)
-      .then(response => response.json())
-      .then((json) => {
-        dispatch({
-          type: type.SEARCH_PARTICIPANTS,
-          data: json.data
-        });
-        return Promise.resolve(json);
+    // return fetch(`http://localhost:3000/search.json`)
+    return ajax({
+      url: `http://baoming.ws.netease.com/admin/signUp/search`,
+      method: 'POST',
+      body: {
+        condition
+      }
+    })
+    .then((json) => {
+      dispatch({
+        type: type.SEARCH_PARTICIPANTS,
+        data: json.data
       });
+      return Promise.resolve(json);
+    });
   }
 }
 // 清除搜索结果
@@ -182,15 +221,18 @@ export function clearSearchResults() {
 // 获取报名人总数
 export function fetchParticipantsCount(id) {
   return (dispatch) => {
-    return fetch(`http://localhost:3000/pcount.json`)
-      .then(response => response.json())
-      .then((json) => {
-        dispatch({
-          type: type.REQUEST_PARTICIPANTS_COUNT,
-          data: json.data
-        });
-        return Promise.resolve(json);
+    // return fetch(`http://localhost:3000/pcount.json`)
+    return ajax({
+      url: `http://baoming.ws.netease.com/admin/signUp/totalCount`,
+      body: { cid: id }
+    })
+    .then((json) => {
+      dispatch({
+        type: type.REQUEST_PARTICIPANTS_COUNT,
+        data: json.data
       });
+      return Promise.resolve(json);
+    });
   };
 }
 // 更改报名人总数
@@ -210,17 +252,20 @@ export function deleteParticipant(cid, pid) {
     const count = getState().participants.count;
     dispatch({
       type: type.REQUEST_PARTICIPANTS,
-      data: participants.filter((person) => {
-        return person.id !== pid;
+      data: participants.map((person) => {
+        if (person.id === pid) {
+          const temp = extend({}, person, { state: 10 })
+          console.log(temp)
+          return temp;
+        }
+        return person;
       }),
       id: cid
     });
-    dispatch({
-      type: type.REQUEST_PARTICIPANTS_COUNT,
-      data: count - 1
-    });
-    return fetch(`http://localhost:3000/delete.json`)
-      .then(response => { response.json() });
+    // return fetch(`http://localhost:3000/delete.json`)
+    return ajax({
+      url: `http://baoming.ws.netease.com/admin/signUp/delete?sid=${pid}`
+    })
   }
 }
 
@@ -230,7 +275,7 @@ export function changeParticipantsPage(next, recordsPerPage) {
     const { id, data } = getState().participants;
     const len = data.slice((next - 1) * recordsPerPage, next * recordsPerPage).length;
     if (len < recordsPerPage) {
-      requestParticipants(id, next, dispatch)
+      requestParticipants(id, next, dispatch, getState)
         .then(() => {
           dispatch({
             type: type.SHOW_PARTICIPANTS,
@@ -275,5 +320,10 @@ export function saveInfo(id, data) {
       id,
       data
     });
+    return ajax({
+      url: `http://baoming.ws.netease.com/admin/signUp/update`,
+      method: 'POST',
+      body: extend({}, { id }, data)
+    })
   };
 }

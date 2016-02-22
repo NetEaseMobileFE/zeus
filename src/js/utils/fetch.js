@@ -15,15 +15,16 @@ export default function ajax(opt) {
     credentials: 'same-origin',
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
     }
   }, opt);
-
-  if (options.method === 'GET') {
-    if (options.body) {
-      options.url = `${options.url}?${transformRequest(options.body)}`;
-    }
+  if (options.method === 'GET' && options.body) {
+    options.url = `${options.url}?${transformRequest(options.body)}`;
     options.body = void(0);
+  }
+
+  if (options.method === 'POST' && options.body) {
+    options.body = transformRequest(options.body);
   }
 
   return fetch(options.url, options)
@@ -34,6 +35,7 @@ export default function ajax(opt) {
         let error = new Error('网络错误');
         error.response = response;
         throw error;
+        return Promise.resolve(response);
       }
     })
     .then((result) => {

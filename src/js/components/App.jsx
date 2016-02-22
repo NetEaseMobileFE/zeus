@@ -34,6 +34,7 @@ App.propTypes = {
     data: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
     modalAction: PropTypes.object.isRequired,
+    route: PropTypes.object.isRequired,
     children: PropTypes.element
 };
 

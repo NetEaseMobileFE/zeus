@@ -78,8 +78,10 @@
     "eslint-config-airbnb": "^4.0.0"
   },
   "dependencies": {
+    "es6-promise": "^3.0.2",
     "isomorphic-fetch": "^2.2.1",
     "moment": "^2.11.2",
+    "lodash.assign": "^4.0.3",
     "react": "^0.14.3",
     "react-datetime": "^2.0.3",
     "react-dom": "^0.14.3",

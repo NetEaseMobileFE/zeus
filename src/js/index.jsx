@@ -4,10 +4,11 @@ import { Provider } from 'react-redux';
 import { Router, Route, IndexRoute, Redirect, hashHistory } from 'react-router';
 import configureStore from './configureStore';
 import AppList from './components/AppList';
-import DetailPage from './components/DetailPage';
+import DetailPage, { Participants, Activity, InviteCodes } from './components/detail';
 import Create from './components/Create';
 import NotFoundView from './components/NotFoundView';
 import App from './components/App';
+require('es6-promise').polyfill();
 
 // 路由:https://github.com/rackt/react-router-redux
 const store = configureStore({
@@ -18,10 +19,15 @@ const store = configureStore({
 render(
   <Provider store={store}>
     <Router history={hashHistory}>
-      <Route component={App}>
+      <Route path="/" component={App}>
         <IndexRoute component={AppList}/>
         <Route path="appList" component={AppList}/>
-        <Route path="appList/:id" component={DetailPage} />
+        <Route path="match/:id" component={DetailPage}>
+          <IndexRoute component={Activity}/>
+          <Route path="detail" component={Activity}/>
+          <Route path="codes" component={InviteCodes}/>
+          <Route path="participants" component={Participants}/>
+        </Route>
         <Route path="create" component={Create} />
         <Route path="/404" component={NotFoundView} />
         <Redirect from="*" to="/404" />

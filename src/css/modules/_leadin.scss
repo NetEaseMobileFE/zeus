@@ -4,15 +4,19 @@ modules 公用文件
 @import '../lib/util/util';
 @import '../lib/global';
 @import "../lib/foundation";
-
+$closebutton-size: 18px;
+@include foundation-form-prepostfix;
+@include foundation-text-alignment;
 @include foundation-global-styles;
-@include foundation-forms;
+@include foundation-button-group;
+@include foundation-close-button;
 @include foundation-flex-grid;
 @include foundation-callout;
-$closebutton-size: 18px;
-@include foundation-close-button;
 @include foundation-button;
+@include foundation-forms;
 @include foundation-table;
+@include foundation-label;
+@include foundation-tabs;
 
 @mixin text-align{
     /*

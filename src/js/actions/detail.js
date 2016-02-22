@@ -11,11 +11,13 @@ export function loadDetail(id) {
       return detail;
     }
 
-    // return fetch(`http://localhost:3000/detail.json`)
     return ajax({
-      url: 'http://baoming.ws.netease.com/admin/competition/get',
-      body: { cid: id }
+      url: `http://localhost:3100/detail.json`
     })
+    // return ajax({
+    //   url: 'http://baoming.ws.netease.com/admin/competition/get',
+    //   body: { cid: id }
+    // })
     .then((json) => {
       dispatch({
         type: type.REQUEST_DETAIL,
@@ -159,11 +161,11 @@ export function genCode(data) {
 }
 
 function requestParticipants(id, pageNum = 1, dispatch, getState) {
-  // return fetch(`http://localhost:3000/participants.json`)
-  return ajax({
-    url: `http://baoming.ws.netease.com/admin/signUp/list`,
-    body: { cid: id, pageNum }
-  })
+  return ajax({ url: `http://localhost:3100/participants.json` })
+  // return ajax({
+  //   url: `http://baoming.ws.netease.com/admin/signUp/list`,
+  //   body: { cid: id, pageNum }
+  // })
   .then((json) => {
     const participants = getState().participants;
     let temp = json.data;
@@ -248,14 +250,16 @@ export function changeParticipantsCount(delta) {
 // 删除报名人
 export function deleteParticipant(cid, pid) {
   return (dispatch, getState) => {
-    const participants = getState().participants.data;
+
+    // 判断当前是否处于搜索状态（searchResults长度大于0）
+    // 若是，更改searchResults, 否则更改data
+    const participants = searchResults.length > 0 ? searchResults : getState().participants.data;
     const count = getState().participants.count;
     dispatch({
-      type: type.REQUEST_PARTICIPANTS,
+      type: searchResults.length > 0 ? type.SEARCH_PARTICIPANTS : type.REQUEST_PARTICIPANTS,
       data: participants.map((person) => {
         if (person.id === pid) {
           const temp = extend({}, person, { state: 10 })
-          console.log(temp)
           return temp;
         }
         return person;

@@ -23,7 +23,10 @@ class DetailPage extends Component {
 
   render() {
     const { id, detail, location } = this.props;
-    const active = location.pathname.match(/\/(\w+?)$/)[1];
+    let active = location.pathname.match(/\/(\w+?)$/)[1];
+    if (active !== 'codes' && active !== 'participants') {
+      active = 'detail';
+    }
     return (
       <div>
         <ul styleName="tabs">
@@ -46,6 +49,7 @@ DetailPage.propTypes = {
 function mapStateToProps(state, props) {
   const { id } = props.params;
   const detail = state.details[id] || {};
+  console.log(state)
   return {
     id,
     detail,

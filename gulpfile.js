@@ -32,10 +32,9 @@ var deployConfig = {
 		assetRoot: 'apps/test/hh'
 	}
 };
-
 var projectName = JSON.parse(fs.readFileSync('package.json', 'utf-8')).name;
 var profile = JSON.parse(fs.readFileSync('.profile', 'utf-8'));
-var publishMode = gutil.env.p ? 'pro' : 'test';
+var publishMode = process.argv[3] === 'test' ? 'test' : 'pro';
 var publishConfig = global.publish = initPublishConfig(publishMode);
 var webpackConfig = require('./webpack.config.prod');
 var webpackStats;  // Record webpack build stats
@@ -72,7 +71,7 @@ gulp.task('assets', ['clean'], function() {
 		}))
 		.pipe(gulp.dest('dist'))
 		.pipe(gulpIgnore.exclude(['**/*.map', '**/{img,img/**}', '**/webpackBootstrap.*.js']))
-		.pipe(conn.dest(publishConfig.assetDir));
+		// .pipe(conn.dest(publishConfig.assetDir));
 });
 
 // Replace assets' path in html files
@@ -92,7 +91,7 @@ gulp.task('html', ['assets'], function() {
 		}))
 		.pipe(htmlmin({ collapseWhitespace: true, removeComments: true }))
 		.pipe(gulp.dest('dist'))
-		.pipe(conn.dest(publishConfig.htmlDir));
+		// .pipe(conn.dest(publishConfig.htmlDir));
 });
 
 // Optimize images

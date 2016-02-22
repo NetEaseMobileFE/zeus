@@ -5,7 +5,7 @@ import extend from 'lodash.assign';
 
 import styles from '../../../css/modules/detail.scss';
 import STATE_MAP from './state';
-import { format } from '../../utils/moment';
+import moment from 'moment';
 import Pagination from '../common/Pagination';
 import { loadParticipants, searchParticipants, clearSearchResults, deleteParticipant, fetchParticipantsCount, changeParticipantsPage, expandInfo, editInfo, saveInfo } from '../../actions/detail';
 
@@ -18,7 +18,6 @@ export default class Participants extends Component {
     this.tempInfo = {};
     this.RECORDES_PER_PAGE = 10;
     this.handleEditBlur = this.handleEditBlur.bind(this);
-    this.handleEditSelect = this.handleEditSelect.bind(this);
     this.handleClearClick = this.handleClearClick.bind(this);
     this.handleSearchClick = this.handleSearchClick.bind(this);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
@@ -57,17 +56,14 @@ export default class Participants extends Component {
     this.props.changeParticipantsPage(next, this.RECORDES_PER_PAGE);
   }
   handleEditBlur(event) {
-    const value = event.target.value;
+    let value = event.target.value;
     const key = event.target.dataset.key;
     if (!key) {
       return;
     }
-    if (value !== this.tempInfo[key]) {
-      extend(this.tempInfo, { [key]: value });
+    if (event.target.type === 'date') {
+      value = +new Date(value);
     }
-  }
-  handleEditSelect(key, event) {
-    const value = event.target.value;
     if (value !== this.tempInfo[key]) {
       extend(this.tempInfo, { [key]: value });
     }
@@ -163,7 +159,7 @@ export default class Participants extends Component {
                             <div styleName="row">
                               <div styleName="columns">
                                 <label>出生年月： 
-                                  <input type="date" data-key="birthday" readOnly={!edit} defaultValue={format(person.birthday)} />
+                                  <input type="date" data-key="birthday" readOnly={!edit} defaultValue={moment(person.birthday).format('YYYY-MM-DD')} />
                                 </label>
                               </div>
                               <div styleName="columns">
@@ -240,7 +236,7 @@ export default class Participants extends Component {
                               </div>
                               <div styleName="columns">
                                 <label>报名时间： 
-                                  <input type="date" data-key="createTime" readOnly={!edit} defaultValue={format(person.createTime)} />
+                                  <input type="date" data-key="createTime" readOnly={!edit} defaultValue={moment(person.createTime).format('YYYY-MM-DD')} />
                                 </label>
                               </div>
                             </div>

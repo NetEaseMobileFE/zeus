@@ -2,18 +2,7 @@
 @import '../lib/global';
 @import "../lib/foundation";
 
-@include foundation-form-prepostfix;
-@include foundation-text-alignment;
-@include foundation-button-group;
-@include foundation-form-select;
-@include foundation-form-label;
-@include foundation-flex-grid;
-@include foundation-form-text;
-@include foundation-callout;
-@include foundation-button;
-@include foundation-table;
-@include foundation-label;
-@include foundation-tabs;
+@import 'leadin';
 
 .row{
   margin: 1.15rem 0;

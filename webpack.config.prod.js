@@ -1,3 +1,4 @@
+var fs = require('fs');
 var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -8,14 +9,12 @@ var revision = publishConfig.revision ? publishConfig.revision + '/' : '';
 var publicPath = publishConfig.assetPath || '/static/';
 var hash = publishConfig.hash ? '.[chunkhash]' : '';
 
-
+var packageJson = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
 module.exports = {
 	devtool: 'source-map-hidden',
 	entry: {
 		app: './src/js/index',
-		vendor: [
-			'react', 'react-dom'
-		],
+		vendor: Object.keys(packageJson.dependencies),
 		webpackBootstrap: [] // Extract the webpackBootstrap from chunks
 	},
 	output: {

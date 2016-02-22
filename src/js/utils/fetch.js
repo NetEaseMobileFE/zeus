@@ -35,7 +35,7 @@ export default function ajax(opt) {
         let error = new Error('网络错误');
         error.response = response;
         throw error;
-        return Promise.resolve(response);
+        return Promise.reject(response);
       }
     })
     .then((result) => {
@@ -54,15 +54,15 @@ export default function ajax(opt) {
           }
         */
       if (result.code === 1) {
-        return result;
+        return Promise.resolve(result);
       }
       let error = new Error(result.msg);
       error.response = result;
       throw error;
+      return Promise.reject(result);
     })
     .catch((fail) => {
       console.log(fail);
-      let error = new Error(fail);
-      dispatch(error);
+      return Promise.reject(fail);
     });
 }

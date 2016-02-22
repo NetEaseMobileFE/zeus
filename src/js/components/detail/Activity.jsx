@@ -4,7 +4,8 @@ import { Link } from 'react-router';
 import CSSModules from 'react-css-modules';
 import styles from '../../../css/modules/detail.scss';
 import { toggleBill, deleteMatch } from '../../actions/detail';
-import { format } from '../../utils/moment';
+// import { format } from '../../utils/moment';
+import moment from 'moment';
 import STATE_MAP from './state';
 @CSSModules(styles, {
   allowMultiple: true
@@ -32,7 +33,7 @@ export default class Activity extends Component {
         </div>
         <div styleName="row">
           <div styleName="shrink columns">活动状态：</div>
-          <div styleName="columns">{detail.state}</div>
+          <div styleName="columns"><span styleName={'label ' + (detail.state === 10 ? 'secondary' : 'success')}>{STATE_MAP[detail.state]}</span></div>
         </div>
         <div styleName="row">
           <div styleName="shrink columns">报名人数：</div>
@@ -40,11 +41,11 @@ export default class Activity extends Component {
         </div>
         <div styleName="row">
           <div styleName="shrink columns text-right">报名时间：</div>
-          <div styleName="columns">{format(detail.signUpStart) + '~' + format(detail.signUpEnd)}</div>
+          <div styleName="columns">{moment(detail.signUpStart).format('YYYY-MM-DD') + '~' + moment(detail.signUpEnd).format('YYYY-MM-DD')}</div>
         </div>
         <div styleName="row">
           <div styleName="shrink columns">赛事时间：</div>
-          <div styleName="columns">{format(detail.gameStart) + '~' + format(detail.gameEnd)}</div>
+          <div styleName="columns">{moment(detail.gameStart).format('YYYY-MM-DD') + '~' + moment(detail.gameEnd).format('YYYY-MM-DD')}</div>
         </div>
         <div styleName="row">
           <div styleName="shrink columns">赛事官网：</div>
@@ -129,4 +130,4 @@ function mapStateToProps(state, props) {
     showBill
   };
 }
-export default connect(mapStateToProps, { handleViewBillClick: toggleBill })(Activity);
+export default connect(mapStateToProps, { handleViewBillClick: toggleBill, deleteMatch })(Activity);

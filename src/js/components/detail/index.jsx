@@ -20,6 +20,11 @@ class DetailPage extends Component {
   componentDidMount() {
     this.props.loadDetail(this.props.id);
   }
+  componentWillReceiveProps(nextProps){
+    if (+nextProps.id !== this.props.id) {
+      this.props.loadDetail(nextProps.id);
+    }
+  }
 
   render() {
     const { id, detail, location } = this.props;

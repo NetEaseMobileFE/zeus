@@ -99,7 +99,7 @@ export default class Participants extends Component {
     value && this.props.deleteParticipant(this.props.id, id);
   }
   render() {
-    const { editId, expandId, showResult, participants, current, count } = this.props;
+    const { editId, detail, expandId, showResult, participants, current, count } = this.props;
     if (participants.length > 0) {
       return (
         <form styleName="joiner" onBlur={this.handleEditBlur}>
@@ -151,7 +151,7 @@ export default class Participants extends Component {
                             <input type="text" data-key="productName" readOnly={!edit} defaultValue={person.productName} />
                           </label>
                         </div>
-                        <div styleName="columns"><span styleName="label">{STATE_MAP[person.state]}</span></div>
+                        <div styleName="columns small-2"><span styleName="label">{STATE_MAP[person.state]}</span></div>
                       </div>
                       {
                         expand && (
@@ -246,18 +246,24 @@ export default class Participants extends Component {
                       }
 
                     </div>
-                    <div styleName="medium-2 row">
-                      <div styleName="medium-6">
-                      {
-                        !edit ? <a styleName={'button warning' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleEditClick.bind(this, person.id, i)}>编辑</a> : <a styleName="button success" onClick={this.handleSaveClick.bind(this, person.id, false)}>保存</a>
-                      }
-                      </div>
-                      <div styleName="medium-6">
-                      {
-                        !edit ? <a styleName={'button alert' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleDeleteClick.bind(this, person.id)}>删除</a> : <a styleName="button" onClick={this.handleSaveClick.bind(this, person.id, true)}>取消</a>
-                      }
-                      </div>
-                    </div>
+                    {
+                      detail.state === 7 ?
+                        (<div styleName="medium-2 row">
+                          {
+                            !edit ? <a styleName={'columns large-4 button warning' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleEditClick.bind(this, person.id, i)}>编辑</a> : <a styleName="button success" onClick={this.handleSaveClick.bind(this, person.id, false)}>保存</a>
+                          }
+                          {
+                            !edit ? <a styleName={'columns large-4 button alert' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleDeleteClick.bind(this, person.id)}>删除</a> : <a styleName="button" onClick={this.handleSaveClick.bind(this, person.id, true)}>取消</a>
+                          }
+                        </div>)
+                      :
+                        (<div styleName="medium-2 row">
+                          <label styleName="columns">成绩： 
+                            <input type="time" data-key="score" readOnly={!edit} defaultValue={moment(person.score || 0).format('hh:mm:ss')} />
+                          </label>
+                          <a styleName="button success">保存</a>
+                        </div>)
+                    }
                   </div>
                 );
               })
@@ -276,6 +282,7 @@ export default class Participants extends Component {
 Participants.propTypes = {
   count: PropTypes.number.isRequired, 
   editId: PropTypes.number.isRequired, 
+  detail: PropTypes.object.isRequired,
   current: PropTypes.number.isRequired, 
   expandId: PropTypes.number.isRequired, 
   participants: PropTypes.array.isRequired, 

@@ -6,7 +6,7 @@ export function details(state = { showBill: false, bill: [] }, action) {
   switch (action.type) {
     case actions.REQUEST_DETAIL:
       return extend({}, state, {
-        [action.data.id]: action.data
+        [action.id]: extend({}, state[action.id], action.data)
       });
     case actions.TOGGLE_BILL:
       return extend({}, state, {

@@ -11,22 +11,50 @@ export function loadDetail(id) {
       return detail;
     }
 
-    return ajax({
-      url: `http://localhost:3100/detail.json`
-    })
     // return ajax({
-    //   url: 'http://baoming.ws.netease.com/admin/competition/get',
-    //   body: { cid: id }
+    //   url: `http://localhost:3100/detail.json`
     // })
+    let data = {};
+    return ajax({
+      url: 'http://baoming.ws.netease.com/admin/competition/get',
+      body: { cid: id }
+    })
     .then((json) => {
+      data = json.data;
+      return Promise.resolve(data);
+    }).then((json) => {
+      return ajax({
+        url: 'http://baoming.ws.netease.com/admin/tenantDetail/get',
+        body: { tid: json.tid || 8 }
+      })
+    }).then((json) => {
+      const { isNewRecord, tenantAccount, privkey, publickey, plateformId } = json.data;
+      return Promise.resolve(extend(data, { isNewRecord, tenantAccount, privkey, publickey, plateformId }));
+    }).then((json) => {
       dispatch({
         type: type.REQUEST_DETAIL,
-        data: json.data,
+        data: json,
         id
       });
-      return Promise.resolve(json);
-    });
+    })
   };
+}
+// 修改活动详情
+export function updateDetail(data) {
+  return (dispatch) => {
+    return ajax({
+      url: 'http://baoming.ws.netease.com/admin/competition/update',
+      method: 'POST',
+      body: extend({}, data)
+    }).then((json) => {
+      dispatch({
+        type: type.REQUEST_DETAIL,
+        data: { display: data.display },
+        id: data.id,
+      });
+      return Promise.resolve(json);
+    })
+  }
 }
 // 显隐账单
 export function toggleBill(id) {
@@ -64,7 +92,8 @@ export function deleteMatch(id) {
         type: type.REQUEST_DETAIL,
         data: extend({}, getState().details[id], { state: 10 }),
         id
-      })
+      });
+      return Promise.resolve(json);
     })
   }
 }
@@ -161,11 +190,11 @@ export function genCode(data) {
 }
 
 function requestParticipants(id, pageNum = 1, dispatch, getState) {
-  return ajax({ url: `http://localhost:3100/participants.json` })
-  // return ajax({
-  //   url: `http://baoming.ws.netease.com/admin/signUp/list`,
-  //   body: { cid: id, pageNum }
-  // })
+  // return ajax({ url: `http://localhost:3100/participants.json` })
+  return ajax({
+    url: `http://baoming.ws.netease.com/admin/signUp/list`,
+    body: { cid: id, pageNum }
+  })
   .then((json) => {
     const participants = getState().participants;
     let temp = json.data;
@@ -253,8 +282,9 @@ export function deleteParticipant(cid, pid) {
 
     // 判断当前是否处于搜索状态（searchResults长度大于0）
     // 若是，更改searchResults, 否则更改data
-    const participants = searchResults.length > 0 ? searchResults : getState().participants.data;
+    const searchResults = getState().participants.searchResults;
     const count = getState().participants.count;
+    const participants = searchResults.length > 0 ? searchResults : getState().participants.data;
     dispatch({
       type: searchResults.length > 0 ? type.SEARCH_PARTICIPANTS : type.REQUEST_PARTICIPANTS,
       data: participants.map((person) => {

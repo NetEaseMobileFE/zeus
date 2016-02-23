@@ -23,7 +23,7 @@ class Modal extends Component {
         let { msg, config, didInvalidate } = this.props.modal;
         let { modal_cancel } = this.props.actions;
         return(
-            <div styleName={["modal",didInvalidate ? "in" : ""].join(" ")}>
+            <div styleName={["modal", didInvalidate ? "in" : ""].join(" ")}>
                 <div styleName="modal-overlay"></div>
                 <div styleName="modal-plane">
                     <div styleName="modal-header">
@@ -35,7 +35,7 @@ class Modal extends Component {
                         </button>
                     </div>
                     <div styleName="modal-body">
-                        {msg}
+                        {this.props.children || msg}
                     </div>
                     <div styleName="modal-footer">
                         {

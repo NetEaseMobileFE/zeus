@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var posixPath = path.posix;
+var exec = require('child_process').exec;
 
 var gulp = require('gulp');
 var gutil = require("gulp-util");
@@ -34,7 +35,7 @@ var deployConfig = {
 };
 var projectName = JSON.parse(fs.readFileSync('package.json', 'utf-8')).name;
 var profile = JSON.parse(fs.readFileSync('.profile', 'utf-8'));
-var publishMode = process.argv[3] === 'test' ? 'test' : 'pro';
+var publishMode = gutil.env.p ? 'pro' : 'test';
 var publishConfig = global.publish = initPublishConfig(publishMode);
 var webpackConfig = require('./webpack.config.prod');
 var webpackStats;  // Record webpack build stats
@@ -113,9 +114,18 @@ gulp.task('img', ['isux'], function () {
 
 // Start
 gulp.task('default', ['html'], function() {
-	gutil.log('Done!');
-	gutil.log('HTML published at ' + gutil.colors.bgCyan.white(publishConfig.htmlPath));
-	gutil.log('Assets deployed at ' + gutil.colors.bgCyan.white(publishConfig.assetPathRevised));
+	if (publishMode === 'test') {
+	  exec('scp -r -P 16322 dist/* ' + profile.developer + '@223.252.197.245:/home/' + profile.developer + '/' + projectName + '/', function(err){
+	    if (err) return cb(err); // return error
+			gutil.log('Done!');
+			gutil.log('HTML published at ' + gutil.colors.bgCyan.white(publishConfig.htmlPath));
+			gutil.log('Assets deployed at ' + gutil.colors.bgCyan.white(publishConfig.assetPathRevised));
+	  })
+	} else {
+		gutil.log('Done!');
+		gutil.log('HTML published at ' + gutil.colors.bgCyan.white(publishConfig.htmlPath));
+		gutil.log('Assets deployed at ' + gutil.colors.bgCyan.white(publishConfig.assetPathRevised));
+	}
 });
 
 

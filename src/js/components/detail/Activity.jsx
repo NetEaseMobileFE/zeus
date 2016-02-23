@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import CSSModules from 'react-css-modules';
 import styles from '../../../css/modules/detail.scss';
-import { toggleBill, deleteMatch } from '../../actions/detail';
+import { toggleBill, deleteMatch, updateDetail } from '../../actions/detail';
 // import { format } from '../../utils/moment';
 import moment from 'moment';
 import STATE_MAP from './state';
@@ -14,9 +14,28 @@ export default class Activity extends Component {
   constructor(props) {
     super(props);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
+    this.handleDisplayClick = this.handleDisplayClick.bind(this);
   }
   handleDeleteClick() {
-    this.props.deleteMatch(this.props.id);
+    if (confirm('是否取消此赛事？')) {
+      this.props.deleteMatch(this.props.id).then((json) => {
+        if (json.code === 1) {
+          alert('取消成功');
+        } else {
+          alert('取消失败');
+        }
+      });
+    }
+  }
+  handleDisplayClick() {
+    const display = Math.abs(this.props.detail.display - 1);
+    this.props.updateDetail({ id: this.props.id, display}).then((json) => {
+      if (json.code === 1) {
+        alert('操作成功');
+      } else {
+        alert('操作成功');
+      }
+    });
   }
   render() {
     const { id, detail, bill, showBill, handleViewBillClick } = this.props;
@@ -36,6 +55,12 @@ export default class Activity extends Component {
           <div styleName="columns"><span styleName={'label ' + (detail.state === 10 ? 'secondary' : 'success')}>{STATE_MAP[detail.state]}</span></div>
         </div>
         <div styleName="row">
+          <div styleName="shrink columns">前台是否显示报名人数：</div>
+          <div styleName="columns">
+          {detail.display === 1 ? <span styleName="label success">显示</span> : <span styleName="label secondary">隐藏</span>}
+          </div>
+        </div>
+        <div styleName="row">
           <div styleName="shrink columns">报名人数：</div>
           <div styleName="columns">{`${detail.signUpNum}/${detail.limitNum}`}</div>
         </div>
@@ -49,7 +74,7 @@ export default class Activity extends Component {
         </div>
         <div styleName="row">
           <div styleName="shrink columns">赛事官网：</div>
-          <div styleName="columns">{detail.name}</div>
+          <div styleName="columns">{detail.siteUrl}</div>
         </div>
         <div styleName="row">
           <div styleName="shrink columns">报名费用：</div>
@@ -72,11 +97,19 @@ export default class Activity extends Component {
         <h3>网易宝信息</h3>
         <div styleName="row">
           <div styleName="shrink columns text-right">商户帐号：</div>
-          <div styleName="columns">{detail.transferAccount}</div>
+          <div styleName="columns">{detail.tenantAccount}</div>
         </div>
         <div styleName="row">
           <div styleName="shrink columns">商户流水号：</div>
-          <div styleName="columns">{detail.name}</div>
+          <div styleName="columns">{detail.plateformId}</div>
+        </div>
+        <div styleName="row">
+          <div styleName="shrink columns">16位公钥：</div>
+          <div styleName="columns">{detail.plateformId}</div>
+        </div>
+        <div styleName="row">
+          <div styleName="shrink columns">16位私钥：</div>
+          <div styleName="columns">{detail.privkey}</div>
         </div>
         <div>
           {showBill}
@@ -105,9 +138,10 @@ export default class Activity extends Component {
         </div>
         <div styleName="button-group">
           <a onClick={handleViewBillClick.bind(this, this.props.id)} styleName="secondary button">账单查询</a>
-          <a styleName="success button">隐藏报名数</a>
+          {detail.display === 1}
+          <a onClick={this.handleDisplayClick} styleName="success button">{(detail.display === 1 ? '隐藏' : '显示') + '报名人数'}</a>
           <Link styleName="warning button" to={`modification/${id}`}>修改</Link>
-          <a styleName="alert button" onClick={this.handleDeleteClick}>取消报名</a>
+          <a onClick={this.handleDeleteClick} styleName={'alert button' + (detail.state === 10 ? ' disabled' : '')}>取消报名</a>
         </div>
       </div>
     );
@@ -130,4 +164,4 @@ function mapStateToProps(state, props) {
     showBill
   };
 }
-export default connect(mapStateToProps, { handleViewBillClick: toggleBill, deleteMatch })(Activity);
+export default connect(mapStateToProps, { handleViewBillClick: toggleBill, deleteMatch, updateDetail })(Activity);

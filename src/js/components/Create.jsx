@@ -36,7 +36,7 @@ class Create extends Component {
     }
 
     componentWillMount(){
-        let { type,items } = this.props.data;
+        let { type, items } = this.props.data;
         const { updateForm } = this.props.actions;
         this.types = {
             1: {
@@ -89,7 +89,7 @@ class Create extends Component {
             iconFiletypes: ['.jpg', '.png', '.gif'],
             showFiletypeIcon: true,
             postUrl: '/admin/competition/imageUpload'
-        }
+        };
     }
 
     // 图片上传 UI 配置

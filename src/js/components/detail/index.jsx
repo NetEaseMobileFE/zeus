@@ -49,7 +49,6 @@ DetailPage.propTypes = {
 function mapStateToProps(state, props) {
   const { id } = props.params;
   const detail = state.details[id] || {};
-  console.log(state)
   return {
     id,
     detail,

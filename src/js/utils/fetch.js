@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch';
 import extend from 'lodash.assign';
+import modal from '../actions/modal';
 
 function transformRequest(obj) {
   let str = [];
@@ -8,8 +9,37 @@ function transformRequest(obj) {
   });
   return str.join('&');
 }
+function errorHanlder(fail, dispatch) {
+  if (typeof dispatch === 'function') {
+    dispatch(modal.error({ msg: `${fail.msg || '未知错误'}` })); 
+  } else {
+    alert(`${fail.msg || '未知错误'}`);
+  }
+  if (fail.code === 0) {
+    setTimeout(function() {
+      // window.location.href = 'http://baoming.ws.netease.com/login/login';
+    }, 200);
+  }
+}
+function checkLogin() {
+  const cookies = '; ' + document.cookie;
+  const name = 'userId';
+  const parts = cookies.split('; ' + name + '=');
+  let value = '';
+  if (parts.length == 2) {
+    value = parts.pop().split(';').shift(); 
+  }
+  return value;
+}
 
-export default function ajax(opt) {
+export default function ajax(opt, dispatch) {
+
+  const userName = checkLogin();
+  if (!userName) {
+    errorHanlder({ code: 0, msg: '未登录，刷新页面' }, dispatch);
+    return Promise.reject({ code: 0, msg: '未登录，刷新页面' });
+  }
+
   let options = extend({}, {
     method: 'GET',
     credentials: 'same-origin',
@@ -32,10 +62,7 @@ export default function ajax(opt) {
       if (response.status >= 200 && response.status < 300 || response.status === 302) {
         return response.json();
       } else {
-        let error = new Error('网络错误');
-        error.response = response;
-        throw error;
-        return Promise.reject(response);
+        return Promise.reject({ code: 6, msg: '网络错误' });
       }
     })
     .then((result) => {
@@ -56,13 +83,10 @@ export default function ajax(opt) {
       if (result.code === 1) {
         return Promise.resolve(result);
       }
-      let error = new Error(result.msg);
-      error.response = result;
-      throw error;
       return Promise.reject(result);
     })
     .catch((fail) => {
-      console.log(fail);
+      errorHanlder(fail, dispatch);
       return Promise.reject(fail);
     });
 }

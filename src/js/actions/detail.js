@@ -11,10 +11,10 @@ export function loadDetail(id) {
       return detail;
     }
 
+    let data = {};
     // return ajax({
     //   url: `http://localhost:3100/detail.json`
     // })
-    let data = {};
     return ajax({
       url: 'http://baoming.ws.netease.com/admin/competition/get',
       body: { cid: id }
@@ -23,10 +23,11 @@ export function loadDetail(id) {
       data = json.data;
       return Promise.resolve(data);
     }).then((json) => {
-      return ajax({
-        url: 'http://baoming.ws.netease.com/admin/tenantDetail/get',
-        body: { tid: json.tid || 8 }
-      })
+      return ajax({url: `http://localhost:3100/detail2.json`})
+      // return ajax({
+      //   url: 'http://baoming.ws.netease.com/admin/tenantDetail/get',
+      //   body: { tid: json.tid || 8 }
+      // })
     }).then((json) => {
       const { isNewRecord, tenantAccount, privkey, publickey, plateformId } = json.data;
       return Promise.resolve(extend(data, { isNewRecord, tenantAccount, privkey, publickey, plateformId }));
@@ -60,8 +61,13 @@ export function updateDetail(data) {
 export function toggleBill(id) {
   return (dispatch, getState) => {
     const showBill = getState().details.showBill;
+    // debugger;
+    dispatch({
+      type: type.TOGGLE_BILL,
+      status: !showBill
+    });
     if (!showBill) {
-      // return fetch('http://localhost:3000/bill.json')
+      // return ajax({ url: 'http://localhost:3100/bill.json'})
       return ajax({
         url: `http://baoming.ws.netease.com/admin/competition/competitionReport`,
         body: { id }
@@ -74,10 +80,7 @@ export function toggleBill(id) {
         return Promise.resolve(json);
       });
     }
-    dispatch({
-      type: type.TOGGLE_BILL,
-      status: !showBill
-    });
+    
   };
 }
 // 删除赛事
@@ -252,7 +255,7 @@ export function clearSearchResults() {
 // 获取报名人总数
 export function fetchParticipantsCount(id) {
   return (dispatch) => {
-    // return fetch(`http://localhost:3000/pcount.json`)
+    // return ajax(`http://localhost:3100/pcount.json`)
     return ajax({
       url: `http://baoming.ws.netease.com/admin/signUp/totalCount`,
       body: { cid: id }

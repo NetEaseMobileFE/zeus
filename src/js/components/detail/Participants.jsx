@@ -18,6 +18,7 @@ export default class Participants extends Component {
     this.tempInfo = {};
     this.RECORDES_PER_PAGE = 10;
     this.handleEditBlur = this.handleEditBlur.bind(this);
+    this.handleSaveClick = this.handleSaveClick.bind(this);
     this.handleClearClick = this.handleClearClick.bind(this);
     this.handleSearchClick = this.handleSearchClick.bind(this);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
@@ -61,11 +62,12 @@ export default class Participants extends Component {
     if (!key) {
       return;
     }
-    if (event.target.type === 'date') {
+    if (event.target.type === 'date' || event.target.type === 'date') {
       value = +new Date(value);
     }
     if (value !== this.tempInfo[key]) {
       extend(this.tempInfo, { [key]: value });
+      console.log(this.tempInfo)
     }
   }
 
@@ -79,7 +81,11 @@ export default class Participants extends Component {
     const { editInfo, saveInfo } = this.props;
     editInfo(0);
     if (!cancel) {
-      saveInfo(id, this.tempInfo);
+      saveInfo(id, this.tempInfo).then((json)=> {
+        if (json.code === 1) {
+          alert('操作成功');
+        }
+      });
     }
     this.tempInfo = {};
   }
@@ -125,145 +131,137 @@ export default class Participants extends Component {
                 const expand = expandId === +person.id;
                 return (
                   <div data-id={person.id} styleName={'row item align-middle' + (expand ? ' callout secondary' : '')} key={person.id}>
-                    <div styleName="medium-10 columns">
-                      <div styleName="row align-middle">
-                        <div styleName="text-center hollow secondary" onClick={this.handleExpandClick.bind(this, person.id)}>{expand ? '↑' : '↓'}</div>
-                        <div styleName="columns">
-                          <label>姓名： 
-                            <input type="text" data-key="name" readOnly={!edit} defaultValue={person.name} />
-                          </label>
-                        </div>
-                        <div styleName="columns small-1">
-                          <label>性别： 
-                            <select disabled={!edit} defaultValue={person.sex} data-key="sex">
-                              <option value="0">男</option>
-                              <option value="1">女</option>
-                            </select> 
-                          </label>
-                        </div>
-                        <div styleName="columns">
-                          <label>联系电话： 
-                            <input type="text" data-key="phoneNum" readOnly={!edit} defaultValue={person.phoneNum} />
-                          </label>
-                        </div>
-                        <div styleName="columns">
-                          <label>报名项目： 
-                            <input type="text" data-key="productName" readOnly={!edit} defaultValue={person.productName} />
-                          </label>
-                        </div>
-                        <div styleName="columns small-2"><span styleName="label">{STATE_MAP[person.state]}</span></div>
+                    <div styleName="row align-middle">
+                      <div styleName="text-center hollow secondary" onClick={this.handleExpandClick.bind(this, person.id)}>{expand ? '↑' : '↓'}</div>
+                      <div styleName="columns">
+                        <label>姓名： 
+                          <input type="text" data-key="name" readOnly={!edit} defaultValue={person.name} />
+                        </label>
                       </div>
+                      <div styleName="columns small-1">
+                        <label>性别： 
+                          <select disabled={!edit} defaultValue={person.sex} data-key="sex">
+                            <option value="0">男</option>
+                            <option value="1">女</option>
+                          </select> 
+                        </label>
+                      </div>
+                      <div styleName="columns">
+                        <label>联系电话： 
+                          <input type="text" data-key="phoneNum" readOnly={!edit} defaultValue={person.phoneNum} />
+                        </label>
+                      </div>
+                      <div styleName="columns">
+                        <label>报名项目： 
+                          <input type="text" data-key="productName" readOnly={!edit} defaultValue={person.productName} />
+                        </label>
+                      </div>
+                      <div styleName="columns small-2 text-center"><span styleName="label">{STATE_MAP[person.state]}</span></div>
                       {
-                        expand && (
-                          <div styleName="columns">
-                            <div styleName="row">
-                              <div styleName="columns">
-                                <label>出生年月： 
-                                  <input type="date" data-key="birthday" readOnly={!edit} defaultValue={moment(person.birthday).format('YYYY-MM-DD')} />
-                                </label>
-                              </div>
-                              <div styleName="columns">
-                                <label>身份证号： 
-                                  <input type="text" data-key="idCard" readOnly={!edit} defaultValue={person.idCard} />
-                                </label>
-                              </div>
-                              <div styleName="columns">
-                                <label>电子邮箱： 
-                                  <input type="email" data-key="eMail" readOnly={!edit} defaultValue={person.eMail} />
-                                </label>
-                              </div>
-                            </div>
-                            <div styleName="row">
-                              <div styleName="columns">
-                                <label>收货地址： 
-                                  <textarea row="2" data-key="address" readOnly={!edit} defaultValue={person.address}></textarea> 
-                                </label>
-                              </div>
-                            </div>
-                            <div styleName="row">
-                              <div styleName="columns">
-                                <label>身高： 
-                                  <input type="number" placeholder="cm." data-key="height" readOnly={!edit} defaultValue={person.height} />
-                                </label>
-                              </div>
-                              <div styleName="columns">
-                                <label>体重： 
-                                  <input type="number" placeholder="kg." data-key="weight" readOnly={!edit} defaultValue={person.weight} />
-                                </label>
-                              </div>
-                              <div styleName="columns">
-                                <label>衣服尺码： 
-                                  <select disabled={!edit} defaultValue={person.dressSize} data-key="dressSize">
-                                    <option value="0">S</option>
-                                    <option value="1">M</option>
-                                    <option value="2">L</option>
-                                    <option value="3">XL</option>
-                                    <option value="4">XXL</option>
-                                    <option value="5">XXXL</option>
-                                  </select> 
-                                </label>
-                              </div>
-                              <div styleName="columns">
-                                <label>跑鞋尺码： 
-                                  <input type="text" data-key="shoesSize" readOnly={!edit} defaultValue={person.shoesSize} />
-                                </label>
-                              </div>
-                            </div>
-                            <div styleName="row">
-                              <div styleName="columns">
-                                <label>紧急联系人姓名： 
-                                  <input type="text" data-key="emergencyName" readOnly={!edit} defaultValue={person.emergencyName} />
-                                </label>
-                              </div>
-                              <div styleName="columns">
-                                <label>紧急联系人电话： 
-                                  <input type="text" data-key="emergencyPhone" readOnly={!edit} defaultValue={person.emergencyPhone} />
-                                </label>
-                              </div>
-                            </div>
-                            <div styleName="row">
-                              <div styleName="columns">
-                                <label>备注：
-                                  <textarea row="2" data-key="note" readOnly={!edit} defaultValue={person.note}></textarea> 
-                                </label>
-                              </div>
-                            </div>
-                            <div styleName="row">
-                              <div styleName="columns">
-                                <label>参加过马拉松： 
-                                  <input type="text" data-key="takePartName" readOnly={!edit} defaultValue={person.takePartName} />
-                                </label>
-                              </div>
-                              <div styleName="columns">
-                                <label>报名时间： 
-                                  <input type="date" data-key="createTime" readOnly={!edit} defaultValue={moment(person.createTime).format('YYYY-MM-DD')} />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                            
-                        )
+                        detail.state === 7 && (!edit ? <a styleName={'columns large-4 button warning' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleEditClick.bind(this, person.id, i)}>编辑</a> : <a styleName="button success" onClick={this.handleSaveClick.bind(this, person.id, false)}>保存</a>)
                       }
-
+                      {
+                        detail.state === 7 && (!edit ? <a styleName={'columns large-4 button alert' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleDeleteClick.bind(this, person.id)}>删除</a> : <a styleName="button" onClick={this.handleSaveClick.bind(this, person.id, true)}>取消</a>)
+                      }
+                      { 
+                        detail.state !== 7 && <label styleName="columns shrink">成绩：<input type="time" data-key="score" step="1" defaultValue={moment(person.score || 0).format('hh:mm:ss')} /></label>
+                      }
+                      {
+                        detail.state !== 7 && <a styleName="shrink button success" onClick={this.handleSaveClick.bind(this, person.id)}>保存</a>
+                      }
                     </div>
                     {
-                      detail.state === 7 ?
-                        (<div styleName="medium-2 row">
-                          {
-                            !edit ? <a styleName={'columns large-4 button warning' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleEditClick.bind(this, person.id, i)}>编辑</a> : <a styleName="button success" onClick={this.handleSaveClick.bind(this, person.id, false)}>保存</a>
-                          }
-                          {
-                            !edit ? <a styleName={'columns large-4 button alert' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleDeleteClick.bind(this, person.id)}>删除</a> : <a styleName="button" onClick={this.handleSaveClick.bind(this, person.id, true)}>取消</a>
-                          }
-                        </div>)
-                      :
-                        (<div styleName="medium-2 row">
-                          <label styleName="columns">成绩： 
-                            <input type="time" data-key="score" readOnly={!edit} defaultValue={moment(person.score || 0).format('hh:mm:ss')} />
-                          </label>
-                          <a styleName="button success">保存</a>
-                        </div>)
+                      expand && (
+                        <div styleName="columns">
+                          <div styleName="row">
+                            <div styleName="columns">
+                              <label>出生年月： 
+                                <input type="date" data-key="birthday" readOnly={!edit} defaultValue={moment(person.birthday).format('YYYY-MM-DD')} />
+                              </label>
+                            </div>
+                            <div styleName="columns">
+                              <label>身份证号： 
+                                <input type="text" data-key="idCard" readOnly={!edit} defaultValue={person.idCard} />
+                              </label>
+                            </div>
+                            <div styleName="columns">
+                              <label>电子邮箱： 
+                                <input type="email" data-key="eMail" readOnly={!edit} defaultValue={person.eMail} />
+                              </label>
+                            </div>
+                          </div>
+                          <div styleName="row">
+                            <div styleName="columns">
+                              <label>收货地址： 
+                                <textarea row="2" data-key="address" readOnly={!edit} defaultValue={person.address}></textarea> 
+                              </label>
+                            </div>
+                          </div>
+                          <div styleName="row">
+                            <div styleName="columns">
+                              <label>身高： 
+                                <input type="number" placeholder="cm." data-key="height" readOnly={!edit} defaultValue={person.height} />
+                              </label>
+                            </div>
+                            <div styleName="columns">
+                              <label>体重： 
+                                <input type="number" placeholder="kg." data-key="weight" readOnly={!edit} defaultValue={person.weight} />
+                              </label>
+                            </div>
+                            <div styleName="columns">
+                              <label>衣服尺码： 
+                                <select disabled={!edit} defaultValue={person.dressSize} data-key="dressSize">
+                                  <option value="0">S</option>
+                                  <option value="1">M</option>
+                                  <option value="2">L</option>
+                                  <option value="3">XL</option>
+                                  <option value="4">XXL</option>
+                                  <option value="5">XXXL</option>
+                                </select> 
+                              </label>
+                            </div>
+                            <div styleName="columns">
+                              <label>跑鞋尺码： 
+                                <input type="text" data-key="shoesSize" readOnly={!edit} defaultValue={person.shoesSize} />
+                              </label>
+                            </div>
+                          </div>
+                          <div styleName="row">
+                            <div styleName="columns">
+                              <label>紧急联系人姓名： 
+                                <input type="text" data-key="emergencyName" readOnly={!edit} defaultValue={person.emergencyName} />
+                              </label>
+                            </div>
+                            <div styleName="columns">
+                              <label>紧急联系人电话： 
+                                <input type="text" data-key="emergencyPhone" readOnly={!edit} defaultValue={person.emergencyPhone} />
+                              </label>
+                            </div>
+                          </div>
+                          <div styleName="row">
+                            <div styleName="columns">
+                              <label>备注：
+                                <textarea row="2" data-key="note" readOnly={!edit} defaultValue={person.note}></textarea> 
+                              </label>
+                            </div>
+                          </div>
+                          <div styleName="row">
+                            <div styleName="columns">
+                              <label>参加过马拉松： 
+                                <input type="text" data-key="takePartName" readOnly={!edit} defaultValue={person.takePartName} />
+                              </label>
+                            </div>
+                            <div styleName="columns">
+                              <label>报名时间： 
+                                <input type="date" data-key="createTime" readOnly={!edit} defaultValue={moment(person.createTime).format('YYYY-MM-DD')} />
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                          
+                      )
                     }
+
                   </div>
                 );
               })

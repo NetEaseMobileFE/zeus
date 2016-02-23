@@ -9,39 +9,38 @@ import styles from '../../../css/modules/Modal.scss';
   allowMultiple: true
 })
 class Modal extends Component {
-  constructor(props,context){
-    super(props,context);
+  constructor(props, context){
+    super(props, context);
+    this.handleButtonClick = this.handleButtonClick.bind(this);
   }
-
-  modal_ok(){
-    let { modal_cancel } = this.props.actions;
-    modal_cancel();
-    this.props.modal.config.onOk();
+  handleButtonClick(isOk){
+    this.props.hideModal(isOk);
   }
 
   render(){
-    let { msg, config, didInvalidate } = this.props.modal;
-    let { modal_cancel } = this.props.actions;
+    const { title = '提示', isShown, hideModal, bodyTextCenter = false, hideCancelButton = true } = this.props;
     return(
-      <div styleName={["modal", didInvalidate ? "in" : ""].join(" ")}>
+      <div styleName={["modal", isShown ? "in" : ""].join(" ")}>
         <div styleName="modal-overlay"></div>
         <div styleName="modal-plane">
-          <div styleName="modal-header">
-            <h6>提示</h6>
-            <button styleName="close-button"
-                type="button"
-                onClick={modal_cancel}>
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div styleName="modal-body">
-            {this.props.children || msg}
-          </div>
-          <div styleName="modal-footer">
-            {
-              config.type !== 'alert' && (<button styleName="alert button hollow" onClick={modal_cancel}>取消</button>)
-            }
-            <button styleName="alert button" onClick={this.modal_ok.bind(this)}>确定</button>
+          <div styleName="inner">
+            <div styleName="modal-header">
+              <h6>{title}</h6>
+              <button styleName="close-button"
+                  type="button"
+                  onClick={this.handleButtonClick.bind(this, false)}>
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div styleName={'modal-body' + (bodyTextCenter ? ' text-center' : '')}>
+              {this.props.children}
+            </div>
+            <div styleName="modal-footer">
+              {
+                !hideCancelButton && (<button styleName="alert button hollow" onClick={this.handleButtonClick.bind(this, false)}>取消</button>)
+              }
+              <button styleName="alert button" onClick={this.handleButtonClick.bind(this, true)}>确定</button>
+            </div>
           </div>
         </div>
       </div>
@@ -50,8 +49,11 @@ class Modal extends Component {
 }
 
 Modal.propTypes={
-  actions:PropTypes.object.isRequired,
-  modal:PropTypes.object.isRequired
+  title: PropTypes.string,
+  isShown: PropTypes.bool.isRequired,
+  bodyTextCenter: PropTypes.bool,
+  hideCancelButton: PropTypes.bool,
+  hideModal: PropTypes.func.isRequired,
 };
 
 export default Modal;

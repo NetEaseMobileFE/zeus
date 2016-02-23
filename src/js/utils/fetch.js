@@ -35,7 +35,7 @@ function checkLogin() {
 export default function ajax(opt, dispatch) {
 
   const userName = checkLogin();
-  if (!userName) {
+  if (!userName && window.location.hostname !== 'localhost') {
     errorHanlder({ code: 0, msg: '未登录，刷新页面' }, dispatch);
     return Promise.reject({ code: 0, msg: '未登录，刷新页面' });
   }

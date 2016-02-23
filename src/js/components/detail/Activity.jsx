@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import moment from 'moment';
 import CSSModules from 'react-css-modules';
 import styles from '../../../css/modules/detail.scss';
 import { toggleBill, deleteMatch, updateDetail } from '../../actions/detail';
-// import { format } from '../../utils/moment';
-import moment from 'moment';
+import Modal from '../common/Modal';
 import STATE_MAP from './state';
 @CSSModules(styles, {
   allowMultiple: true
@@ -13,8 +13,16 @@ import STATE_MAP from './state';
 export default class Activity extends Component {
   constructor(props) {
     super(props);
+    this.hideBillModal = this.hideBillModal.bind(this);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
     this.handleDisplayClick = this.handleDisplayClick.bind(this);
+    this.handleViewBillClick = this.handleViewBillClick.bind(this);
+  }
+  handleViewBillClick() {
+    this.props.toggleBill(this.props.id);
+  }
+  hideBillModal() {
+    this.props.toggleBill(this.props.id);
   }
   handleDeleteClick() {
     if (confirm('是否取消此赛事？')) {
@@ -38,7 +46,7 @@ export default class Activity extends Component {
     });
   }
   render() {
-    const { id, detail, bill, showBill, handleViewBillClick } = this.props;
+    const { id, detail, bill, showBill } = this.props;
     let items = [];
     try {
       items = JSON.parse(detail.items);
@@ -111,8 +119,7 @@ export default class Activity extends Component {
           <div styleName="shrink columns">16位私钥：</div>
           <div styleName="columns">{detail.privkey}</div>
         </div>
-        <div>
-          {showBill}
+        <Modal title="账单查询" isShown={showBill} hideCancleButton={true} hideModal={this.hideBillModal}>
           <div>总收入： {
             bill.length > 0 && bill.reduce((pre, curr) => {
               return pre.total + curr.total;
@@ -135,9 +142,9 @@ export default class Activity extends Component {
               }
             </tbody>
           </table>
-        </div>
+        </Modal>
         <div styleName="button-group">
-          <a onClick={handleViewBillClick.bind(this, this.props.id)} styleName="secondary button">账单查询</a>
+          <a onClick={this.handleViewBillClick} styleName="secondary button">账单查询</a>
           {detail.display === 1}
           <a onClick={this.handleDisplayClick} styleName="success button">{(detail.display === 1 ? '隐藏' : '显示') + '报名人数'}</a>
           <Link styleName="warning button" to={`modification/${id}`}>修改</Link>
@@ -151,7 +158,7 @@ Activity.propTypes = {
   detail: PropTypes.object.isRequired, 
   bill: PropTypes.array.isRequired, 
   showBill: PropTypes.bool.isRequired, 
-  handleViewBillClick: PropTypes.func.isRequired
+  toggleBill: PropTypes.func.isRequired
 };
 function mapStateToProps(state, props) {
   const { id, detail } = props;
@@ -164,4 +171,4 @@ function mapStateToProps(state, props) {
     showBill
   };
 }
-export default connect(mapStateToProps, { handleViewBillClick: toggleBill, deleteMatch, updateDetail })(Activity);
+export default connect(mapStateToProps, { toggleBill, deleteMatch, updateDetail })(Activity);

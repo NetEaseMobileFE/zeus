@@ -21,7 +21,7 @@ class DetailPage extends Component {
     this.props.loadDetail(this.props.id);
   }
   componentWillReceiveProps(nextProps){
-    if (+nextProps.id !== this.props.id) {
+    if (+nextProps.id !== +this.props.id) {
       this.props.loadDetail(nextProps.id);
     }
   }

@@ -38,6 +38,9 @@
     background: #e6e6e6;
   }
 }
+table {
+  margin-bottom: 0;
+}
 .tabs, .tabs-content{
   border-color: #cacaca;
 }
@@ -45,6 +48,15 @@
   .item {
     .row {
       margin-bottom: 1.15rem;
+    }
+    >.row{
+      width: 100%;
+      max-width: 1300px;
+      margin-left: 0;
+      margin-right: 0;
+    }
+    .button {
+      margin-bottom: 0;
     }
   }
   .columns.middle{

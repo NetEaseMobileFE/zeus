@@ -2,7 +2,7 @@
  * Created by jruif on 16/2/2.
  */
 
-import { ADD_ITEM,REMOVE_ITEM,UPDATE_ITEM,UPDATE_FORM,RESET,MODIFICATIOB_INIT } from '../actions/actionType';
+import { ADD_ITEM,REMOVE_ITEM,UPDATE_ITEM,UPDATE_FORM,RESET,MODIFICATION_INIT } from '../actions/actionType';
 import extend from 'lodash.assign';
 
 const INIT_STATE = {
@@ -18,8 +18,8 @@ const INIT_STATE = {
     "disclaimer": "",
     "pictures": [],
     "requiredItems": {},
-    "addItems": [],
-    "weight": "",
+    "addItems": {},
+    "weight": 50,
     "display": 1,
     "defaultTenant": "0",
     "tenantAccount": "rfjing@corp.netease.com",
@@ -55,7 +55,8 @@ export default function create(state = INIT_STATE, action) {
             return extend({}, state, {
                 [action.name]: action.value
             });
-        case MODIFICATIOB_INIT:
+        case MODIFICATION_INIT:
+            console.log(action.value);
             return extend({},state,action.value);
         case RESET:
             return INIT_STATE;

@@ -4,7 +4,7 @@
 @include text-align;
 
 .applist{
-    @include table(odd);
+    @include table;
     table {
         text-align: center;
         width: 100%;

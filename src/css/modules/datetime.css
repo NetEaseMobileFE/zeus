@@ -36,6 +36,7 @@
 .rdtPicker th {
     text-align: center;
     height: 28px;
+    padding: 0;
 }
 .rdtPicker td.rdtToday:hover,
 .rdtPicker td.rdtHour:hover,

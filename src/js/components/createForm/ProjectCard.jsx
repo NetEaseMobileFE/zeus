@@ -3,6 +3,7 @@
  */
 import React, { Component, PropTypes } from 'react';
 import CSSModules from 'react-css-modules';
+import extend from 'lodash.assign';
 import styles from '../../../css/modules/ProjectCard.scss';
 
 @CSSModules(styles, {
@@ -26,7 +27,6 @@ class ProjectCard extends Component {
     }
     removeItem(index){
         const { removeItem } = this.props.actions;
-        let project = this.state.project;
         removeItem('items',index);
     }
     updateForm(index,event){
@@ -43,7 +43,7 @@ class ProjectCard extends Component {
         this.setState({
             project:[
                 ...project.slice(0,index),
-                {name:[target.name],value:[target.value]},
+                extend(project[index],{[target.name]:[target.value]}),
                 ...project.slice(index+1)
             ]
         })

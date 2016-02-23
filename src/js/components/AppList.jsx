@@ -30,11 +30,15 @@ class AppList extends Component {
     componentDidMount(){
         this.search();
     }
-    updateValue(){
-
+    updateValue(event){
+        let target = event.target;
+        const {updateParam} = this.props.actions;
+        updateParam(target.name,target.value);
     }
-    handlePageChangeClick(){
-
+    handlePageChangeClick(number){
+        const {updateParam} = this.props.actions;
+        updateParam('pageNum',number);
+        this.search();
     }
     search(){
         let { ajax } = this.props.ajax;
@@ -47,26 +51,27 @@ class AppList extends Component {
         });
 
         ajax({
-            url:'/totalCount'
+            url:'/totalCount',
+            queryType:'applist'
         },function(result){
             updateList(result.data,'pagination');
         })
     }
     render() {
-        const { route,delta } = this.props;
         const { data,param,pagination } = this.props.applist;
         let [self,count] = [this,data.length];
         return (
             <div styleName="panel applist">
                 <div styleName="row">
-                    <div styleName="columns"><h4>> 首页</h4></div>
+                    <div styleName="columns"><h4>首页</h4></div>
                     <div styleName="columns">
                         <div styleName="input-group ">
-                            <input styleName="input-group-field" type="text" name="condition"
-                                   defaultValue={param}
+                            <input styleName="input-group-field" type="text" name="name"
+                                   defaultValue={param.name}
                                    onBlur={this.updateValue.bind(this)}/>
                             <div styleName="input-group-button">
-                                <input type="submit" styleName="button" value="搜 索" onClick={this.search.bind(this)}/>
+                                <input type="submit" styleName="button" value="搜 索"
+                                       onClick={this.search.bind(this)}/>
                             </div>
                         </div>
                     </div>
@@ -89,7 +94,7 @@ class AppList extends Component {
                         {
                             data.map((elm,index)=>(
                                 <tr key={`content-${index}`}>
-                                    <td>{index+1}</td>
+                                    <td>{(param.pageNum-1)*count+(index+1)}</td>
                                     <td><Link to={`/match/${elm.id}`}>{elm.name || '-'}</Link></td>
                                     <td>{moment(elm.gameStart).local('zh-cn').format('lll')}</td>
                                     <td>{elm.weight || '-'}</td>
@@ -100,7 +105,9 @@ class AppList extends Component {
                         }
                         </tbody>
                     </table>
-                    <Pagination total={Math.ceil(count / pagination)} curPage={param.pageNum} toPage={this.handlePageChangeClick} />
+                    <Pagination total={Math.ceil(pagination / count)}
+                                curPage={param.pageNum}
+                                toPage={this.handlePageChangeClick.bind(this)} />
                 </div>
             </div>
         );

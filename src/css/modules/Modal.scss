@@ -5,6 +5,7 @@
     height: 100%;
     display: none;
     top: 0;
+    z-index:99;
     .modal-overlay {
         background-color: rgba(6, 6, 6, 0.5);
         width: 100%;

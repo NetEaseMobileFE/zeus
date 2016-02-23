@@ -35,6 +35,7 @@ export const SAVE_INFO = 'SAVE_INFO'; // 保存报名人信息
 // 首页
 export const UPDATE_APP_LIST = "UPDATE_APP_LIST";
 export const UPDATE_LIST_PAGINATION = "UPDATE_LIST_PAGINATION";
+export const UPDATE_LIST_PARAM = "UPDATE_LIST_PARAM";
 
 // 创建表单
 export const ADD_ITEM = 'ADD_ITEM';     // 添加 子元素
@@ -42,4 +43,4 @@ export const REMOVE_ITEM = 'REMOVE_ITEM'; // 移除 子元素
 export const UPDATE_ITEM = 'UPDATE_ITEM'; // 更新 子元素
 export const UPDATE_FORM = 'UPDATE_FORM'; // 更新 表单
 export const RESET = 'RESET'; // 更新 表单
-export const MODIFICATIOB_INIT = 'MODIFICATIOB_INIT'; // 修改 活动初始化
+export const MODIFICATION_INIT = 'MODIFICATION_INIT'; // 修改 活动初始化

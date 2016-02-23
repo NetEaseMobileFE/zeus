@@ -101,6 +101,10 @@ export function ajax(opt,callback) {
                  */
                 if (result.code === 1) {
                     return result;
+                }else if(result.code === 2){
+                    result.msg = '参数错误'
+                }else if(result.code === 3){
+                    result.msg = '服务器错误'
                 }
                 let error = new Error(result.msg);
                 error.response = result;
@@ -109,6 +113,7 @@ export function ajax(opt,callback) {
             .then(callback.bind(this))
             .catch((fail) => {
                 dispatch(modal.error(fail.response || {msg:'未知错误,请联系程序猿 或 刷新页面'}));
+                console.error(fail);
             });
     };
 }

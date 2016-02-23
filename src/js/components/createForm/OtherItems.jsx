@@ -31,18 +31,28 @@ class OtherItems extends Component {
         this.addItems = [];
     }
 
-    concatOtherItems() {
-        const { requiredItems,addItems } = this.props;
+    componentWillMount() {
+        this.setState({
+            otherItems: this.concatOtherItems(this.props)
+        });
+    }
+    componentWillReceiveProps(nextProps){
+        this.setState({
+            otherItems: this.concatOtherItems(nextProps)
+        });
+    }
+
+    concatOtherItems(Props) {
+        const { requiredItems,addItems } = Props;
         let otherItems = this.otherItems;
         // 合并addItems到预设
-        this.addItems = addItems.map((elm)=> {
-            let key = Object.keys(elm)[0];
-            otherItems[key] = {
+        this.addItems = Object.keys(addItems).map((elm)=> {
+            otherItems[elm] = {
                 value: false,
-                text: elm[key],
+                text: addItems[elm],
                 type: 1  // 1 表示为addItems元素
             };
-            return key;
+            return elm;
         });
         Object.keys(requiredItems).map((elm)=> {
             otherItems[elm].value = requiredItems[elm];
@@ -50,39 +60,33 @@ class OtherItems extends Component {
         return otherItems;
     }
 
-    componentWillMount() {
-        this.setState({
-            otherItems: this.concatOtherItems()
-        });
-    }
-
     updateAddItems(event) {
         event.stopPropagation();
         const { updateForm } = this.props.actions;
         let [name, value] = [event.target.name, event.target.value];
+        let { addItems } = this.props;
         if (name.indexOf('other_') === 0) {
-            this.addItems.map((elm, index)=> {
-                if (elm === name) {
-                    updateForm('addItems', {
-                        [name]: value
-                    }, index);
-                }
-            });
+            updateForm('addItems',extend({},addItems,{
+                [name]:value
+            }));
         }
     }
 
     addOther() {
-        const { addItem } = this.props.actions;
-        let key = `other_${Date.now()}`;
+        const { updateForm } = this.props.actions;
+        let name = `other_${Date.now()}`;
+        let { addItems } = this.props;
         let otherItems = extend({}, this.state.otherItems, {
-            [key]: {
+            [name]: {
                 value: false,
                 text: null,
                 type: 1  // 1 表示为addItems元素
             }
         });
-        this.addItems.push(key);
-        addItem('addItems', {[key]: null});
+        this.addItems.push(name);
+        updateForm('addItems',extend({},addItems,{
+            [name]:null
+        }));
         this.setState({otherItems});
     }
 
@@ -111,7 +115,6 @@ class OtherItems extends Component {
     }
 
     render() {
-        let { }=this.props;
         let state = this.state;
         return (
             <ul styleName="other"
@@ -127,7 +130,7 @@ class OtherItems extends Component {
                                             {
                                                 state.otherItems[elm].value ?
                                                     <input type="checkbox" name="requiredItems"
-                                                           data-index={index} value={elm} defaultChecked/> :
+                                                           data-index={index} value={elm} checked/> :
                                                     <input type="checkbox" name="requiredItems"
                                                            data-index={index} value={elm}/>
                                             }
@@ -140,7 +143,7 @@ class OtherItems extends Component {
                                         {
                                             state.otherItems[elm].value ?
                                                 <input type="checkbox" name="requiredItems"
-                                                       data-index={index} value={elm} defaultChecked/> :
+                                                       data-index={index} value={elm} checked/> :
                                                 <input type="checkbox" name="requiredItems"
                                                        data-index={index} value={elm}/>
                                         }
@@ -158,7 +161,7 @@ class OtherItems extends Component {
 OtherItems.propTypes = {
     actions: PropTypes.object.isRequired,
     requiredItems: PropTypes.object.isRequired,
-    addItems: PropTypes.array.isRequired
+    addItems: PropTypes.object.isRequired
 };
 
 export default OtherItems;

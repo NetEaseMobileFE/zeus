@@ -1,7 +1,7 @@
 /**
  * Created by jruif on 16/2/14.
  */
-import {ADD_ITEM,REMOVE_ITEM,UPDATE_ITEM,UPDATE_FORM,RESET,MODIFICATIOB_INIT} from './actionType'
+import {ADD_ITEM,REMOVE_ITEM,UPDATE_ITEM,UPDATE_FORM,RESET,MODIFICATION_INIT} from './actionType'
 
 export function addItem(name,value){
     return {
@@ -37,7 +37,7 @@ export function updateForm(name,value,index){
 
 export function modificationInit(value){
     return {
-        type: MODIFICATIOB_INIT,
+        type: MODIFICATION_INIT,
         value
     }
 }

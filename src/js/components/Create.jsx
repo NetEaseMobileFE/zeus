@@ -9,15 +9,18 @@ import { connect } from 'react-redux';
 import CSSModules from 'react-css-modules';
 import extend from 'lodash.assign';
 import moment from 'moment';
+// action creator
 import * as createActions from '../actions/create';
 import * as Ajax from '../actions/fetch';
 import * as Modal from '../actions/modal';
+// 组建
 import DropzoneComponent from 'react-dropzone-component';
 import ProjectCard from './createForm/ProjectCard.jsx';
 import OtherItems from './createForm/OtherItems.jsx';
 import WYBinfo from './createForm/WYBinfo.jsx';
 import Datetime from 'react-datetime';
 import 'moment/locale/zh-cn';
+// 样式
 import '!style!css!../../css/modules/datetime.css';
 import '!style!css!sass!../../css/modules/upload.scss';
 import styles from '../../css/modules/create.scss';
@@ -33,6 +36,7 @@ class Create extends Component {
         this.cache = {};
         this.picturesPaths = [];
         this.state = extend({},data);
+        this.postUrl = '/save';
     }
 
     componentWillMount(){
@@ -66,21 +70,35 @@ class Create extends Component {
         const { route,actions } = this.props;
         const { ajax } = this.props.ajax;
         const { modificationInit } = this.props.actions;
+        let self = this;
         if( route.location.pathname.indexOf('modification')>-1 ){
             ajax({
                 url:'/get',
                 body:{
-                    cid:this.props.routeParams.id
+                    cid:self.props.routeParams.id
                 }
             },function(rs){
                 ['addItems','items','pictures','requiredItems'].map((elm)=>{
+                    if(typeof rs.data[elm] === 'string' && !rs.data[elm].length){
+                        if(elm === 'addItems' || elm === 'requiredItems'){
+                            rs.data[elm] = "{}";
+                        }else{
+                            rs.data[elm] = "[]";
+                        }
+                    }
                     extend(rs.data,{
                         [elm]:JSON.parse(rs.data[elm])
                     });
                 });
                 modificationInit(rs.data);
             });
+            this.postUrl = '/update';
         }
+    }
+
+    componentWillReceiveProps(nextProps){
+        let data = nextProps.data;
+        this.setState(extend({},data));
     }
 
     // 图片上传 属性 配置
@@ -129,51 +147,14 @@ class Create extends Component {
         }
     }
 
-    // 切换类型
-    switchType(event) {
-        let target = event.target;
-        const { updateForm } = this.props.actions;
-        updateForm(target.name, target.value);
-        updateForm('items', this.types[target.value].project);
-    }
-
-    // input/textarea 等获得焦点时
-    focusInput(event) {
-        let target = event.target;
-        extend(this.cache, {
-            [target.name]: target.value
-        });
-    }
-
-    // 使出焦点时,更新 store 中的 state 值
-    updateValue(event) {
-        const { updateForm,reset } = this.props.actions;
-
-        reset();
-        let [name, value] = [event.target.name, event.target.value];
-        let reg = new RegExp(name, 'g');
-        if (!reg.test(['signUpStart', 'signUpEnd', 'gameStart', 'gameEnd'].join('|'))
-            && this.cache[name] !== value) {
-            this.cache[name] = value;
-            updateForm(name, value);
-        }
-    }
-
-    // @param { name }
-    // @param { Moment } moment 实例
-    updateTime(name, mom) {
-        const { updateForm } = this.props.actions;
-        updateForm(name, mom.valueOf());
-        if(name === 'gameStart'){
-            updateForm('gameEnd', mom.valueOf() + 24 * 60 * 60 * 1000);
-        }
-    }
-
     uploadEventHandlers() {
         //[{"path": "pic1", "description": "introduce"},{"path": "pic2", "description": "introduce"}]
         let [name, self] = ['pictures', this];
         const { addItem,removeItem } = this.props.actions;
+        const { pictures } = this.state;
         return {
+            init(dp){
+            },
             success(file, result){
                 addItem(name, {
                     path: result.data,
@@ -196,6 +177,44 @@ class Create extends Component {
         }
     }
 
+    // 切换类型
+    switchType(event) {
+        let target = event.target;
+        const { updateForm } = this.props.actions;
+        updateForm(target.name, target.value);
+        updateForm('items', this.types[target.value].project);
+    }
+
+    // input/textarea 等获得焦点时
+    focusInput(event) {
+        let target = event.target;
+        extend(this.cache, {
+            [target.name]: target.value
+        });
+    }
+
+    // 使出焦点时,更新 store 中的 state 值
+    updateValue(event) {
+        const { updateForm } = this.props.actions;
+        let [name, value] = [event.target.name, event.target.value];
+        let reg = new RegExp(name, 'g');
+        if (!reg.test(['signUpStart', 'signUpEnd', 'gameStart', 'gameEnd'].join('|'))
+            && this.cache[name] !== value) {
+            this.cache[name] = value;
+            updateForm(name, value);
+        }
+    }
+
+    // @param { name }
+    // @param { Moment } moment 实例
+    updateTime(name, mom) {
+        const { updateForm } = this.props.actions;
+        updateForm(name, mom.valueOf());
+        if(name === 'gameStart'){
+            updateForm('gameEnd', mom.valueOf() + 24 * 60 * 60 * 1000);
+        }
+    }
+
     updateDescription(event) {
         event.stopPropagation();
         let target = event.target;
@@ -214,23 +233,28 @@ class Create extends Component {
         const { ajax } = this.props.ajax;
         const { reset } = this.props.actions;
         const { success,modal_ok } = this.props.modal;
+        const { route } = this.props;
         ajax({
-            url:'/save',
-            method:'POST'
+            url: this.postUrl,
+            method:'POST',
+            queryType:'create'
         },function(result){
             // todo: 弹出alert -> 跳转到 详情页/列表页
             success(result,function(){
                 reset();
                 modal_ok();
+                route.push('/applist');
             });
         });
     }
+
     updateStateValue(event){
         let target = event.target;
         this.setState({
             [target.name]: target.value
         });
     }
+
     render() {
         const { actions,data } = this.props;
         let self = this;
@@ -276,13 +300,13 @@ class Create extends Component {
                         <div styleName="small-8 medium-4 columns">
                             <Datetime input={true} locale="zh-cn"
                                       inputProps={{placeholder:'起始日期',name:'signUpStart',readOnly:true}}
-                                      value={this.state.signUpStart}
+                                      value={data.signUpStart}
                                       onBlur={this.updateTime.bind(this,'signUpStart')}/>
                         </div>
                         <div styleName="small-8 medium-4 columns">
                             <Datetime input={true} locale="zh-cn"
                                       inputProps={{placeholder:'结束日期',name:'signUpEnd',readOnly:true}}
-                                      value={this.state.signUpEnd}
+                                      value={data.signUpEnd}
                                       onBlur={this.updateTime.bind(this,'signUpEnd')}/>
                         </div>
                     </div>
@@ -293,14 +317,14 @@ class Create extends Component {
                         <div styleName="small-8 medium-4 columns">
                             <Datetime input={true} locale="zh-cn"
                                       inputProps={{placeholder:'起始日期',name:'gameStart',readOnly:true}}
-                                      value={this.state.gameStart}
-                                      onChange={this.updateTime.bind(this,'gameEnd')}
+                                      value={data.gameStart}
+                                      onChange={this.updateTime.bind(this,'gameStart')}
                                       onBlur={this.updateTime.bind(this,'gameStart')}/>
                         </div>
                         <div styleName="small-8 medium-4 columns">
                             <Datetime input={true} locale="zh-cn"
                                       inputProps={{placeholder:'结束日期',name:'gameEnd',readOnly:true}}
-                                      value={this.state.gameEnd}
+                                      value={data.gameEnd}
                                       onChange={this.updateTime.bind(this,'gameEnd')}
                                       onBlur={this.updateTime.bind(this,'gameEnd')}/>
                         </div>
@@ -310,7 +334,7 @@ class Create extends Component {
                             <label styleName="text-right middle" data-suffix=":">{curType.text}官网</label>
                         </div>
                         <div styleName="small-8 medium-8 columns">
-                            <input type="text" name="siteUrl" value={self.siteUrl}/>
+                            <input type="text" name="siteUrl" value={self.state.siteUrl}/>
                         </div>
                     </div>
                     <div styleName="row">
@@ -365,8 +389,8 @@ class Create extends Component {
                         </div>
                         <div styleName="small-8 medium-8 columns">
                             <OtherItems actions={actions}
-                                        requiredItems={this.state.requiredItems}
-                                        addItems={this.state.addItems}/>
+                                        requiredItems={data.requiredItems}
+                                        addItems={data.addItems}/>
                         </div>
                     </div>
                     <div styleName="row">

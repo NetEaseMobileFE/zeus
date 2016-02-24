@@ -80,6 +80,7 @@ export default class Participants extends Component {
   handleSaveClick(id, cancel) {
     const { editInfo, saveInfo } = this.props;
     editInfo(0);
+    debugger;
     if (!cancel) {
       saveInfo(id, this.tempInfo).then((json)=> {
         if (json.code === 1) {
@@ -156,18 +157,18 @@ export default class Participants extends Component {
                           <input type="text" data-key="productName" readOnly={!edit} defaultValue={person.productName} />
                         </label>
                       </div>
-                      <div styleName="columns small-2 text-center"><span styleName="label">{STATE_MAP[person.state]}</span></div>
+                      <div styleName="columns small-2 text-center"><span styleName={'label' + (person.state === 10 ? ' secondary' : '')}>{STATE_MAP[person.state]}</span></div>
                       {
-                        detail.state === 7 && (!edit ? <a styleName={'columns large-4 button warning' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleEditClick.bind(this, person.id, i)}>编辑</a> : <a styleName="button success" onClick={this.handleSaveClick.bind(this, person.id, false)}>保存</a>)
+                        detail.state !== 7 && (!edit ? <a styleName={'shrink button warning' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleEditClick.bind(this, person.id, i)}>编辑</a> : <a styleName="button success" onClick={this.handleSaveClick.bind(this, person.id, false)}>保存</a>)
                       }
                       {
-                        detail.state === 7 && (!edit ? <a styleName={'columns large-4 button alert' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleDeleteClick.bind(this, person.id)}>删除</a> : <a styleName="button" onClick={this.handleSaveClick.bind(this, person.id, true)}>取消</a>)
+                        detail.state !== 7 && (!edit ? <a styleName={'shrink button alert' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleDeleteClick.bind(this, person.id)}>删除</a> : <a styleName="button" onClick={this.handleSaveClick.bind(this, person.id, true)}>取消</a>)
                       }
                       { 
-                        detail.state !== 7 && <label styleName="columns shrink">成绩：<input type="time" data-key="score" step="1" defaultValue={moment(person.score || 0).format('hh:mm:ss')} /></label>
+                        detail.state === 7 && person.state === 9 && <label styleName="columns shrink">成绩：<input type="time" data-key="score" step="1" defaultValue={moment(person.score || 0).format('hh:mm:ss')} /></label>
                       }
                       {
-                        detail.state !== 7 && <a styleName="shrink button success" onClick={this.handleSaveClick.bind(this, person.id)}>保存</a>
+                        detail.state === 7 && person.state === 9 && <a styleName="shrink button success" onClick={this.handleSaveClick.bind(this, person.id, false)}>保存</a>
                       }
                     </div>
                     {

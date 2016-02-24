@@ -6,12 +6,13 @@ import { ADD_ITEM,REMOVE_ITEM,UPDATE_ITEM,UPDATE_FORM,RESET,MODIFICATION_INIT } 
 import extend from 'lodash.assign';
 
 const INIT_STATE = {
-    "type": "2",
+    "type": 0,
     "name": "",
     "signUpStart": null,
     "signUpEnd": null,
     "gameStart": null,
     "gameEnd": null,
+    "siteUrl":'',
     "items": [],
     "limitNum": "",
     "introduce": "",
@@ -22,7 +23,7 @@ const INIT_STATE = {
     "weight": 50,
     "display": 1,
     "defaultTenant": "0",
-    "tenantAccount": "rfjing@corp.netease.com",
+    "tenantAccount": "",
     "privkey": "",
     "publickey": "",
     "plateformId": ""
@@ -56,7 +57,6 @@ export default function create(state = INIT_STATE, action) {
                 [action.name]: action.value
             });
         case MODIFICATION_INIT:
-            console.log(action.value);
             return extend({},state,action.value);
         case RESET:
             return INIT_STATE;

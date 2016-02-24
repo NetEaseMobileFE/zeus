@@ -4,11 +4,8 @@
 import React, { Component, PropTypes } from 'react';
 import CSSModules from 'react-css-modules';
 
-import Modal './common/Modal';
+import Modal from './common/Modal';
 
-@CSSModules(styles, {
-  allowMultiple: true
-})
 class AlertModal extends Component {
   constructor(props,context){
     super(props,context);

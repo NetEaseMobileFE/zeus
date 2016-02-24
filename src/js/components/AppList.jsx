@@ -6,7 +6,7 @@ import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { routeActions } from 'react-router-redux';
-import { Router, Route, Link } from 'react-router'
+import { Router, Route, Link } from 'react-router';
 import CSSModules from 'react-css-modules';
 import moment from 'moment';
 import * as AppListAction from '../actions/applist';
@@ -59,7 +59,7 @@ class AppList extends Component {
     }
     render() {
         const { data,param,pagination } = this.props.applist;
-        let [self,count] = [this,data.length];
+        let [self,count] = [this,10];
         return (
             <div styleName="panel applist">
                 <div styleName="row">

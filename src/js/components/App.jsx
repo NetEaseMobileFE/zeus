@@ -7,7 +7,7 @@ import * as Actions from '../actions';
 import * as ModalActions from '../actions/modal';
 import SlideBar from './SlideBar';
 import Header from './Header';
-import Modal from './Modal.jsx';
+import AlertModal from './AlertModal.jsx';
 
 @CSSModules(styles)
 class App extends Component{
@@ -22,7 +22,7 @@ class App extends Component{
                         {children}
                     </section>
                 </section>
-                <Modal modal={modal}
+                <AlertModal modal={modal}
                        actions={modalAction}/>
             </div>
         );

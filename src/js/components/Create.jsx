@@ -6,14 +6,17 @@ import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import ReactDOMServer from 'react-dom/server';
 import { connect } from 'react-redux';
+import { Router } from 'react-router'
 import CSSModules from 'react-css-modules';
 import extend from 'lodash.assign';
 import moment from 'moment';
+import validator from'validator'
 // action creator
+import { routeActions } from 'react-router-redux'
 import * as createActions from '../actions/create';
 import * as Ajax from '../actions/fetch';
 import * as Modal from '../actions/modal';
-// 组建
+// 组件
 import DropzoneComponent from 'react-dropzone-component';
 import ProjectCard from './createForm/ProjectCard.jsx';
 import OtherItems from './createForm/OtherItems.jsx';
@@ -40,14 +43,15 @@ class Create extends Component {
     }
 
     componentWillMount(){
-        let { type, items } = this.props.data;
-        const { updateForm } = this.props.actions;
+        let { type,items } = this.props.data;
+        const { updateForm,reset } = this.props.actions;
+        reset();
         this.types = {
             1: {
                 text: '活动',
                 project: []
             },
-            2: {
+            0: {
                 text: '赛事',
                 project: [{
                     name: '全程马拉松',
@@ -91,6 +95,7 @@ class Create extends Component {
                     });
                 });
                 modificationInit(rs.data);
+                self.picturesPaths = rs.data.pictures.map((elm)=>elm.path);
             });
             this.postUrl = '/update';
         }
@@ -150,7 +155,7 @@ class Create extends Component {
     uploadEventHandlers() {
         //[{"path": "pic1", "description": "introduce"},{"path": "pic2", "description": "introduce"}]
         let [name, self] = ['pictures', this];
-        const { addItem,removeItem } = this.props.actions;
+        const { addItem } = this.props.actions;
         const { pictures } = this.state;
         return {
             init(dp){
@@ -165,16 +170,34 @@ class Create extends Component {
             },
             removedfile(file){
                 let path = JSON.parse(file.xhr.response).data;
-                let index = null;
-                self.picturesPaths.map((elm, i)=> {
-                    if (elm === path) {
-                        removeItem(name, i);
-                        index = i;
-                    }
-                });
-                self.picturesPaths.splice(index, 1);
+                self.removedPictures(path);
             }
         }
+    }
+
+    removedPictures(path){
+        let index = null;
+        const { removeItem } = this.props.actions;
+        this.picturesPaths.map((elm, i)=> {
+            if (elm === path) {
+                removeItem('pictures', i);
+                index = i;
+            }
+        });
+        this.picturesPaths.splice(index, 1);
+    }
+
+    updateDescription(event) {
+        event.stopPropagation();
+        let target = event.target;
+        const { updateForm } = this.props.actions;
+        this.picturesPaths.map((elm, index)=> {
+            if (elm === target.dataset.path) {
+                updateForm('pictures', {
+                    [target.name]: target.value
+                }, index);
+            }
+        });
     }
 
     // 切换类型
@@ -200,6 +223,7 @@ class Create extends Component {
         let reg = new RegExp(name, 'g');
         if (!reg.test(['signUpStart', 'signUpEnd', 'gameStart', 'gameEnd'].join('|'))
             && this.cache[name] !== value) {
+            validator.is
             this.cache[name] = value;
             updateForm(name, value);
         }
@@ -209,23 +233,11 @@ class Create extends Component {
     // @param { Moment } moment 实例
     updateTime(name, mom) {
         const { updateForm } = this.props.actions;
-        updateForm(name, mom.valueOf());
-        if(name === 'gameStart'){
-            updateForm('gameEnd', mom.valueOf() + 24 * 60 * 60 * 1000);
+        let time = mom.valueOf();
+        updateForm(name, time);
+        if(name === 'gameStart' && time && !this.state.gameEnd){
+            updateForm('gameEnd', time + 24 * 60 * 60 * 1000);
         }
-    }
-
-    updateDescription(event) {
-        event.stopPropagation();
-        let target = event.target;
-        const { updateForm } = this.props.actions;
-        this.picturesPaths.map((elm, index)=> {
-            if (elm === target.dataset.path) {
-                updateForm('pictures', {
-                    [target.name]: target.value
-                }, index);
-            }
-        });
     }
 
     submitForm(event){
@@ -233,7 +245,7 @@ class Create extends Component {
         const { ajax } = this.props.ajax;
         const { reset } = this.props.actions;
         const { success,modal_ok } = this.props.modal;
-        const { route } = this.props;
+        const { router } = this.props;
         ajax({
             url: this.postUrl,
             method:'POST',
@@ -243,7 +255,7 @@ class Create extends Component {
             success(result,function(){
                 reset();
                 modal_ok();
-                route.push('/applist');
+                router.push('/applist');
             });
         });
     }
@@ -276,7 +288,7 @@ class Create extends Component {
                                     <label styleName="align-spaced">
                                         <input type="radio" name="type"
                                                value={ elm } data-text={ self.types[elm].text }
-                                               checked={ elm === self.state.type }
+                                               checked={ +elm === self.state.type }
                                                onChange={self.switchType.bind(self)}/>
                                         {self.types[elm].text}
                                     </label>
@@ -378,6 +390,26 @@ class Create extends Component {
                             <label styleName="text-right middle" data-suffix=":">上传图片</label>
                         </div>
                         <div styleName="small-8 medium-8 columns" onBlur={self.updateDescription.bind(self)}>
+                            {
+                                self.state.pictures.length && (
+                                    <div className="dropzone">
+                                    {
+                                        self.state.pictures.map((elm,index)=>(
+                                            <div className="dz-preview dz-file-preview" key={`preview_${index}`}>
+                                                <div className="dz-image">
+                                                    <img src={elm.path}/>
+                                                </div>
+                                                <input type="text" name="description"
+                                                       defaultValue={elm.description}
+                                                       data-path={elm.path}/>
+                                                <a className="dz-remove" href="javascript:undefined;"
+                                                   onClick={self.removedPictures.bind(self,elm.path)}>✘</a>
+                                            </div>
+                                        ))
+                                    }
+                                    </div>
+                                )
+                            }
                             <DropzoneComponent config={this.uploadComponentConfig()}
                                                eventHandlers={this.uploadEventHandlers()}
                                                djsConfig={this.uploadDjsConfig()}/>
@@ -426,6 +458,7 @@ export default connect(
     (dispatch) => ({
         actions: bindActionCreators(createActions, dispatch),
         modal: bindActionCreators(Modal, dispatch),
+        router: bindActionCreators(routeActions, dispatch),
         ajax: bindActionCreators(Ajax, dispatch)
     })
 )(Create);

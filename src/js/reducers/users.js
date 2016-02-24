@@ -1,12 +1,12 @@
 import extend from'lodash.assign';
 import * as actions from '../actions/actionType';
 import moment from 'moment';
-export function users(state = { data: [], count: 0 }, action) {
+export default function users(state = { data: [], count: 0, showModal: false, modifying: {} }, action) {
   switch (action.type) {
     case actions.REQUEST_USERS:
       return extend({}, state, {
         data: [
-          ...state.users,
+          ...state.data,
           ...action.data
         ]
       });
@@ -22,5 +22,11 @@ export function users(state = { data: [], count: 0 }, action) {
           ...state.data
         ]
       });
+    case actions.TOGGLE_MODAL:
+      return extend({}, state, {
+        showModal: action.showModal
+      });
+    default:
+      return state;
   }
 }

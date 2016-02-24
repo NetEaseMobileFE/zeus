@@ -49,4 +49,6 @@ export const MODIFICATION_INIT = 'MODIFICATION_INIT'; // 修改 活动初始化
 export const REQUEST_USERS = 'REQUEST_USERS'; //请求用户s
 export const REQUEST_USERS_COUNT = 'REQUEST_USERS_COUNT'; //请求用户总数
 export const ADD_USER = 'ADD_USER'; // 增加用户
+export const MODIFY_USER = 'MODIFY_USER'; // 修改用户
 export const DELETE_USER = 'DELETE_USER'; // 删除用户
+export const TOGGLE_MODAL = 'TOGGLE_MODAL'; // 显示或隐藏对话框

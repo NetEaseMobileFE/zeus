@@ -1,1 +1,17 @@
 @import 'leadin';
+form {
+  width: 400px;
+  margin-left: -0.9375rem;
+  margin-bottom: -8px;
+  padding-top: 12px;
+}
+table {
+  width: 1000px;
+  text-align: center;
+  thead th {
+    text-align: center;
+  }
+}
+table .button {
+  margin-bottom: 0;
+}

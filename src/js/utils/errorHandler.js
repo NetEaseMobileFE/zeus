@@ -1,7 +1,6 @@
 import * as modal from '../actions/modal';
 
 export default function errorHanlder(dispatch, fail) {
-  debugger
   dispatch(modal.error({ msg: `${fail.msg}` })); 
   if (fail.code === -1) {
     setTimeout(function() {

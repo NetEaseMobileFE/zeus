@@ -31,6 +31,17 @@ export function fetchUsersCount() {
   };
 }
 
+// 打开或关闭添加管理员对话框
+export function toggleModal() {
+  return (dispatch, getState) => {
+    const showModal = getState().users.showModal;
+    dispatch({
+      type: type.TOGGLE_MODAL,
+      showModal: !showModal
+    });
+  };
+}
+
 // 添加管理员
 export function addUser(data = { account: '', name: ''}) {
   return (dispatch, getState) => {
@@ -43,6 +54,15 @@ export function addUser(data = { account: '', name: ''}) {
         type: type.ADD_USER,
         data,
       });
+    }).catch(errorHandler.bind(null, dispatch));
+  };
+}
+// 修改管理员
+export function modifyUser(data = { account: '', name: ''}) {
+  return (dispatch) => {
+    dispatch({
+      type: type.MODIFY_USER,
+      modifying: data
     });
   };
 }
@@ -57,10 +77,10 @@ export function deleteUser(data = { account: '' }) {
       body: data
     }).then((json) => {
       dispatch({
-        type: type.ADD_USER,
-        count: count + 1,
+        type: type.DELETE_USER,
+        count: count - 1,
       });
-    });
+    }).catch(errorHandler.bind(null, dispatch));
   };
 }
 

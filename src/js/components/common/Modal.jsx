@@ -13,12 +13,13 @@ class Modal extends Component {
     super(props, context);
     this.handleButtonClick = this.handleButtonClick.bind(this);
   }
-  handleButtonClick(isOk){
-    this.props.hideModal(isOk);
+  handleButtonClick(isOK){
+    this.props.hideModal(isOK);
+    console.log(isOK)
   }
 
   render(){
-    const { title = '提示', isShown, hideModal, bodyTextCenter = false, hideCancelButton = true } = this.props;
+    const { title = '提示', isShown, hideModal, bodyTextCenter = false, buttonEnable = true, hideCancelButton = true } = this.props;
     return(
       <div styleName={["modal", isShown ? "in" : ""].join(" ")}>
         <div styleName="modal-overlay"></div>
@@ -36,10 +37,10 @@ class Modal extends Component {
               {this.props.children}
             </div>
             <div styleName="modal-footer">
+              <button styleName={'alert button' + (buttonEnable ? '' : ' disabled')} onClick={this.handleButtonClick.bind(this, true)}>确定</button>
               {
                 !hideCancelButton && (<button styleName="alert button hollow" onClick={this.handleButtonClick.bind(this, false)}>取消</button>)
               }
-              <button styleName="alert button" onClick={this.handleButtonClick.bind(this, true)}>确定</button>
             </div>
           </div>
         </div>
@@ -51,8 +52,8 @@ class Modal extends Component {
 Modal.propTypes={
   title: PropTypes.string,
   isShown: PropTypes.bool.isRequired,
+  buttonEnable: PropTypes.bool,
   bodyTextCenter: PropTypes.bool,
-  config: PropTypes.object,
   hideCancelButton: PropTypes.bool,
   hideModal: PropTypes.func.isRequired,
 };

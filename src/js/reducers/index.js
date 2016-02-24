@@ -8,6 +8,7 @@ import create from './create';
 import { details, participants, inviteCodes } from './detail';
 import app from './app';
 import modal from './modal';
+import users from './users';
 const rootReducer = combineReducers({
   routeReducer,
   participants,
@@ -15,8 +16,9 @@ const rootReducer = combineReducers({
   applyList,
   details,
   create,
+  modal,
+  users,
   app,
-  modal
 });
 
 export default rootReducer;

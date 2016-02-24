@@ -52,6 +52,7 @@ Modal.propTypes={
   title: PropTypes.string,
   isShown: PropTypes.bool.isRequired,
   bodyTextCenter: PropTypes.bool,
+  config: PropTypes.object,
   hideCancelButton: PropTypes.bool,
   hideModal: PropTypes.func.isRequired,
 };

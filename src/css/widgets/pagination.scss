@@ -3,3 +3,14 @@
 @import "../lib/foundation";
 
 @include foundation-button;
+.wrap {
+  display: flex;
+}
+.button {
+  margin: 0 0 0 1rem;
+}
+.middle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

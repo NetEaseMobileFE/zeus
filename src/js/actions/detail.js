@@ -2,6 +2,7 @@ import * as type from './actionType';
 import fetch from 'isomorphic-fetch';
 import extend from 'lodash.assign';
 import ajax from '../utils/fetch';
+import errorHandler from '../utils/errorHandler';
 
 // 获取活动详情
 export function loadDetail(id) {
@@ -37,7 +38,7 @@ export function loadDetail(id) {
         data: json,
         id
       });
-    })
+    });
   };
 }
 // 修改活动详情
@@ -46,7 +47,10 @@ export function updateDetail(data) {
     return ajax({
       url: 'http://baoming.ws.netease.com/admin/competition/update',
       method: 'POST',
-      body: extend({}, data)
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      }, 
+      body: JSON.stringify(data)
     }).then((json) => {
       dispatch({
         type: type.REQUEST_DETAIL,
@@ -54,7 +58,7 @@ export function updateDetail(data) {
         id: data.id,
       });
       return Promise.resolve(json);
-    })
+    }).catch(errorHandler.bind(null, dispatch));
   }
 }
 // 显隐账单
@@ -78,7 +82,7 @@ export function toggleBill(id) {
           bill: json.data
         });
         return Promise.resolve(json);
-      });
+      }).catch(errorHandler.bind(null, dispatch));
     }
     
   };
@@ -97,7 +101,7 @@ export function deleteMatch(id) {
         id
       });
       return Promise.resolve(json);
-    })
+    }).catch(errorHandler.bind(null, dispatch));
   }
 }
 
@@ -115,7 +119,7 @@ function requestCodes(id, pageNum = 1, dispatch) {
       id
     });
     return Promise.resolve(json);
-  });
+  }).catch(errorHandler.bind(null, dispatch));
 }
 
 // 获取邀请码
@@ -164,7 +168,6 @@ export function changeCodesPage(next, recordsPerPage) {
   };
 }
 
-
 // 生成邀请码
 export function genCode(data) {
   return (dispatch, getState) => {
@@ -188,10 +191,11 @@ export function genCode(data) {
         type: type.REQUEST_CODES_COUNT,
         count: count + 1
       });
-    });
+    }).catch(errorHandler.bind(null, dispatch));
   };
 }
 
+// 获取报名人
 function requestParticipants(id, pageNum = 1, dispatch, getState) {
   // return ajax({ url: `http://localhost:3100/participants.json` })
   return ajax({
@@ -219,7 +223,7 @@ function requestParticipants(id, pageNum = 1, dispatch, getState) {
 // 获取报名人
 export function loadParticipants(id, pageNum) {
   return (dispatch, getState) => {
-    return requestParticipants(id, pageNum, dispatch, getState);
+    return requestParticipants(id, pageNum, dispatch, getState).catch(errorHandler.bind(null, dispatch));
   };
 }
 
@@ -231,6 +235,7 @@ export function searchParticipants(id, condition) {
       url: `http://baoming.ws.netease.com/admin/signUp/search`,
       method: 'POST',
       body: {
+        cid: id,
         condition
       }
     })
@@ -240,7 +245,7 @@ export function searchParticipants(id, condition) {
         data: json.data
       });
       return Promise.resolve(json);
-    });
+    }).catch(errorHandler.bind(null, dispatch));
   }
 }
 // 清除搜索结果
@@ -302,7 +307,7 @@ export function deleteParticipant(cid, pid) {
     // return fetch(`http://localhost:3000/delete.json`)
     return ajax({
       url: `http://baoming.ws.netease.com/admin/signUp/delete?sid=${pid}`
-    })
+    }).catch(errorHandler.bind(null, dispatch));
   }
 }
 
@@ -361,6 +366,6 @@ export function saveInfo(id, data) {
       url: `http://baoming.ws.netease.com/admin/signUp/update`,
       method: 'POST',
       body: extend({}, { id }, data)
-    })
+    }).catch(errorHandler.bind(null, dispatch));
   };
 }

@@ -8,12 +8,18 @@ import DetailPage, { Participants, Activity, InviteCodes } from './components/de
 import Create from './components/Create';
 import NotFoundView from './components/NotFoundView';
 import App from './components/App';
+import checkLogin from './utils/checkLogin';
 require('es6-promise').polyfill();
+
+const userName = checkLogin();
+if (!userName) {
+  window.location.href = 'http://baoming.ws.netease.com/login/login'; 
+}
 
 // 路由:https://github.com/rackt/react-router-redux
 const store = configureStore({
   app: {
-    name: 'jruif'
+    name: userName
   }
 });
 render(

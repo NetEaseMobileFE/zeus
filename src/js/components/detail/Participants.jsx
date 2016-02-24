@@ -4,7 +4,7 @@ import CSSModules from 'react-css-modules';
 import extend from 'lodash.assign';
 
 import styles from '../../../css/modules/detail.scss';
-import STATE_MAP from './state';
+import STATE_MAP from '../../actions/states';
 import moment from 'moment';
 import Pagination from '../common/Pagination';
 import { loadParticipants, searchParticipants, clearSearchResults, deleteParticipant, fetchParticipantsCount, changeParticipantsPage, expandInfo, editInfo, saveInfo } from '../../actions/detail';
@@ -27,7 +27,7 @@ export default class Participants extends Component {
   componentDidMount() {
     // 清空临时信息
     this.tempInfo = {};
-    const { id, participants, loadParticipants, fetchParticipantsCount } = this.props;
+    const { id, detail, participants, loadParticipants, fetchParticipantsCount } = this.props;
     if (participants.length === 0) {
       loadParticipants(id);
       fetchParticipantsCount(id);

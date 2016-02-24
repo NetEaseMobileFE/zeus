@@ -18,7 +18,7 @@ export default class InviteCodes extends Component {
     this.handlePageChangeClick = this.handlePageChangeClick.bind(this);
   }
   componentDidMount() {
-    const { id, loadInviteCodes, fetchCodesCount } = this.props;
+    const { id, codes, detail, loadInviteCodes, fetchCodesCount } = this.props;
     loadInviteCodes(id);
     fetchCodesCount(id);
   }
@@ -101,7 +101,6 @@ function mapStateToProps(state, props) {
   let codes = [];
   let current = 0;
   let count = 0;
-
   if (id === state.inviteCodes.id) {
     codes = state.inviteCodes.data || [];
     count = state.inviteCodes.count;

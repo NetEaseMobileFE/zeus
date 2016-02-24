@@ -21,10 +21,10 @@ export default class Pagination extends Component {
   render() {
     const { curPage, total } = this.props;
     return (
-      <div>
-        {`${curPage} / ${total}`}
-        <a styleName={'button' + (curPage === 1 ? ' disabled' : '')} onClick={this.handleClick.bind(this, -1)}>上一页</a>
-        <a styleName={'button' + (curPage === total ? ' disabled' : '')} onClick={this.handleClick.bind(this, 1)}>下一页</a>
+      <div styleName="wrap">
+        <span styleName="middle">{`${curPage} / ${total}`}</span>
+        <a styleName={'button tiny' + (curPage === 1 ? ' disabled' : '')} onClick={this.handleClick.bind(this, -1)}>上一页</a>
+        <a styleName={'button tiny' + (curPage === total ? ' disabled' : '')} onClick={this.handleClick.bind(this, 1)}>下一页</a>
       </div>
     );
   }

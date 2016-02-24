@@ -6,7 +6,7 @@ import CSSModules from 'react-css-modules';
 import styles from '../../../css/modules/detail.scss';
 import { toggleBill, deleteMatch, updateDetail } from '../../actions/detail';
 import Modal from '../common/Modal';
-import STATE_MAP from './state';
+import STATE_MAP from '../../actions/states';
 @CSSModules(styles, {
   allowMultiple: true
 })
@@ -70,7 +70,7 @@ export default class Activity extends Component {
         </div>
         <div styleName="row">
           <div styleName="shrink columns">报名人数：</div>
-          <div styleName="columns">{`${detail.signUpNum}/${detail.limitNum}`}</div>
+          <div styleName="columns">{`${detail.signUpNum || 0}/${detail.limitNum}`}</div>
         </div>
         <div styleName="row">
           <div styleName="shrink columns text-right">报名时间：</div>
@@ -113,11 +113,11 @@ export default class Activity extends Component {
         </div>
         <div styleName="row">
           <div styleName="shrink columns">16位公钥：</div>
-          <div styleName="columns">{detail.plateformId}</div>
+          <div styleName="columns key">{detail.publickey}</div>
         </div>
         <div styleName="row">
           <div styleName="shrink columns">16位私钥：</div>
-          <div styleName="columns">{detail.privkey}</div>
+          <div styleName="columns key">{detail.privkey}</div>
         </div>
         <Modal title="账单查询" isShown={showBill} hideCancleButton={true} hideModal={this.hideBillModal}>
           <div>

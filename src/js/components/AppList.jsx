@@ -25,10 +25,14 @@ class AppList extends Component {
             "名额已满","报名结束","未开赛",
             "已开赛","比赛结束","已报名-未支付",
             "报名成功-支付成功","取消报名","我关注的赛事"
-        ]
+        ];
+        this.state={
+            is_search:false,
+            name:''
+        };
     }
     componentDidMount(){
-        this.search();
+        this.init();
     }
     updateValue(event){
         let target = event.target;
@@ -38,9 +42,19 @@ class AppList extends Component {
     handlePageChangeClick(number){
         const {updateParam} = this.props.actions;
         updateParam('pageNum',number);
-        this.search();
+        this.init();
     }
     search(){
+        if(this.state.name){
+            let { updateParam } = this.props.actions;
+            this.setState({
+                is_search:true
+            });
+            updateParam('pageNum',1);
+            this.init();
+        }
+    }
+    init(){
         let { ajax } = this.props.ajax;
         let { updateList } = this.props.actions;
         ajax({
@@ -57,6 +71,18 @@ class AppList extends Component {
             updateList(result.data,'pagination');
         })
     }
+    returnAll(){
+        this.setState({
+            is_search:false
+        });
+        let { updateParam } = this.props.actions;
+        updateParam('pageNum',1);
+        updateParam('name','');
+        this.setState({
+            name:''
+        });
+        this.init();
+    }
     render() {
         const { data,param,pagination } = this.props.applist;
         let [self,count] = [this,10];
@@ -67,7 +93,8 @@ class AppList extends Component {
                     <div styleName="columns">
                         <div styleName="input-group ">
                             <input styleName="input-group-field" type="text" name="name"
-                                   defaultValue={param.name}
+                                   value={this.state.name}
+                                   onChange={(event)=>{this.setState({name:event.target.value})}}
                                    onBlur={this.updateValue.bind(this)}/>
                             <div styleName="input-group-button">
                                 <input type="submit" styleName="button" value="搜 索"
@@ -108,6 +135,11 @@ class AppList extends Component {
                     <Pagination total={Math.ceil(pagination / count)}
                                 curPage={param.pageNum}
                                 toPage={this.handlePageChangeClick.bind(this)} />
+                    {
+                        this.state.is_search && (
+                            <button onClick={this.returnAll.bind(this)}  styleName="button alert">返回全部</button>
+                        )
+                    }
                 </div>
             </div>
         );

@@ -19,7 +19,7 @@ class OtherItems extends Component {
             idCard: {value: false, text: '身份证'},
             phoneNum: {value: false, text: '手机号'},
             eMail: {value: false, text: '邮箱'},
-            address: {value: false, text: '收费地址'},
+            address: {value: false, text: '收货地址'},
             height: {value: false, text: '身高'},
             weight: {value: false, text: '体重'},
             dressSize: {value: false, text: '衣服尺寸'},
@@ -36,7 +36,8 @@ class OtherItems extends Component {
             otherItems: this.concatOtherItems(this.props)
         });
     }
-    componentWillReceiveProps(nextProps){
+
+    componentWillReceiveProps(nextProps) {
         this.setState({
             otherItems: this.concatOtherItems(nextProps)
         });
@@ -44,10 +45,10 @@ class OtherItems extends Component {
 
     concatOtherItems(Props) {
         const { requiredItems,addItems } = Props;
-        let other = extend({},this.otherItems);
+        let other = extend({}, this.otherItems);
         // 无力吐槽这extend的实现了,你深度遍历下会死啊
-        Object.keys(this.otherItems).map((elm)=>{
-            other[elm] = extend({},this.otherItems[elm]);
+        Object.keys(this.otherItems).map((elm)=> {
+            other[elm] = extend({}, this.otherItems[elm]);
         });
         // 合并addItems到预设
         this.addItems = Object.keys(addItems).map((elm)=> {
@@ -59,8 +60,8 @@ class OtherItems extends Component {
             return elm;
         });
         Object.keys(requiredItems).map((elm)=> {
-            extend(other[elm],{
-                value:requiredItems[elm]
+            extend(other[elm], {
+                value: requiredItems[elm]
             })
         });
         return other;
@@ -71,9 +72,9 @@ class OtherItems extends Component {
         const { updateForm } = this.props.actions;
         let [name, value] = [event.target.name, event.target.value];
         let { addItems } = this.props;
-        if (name.indexOf('other_') === 0) {
-            updateForm('addItems',extend({},addItems,{
-                [name]:value
+        if (this.state.otherItems[name].type) {
+            updateForm('addItems', extend({}, addItems, {
+                [name]: value
             }));
         }
     }
@@ -90,8 +91,8 @@ class OtherItems extends Component {
             }
         });
         this.addItems.push(name);
-        updateForm('addItems',extend({},addItems,{
-            [name]:null
+        updateForm('addItems', extend({}, addItems, {
+            [name]: null
         }));
         this.setState({otherItems});
     }
@@ -101,12 +102,12 @@ class OtherItems extends Component {
         let target = event.target;
         if (target.name === 'requiredItems') {
             event.stopPropagation();
-            let [otherItems,requiredItems] = [extend({},this.state.otherItems), {}];
+            let [otherItems,requiredItems] = [extend({}, this.state.otherItems), {}];
             otherItems[target.value].value = target.checked;
             // 抽取 requiredItems
             Object.keys(otherItems).map((elm)=> {
                 if (otherItems[elm].value) {
-                    extend(requiredItems,{
+                    extend(requiredItems, {
                         [elm]: true
                     });
                 }
@@ -124,7 +125,6 @@ class OtherItems extends Component {
         let state = this.state;
         return (
             <ul styleName="other"
-                onChange={this.updateRequiredItems.bind(this)}
                 onBlur={this.updateAddItems.bind(this)}>
                 {
                     Object.keys(state.otherItems).map((elm, index)=>(
@@ -133,26 +133,20 @@ class OtherItems extends Component {
                                 state.otherItems[elm].type ? (
                                     <div styleName="input-group">
                                         <span styleName="input-group-label">
-                                            {
-                                                state.otherItems[elm].value ?
-                                                    <input type="checkbox" name="requiredItems"
-                                                           data-index={index} value={elm} checked/> :
-                                                    <input type="checkbox" name="requiredItems"
-                                                           data-index={index} value={elm}/>
-                                            }
+                                            <input type="checkbox" name="requiredItems"
+                                                   data-index={index} value={elm}
+                                                   onChange={this.updateRequiredItems.bind(this)}
+                                                   checked={state.otherItems[elm].value}/>
                                         </span>
                                         <input styleName="input-group-field"
                                                name={elm} type="text" data-index={index}
                                                value={state.otherItems[elm].text}/>
                                     </div>) : (
                                     <label>
-                                        {
-                                            state.otherItems[elm].value ?
-                                                <input type="checkbox" name="requiredItems"
-                                                       data-index={index} value={elm} checked/> :
-                                                <input type="checkbox" name="requiredItems"
-                                                       data-index={index} value={elm}/>
-                                        }
+                                        <input type="checkbox" name="requiredItems"
+                                               data-index={index} value={elm}
+                                               onChange={this.updateRequiredItems.bind(this)}
+                                               checked={state.otherItems[elm].value}/>
                                         {state.otherItems[elm].text}
                                     </label>)
                             }

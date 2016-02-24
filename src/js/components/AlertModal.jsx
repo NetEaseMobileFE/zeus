@@ -11,17 +11,19 @@ class AlertModal extends Component {
     super(props,context);
   }
 
-  modal_ok(){
+  modal_ok(isOk){
     let { modal_cancel } = this.props.actions;
     modal_cancel();
-    this.props.modal.config.onOk();
+    isOk && this.props.modal.config.onOk();
   }
 
   render(){
     let { msg, config, didInvalidate } = this.props.modal;
-    let { modal_cancel } = this.props.actions;
     return(
-      <Modal isShown={didInvalidate} hideCancleButton={config.type === 'alert'} bodyTextCenter={true} hideModal={modal_cancel}>
+      <Modal isShown={didInvalidate}
+             hideCancleButton={config.type === 'alert'}
+             bodyTextCenter={true}
+             hideModal={this.modal_ok.bind(this)}>
         {msg}
       </Modal>
     )

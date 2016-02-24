@@ -223,7 +223,6 @@ class Create extends Component {
         let reg = new RegExp(name, 'g');
         if (!reg.test(['signUpStart', 'signUpEnd', 'gameStart', 'gameEnd'].join('|'))
             && this.cache[name] !== value) {
-            validator.is
             this.cache[name] = value;
             updateForm(name, value);
         }

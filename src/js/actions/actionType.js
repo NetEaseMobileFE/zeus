@@ -44,3 +44,9 @@ export const UPDATE_ITEM = 'UPDATE_ITEM'; // 更新 子元素
 export const UPDATE_FORM = 'UPDATE_FORM'; // 更新 表单
 export const RESET = 'RESET'; // 更新 表单
 export const MODIFICATION_INIT = 'MODIFICATION_INIT'; // 修改 活动初始化
+
+// 管理员
+export const REQUEST_USERS = 'REQUEST_USERS'; //请求用户s
+export const REQUEST_USERS_COUNT = 'REQUEST_USERS_COUNT'; //请求用户总数
+export const ADD_USER = 'ADD_USER'; // 增加用户
+export const DELETE_USER = 'DELETE_USER'; // 删除用户

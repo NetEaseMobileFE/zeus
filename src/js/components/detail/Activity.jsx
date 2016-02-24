@@ -102,22 +102,9 @@ export default class Activity extends Component {
           <div styleName="shrink columns">免责说明：</div>
           <div styleName="columns">{detail.disclaimer}</div>
         </div>
-        <h3>网易宝信息</h3>
         <div styleName="row">
           <div styleName="shrink columns text-right">商户帐号：</div>
           <div styleName="columns">{detail.tenantAccount}</div>
-        </div>
-        <div styleName="row">
-          <div styleName="shrink columns">商户流水号：</div>
-          <div styleName="columns">{detail.plateformId}</div>
-        </div>
-        <div styleName="row">
-          <div styleName="shrink columns">16位公钥：</div>
-          <div styleName="columns key">{detail.publickey}</div>
-        </div>
-        <div styleName="row">
-          <div styleName="shrink columns">16位私钥：</div>
-          <div styleName="columns key">{detail.privkey}</div>
         </div>
         <Modal title="账单查询" isShown={showBill} hideCancleButton={true} hideModal={this.hideBillModal}>
           <div>

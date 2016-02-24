@@ -47,7 +47,8 @@ export function inviteCodes(state = { id: '', data: [], current: 1, count: 0 }, 
         data: [
           ...action.data,
           ...state.data
-        ]
+        ],
+        count: state.count + 1
       });
     case actions.REQUEST_CODES_COUNT:
       return extend({}, state, {

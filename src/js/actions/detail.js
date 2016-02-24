@@ -1,5 +1,4 @@
 import * as type from './actionType';
-import fetch from 'isomorphic-fetch';
 import extend from 'lodash.assign';
 import ajax from '../utils/fetch';
 import errorHandler from '../utils/errorHandler';
@@ -19,23 +18,10 @@ export function loadDetail(id) {
     return ajax({
       url: 'http://baoming.ws.netease.com/admin/competition/get',
       body: { cid: id }
-    })
-    .then((json) => {
-      data = json.data;
-      return Promise.resolve(data);
-    }).then((json) => {
-      // return ajax({url: `http://localhost:3100/detail2.json`})
-      return ajax({
-        url: 'http://baoming.ws.netease.com/admin/tenantDetail/get',
-        body: { tid: json.tid || 8 }
-      })
-    }).then((json) => {
-      const { isNewRecord, tenantAccount, privkey, publickey, plateformId } = json.data;
-      return Promise.resolve(extend(data, { isNewRecord, tenantAccount, privkey, publickey, plateformId }));
     }).then((json) => {
       dispatch({
         type: type.REQUEST_DETAIL,
-        data: json,
+        data: json.data,
         id
       });
     });
@@ -186,10 +172,6 @@ export function genCode(data) {
         type: type.GENERATE_CODE,
         data: json.data,
         id: json.data[0].cid
-      });
-      dispatch({
-        type: type.REQUEST_CODES_COUNT,
-        count: count + 1
       });
     }).catch(errorHandler.bind(null, dispatch));
   };

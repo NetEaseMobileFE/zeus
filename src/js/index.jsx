@@ -5,6 +5,7 @@ import { Router, Route, IndexRoute, Redirect, hashHistory } from 'react-router';
 import configureStore from './configureStore';
 import AppList from './components/AppList';
 import DetailPage, { Participants, Activity, InviteCodes } from './components/detail';
+import Users from './components/user';
 import Create from './components/Create';
 import NotFoundView from './components/NotFoundView';
 import App from './components/App';
@@ -12,7 +13,7 @@ import checkLogin from './utils/checkLogin';
 require('es6-promise').polyfill();
 
 const userName = checkLogin();
-if (!userName) {
+if (!userName && window.location.hostname !== 'localhost') {
   window.location.href = 'http://baoming.ws.netease.com/login/login'; 
 }
 
@@ -34,6 +35,7 @@ render(
           <Route path="codes" component={InviteCodes}/>
           <Route path="participants" component={Participants}/>
         </Route>
+        <Route path="users" component={Users} />
         <Route path="create" component={Create} />
         <Route path="modification/:id" component={Create} />
         <Route path="/404" component={NotFoundView} />

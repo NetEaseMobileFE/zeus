@@ -120,28 +120,30 @@ export default class Activity extends Component {
           <div styleName="columns">{detail.privkey}</div>
         </div>
         <Modal title="账单查询" isShown={showBill} hideCancleButton={true} hideModal={this.hideBillModal}>
-          <div>总收入： {
-            bill.length > 0 && bill.reduce((pre, curr) => {
-              return pre.total + curr.total;
-            })
-          }</div>
-          <table>
-            <thead>
-              <tr><th>项目</th><th>收入</th><th>花钱人数</th><th>邀请码人数</th></tr>
-            </thead>
-            <tbody>
-              {
-                bill.map((item, i) => {
-                  return (<tr key={i}>
-                    <td>{item.productName}</td>
-                    <td>{item.total}</td>
-                    <td>{item.signUpNums}</td>
-                    <td>{item.codeNums}</td>
-                  </tr>);
-                })
-              }
-            </tbody>
-          </table>
+          <div>
+            总收入： {
+              bill.length > 0 && bill.reduce((pre, curr) => {
+                return { total: pre.total || 0 + curr.total || 0 };
+              }).total
+            }
+            <table>
+              <thead>
+                <tr><th>项目</th><th>收入</th><th>花钱人数</th><th>邀请码人数</th></tr>
+              </thead>
+              <tbody>
+                {
+                  bill.length > 0 && bill.map((item, i) => {
+                    return (<tr key={i}>
+                      <td>{item.productName}</td>
+                      <td>{item.total}</td>
+                      <td>{item.signUpNums}</td>
+                      <td>{item.codeNums}</td>
+                    </tr>);
+                  })
+                }
+              </tbody>
+            </table>
+          </div>
         </Modal>
         <div styleName="button-group">
           <a onClick={this.handleViewBillClick} styleName="secondary button">账单查询</a>

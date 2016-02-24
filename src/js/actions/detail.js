@@ -23,11 +23,11 @@ export function loadDetail(id) {
       data = json.data;
       return Promise.resolve(data);
     }).then((json) => {
-      return ajax({url: `http://localhost:3100/detail2.json`})
-      // return ajax({
-      //   url: 'http://baoming.ws.netease.com/admin/tenantDetail/get',
-      //   body: { tid: json.tid || 8 }
-      // })
+      // return ajax({url: `http://localhost:3100/detail2.json`})
+      return ajax({
+        url: 'http://baoming.ws.netease.com/admin/tenantDetail/get',
+        body: { tid: json.tid || 8 }
+      })
     }).then((json) => {
       const { isNewRecord, tenantAccount, privkey, publickey, plateformId } = json.data;
       return Promise.resolve(extend(data, { isNewRecord, tenantAccount, privkey, publickey, plateformId }));

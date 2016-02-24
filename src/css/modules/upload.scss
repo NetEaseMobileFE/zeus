@@ -87,7 +87,8 @@ div.filepicker {
     width: 100%;
     text-align: center;
     background-color: #fff;
-}
-.dropzone .dz-preview .dz-image img{
-    display: inline-block;
+    img{
+        display: inline-block;
+        height: 120px;
+    }
 }

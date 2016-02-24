@@ -44,10 +44,14 @@ class OtherItems extends Component {
 
     concatOtherItems(Props) {
         const { requiredItems,addItems } = Props;
-        let otherItems = this.otherItems;
+        let other = extend({},this.otherItems);
+        // 无力吐槽这extend的实现了,你深度遍历下会死啊
+        Object.keys(this.otherItems).map((elm)=>{
+            other[elm] = extend({},this.otherItems[elm]);
+        });
         // 合并addItems到预设
         this.addItems = Object.keys(addItems).map((elm)=> {
-            otherItems[elm] = {
+            other[elm] = {
                 value: false,
                 text: addItems[elm],
                 type: 1  // 1 表示为addItems元素
@@ -55,9 +59,11 @@ class OtherItems extends Component {
             return elm;
         });
         Object.keys(requiredItems).map((elm)=> {
-            otherItems[elm].value = requiredItems[elm];
+            extend(other[elm],{
+                value:requiredItems[elm]
+            })
         });
-        return otherItems;
+        return other;
     }
 
     updateAddItems(event) {
@@ -95,7 +101,7 @@ class OtherItems extends Component {
         let target = event.target;
         if (target.name === 'requiredItems') {
             event.stopPropagation();
-            let [otherItems,requiredItems] = [this.state.otherItems, {}];
+            let [otherItems,requiredItems] = [extend({},this.state.otherItems), {}];
             otherItems[target.value].value = target.checked;
             // 抽取 requiredItems
             Object.keys(otherItems).map((elm)=> {

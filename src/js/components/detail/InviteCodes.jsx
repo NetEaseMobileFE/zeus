@@ -43,8 +43,7 @@ export default class InviteCodes extends Component {
       items = JSON.parse(detail.items);
     } catch (e) {}
     return (
-      <div>
-        <h2>邀请码</h2>
+      <div styleName="codes">
         <div className="row">
           <select className="medium-2 columns" ref="select">
             {
@@ -53,9 +52,9 @@ export default class InviteCodes extends Component {
               })
             }
           </select>
-          <a className="button medium-1" onClick={() => { this.handleGenCodeClick(this.refs.select.value); }}>生成邀请码</a>
+          <a className="button shrink" onClick={() => { this.handleGenCodeClick(this.refs.select.value); }}>生成邀请码</a>
         </div>
-        <table>
+        <table styleName="table">
           <thead>
             <tr>
               <th>序号</th>

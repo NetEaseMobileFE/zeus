@@ -1,13 +1,16 @@
 @import 'leadin';
-
+.activity {
+  margin-left: -3rem;
+}
 .row{
   margin: 1.15rem 0;
 }
-.button-group .button {
-  margin: 0 0.2rem;
-}
-.key {
-  word-break: break-all;
+.button-group {
+  margin-left: 170px;
+  margin-top: 30px;
+  .button {
+    margin: 0 0.4rem !important;
+  } 
 }
 .button {
   -webkit-user-select: none;
@@ -18,15 +21,11 @@
 .users{
   display: block;
 }
-.row select{
-  width: 100%;
-  margin-bottom: 0;
-}
-.row input{
-  margin-bottom: 0;
-}
-.row textarea{
-  width: 100%;
+.row{
+  textarea, input, select{
+    margin-bottom: 0;
+    width: 100%;
+  }
 }
 .tabs{
   padding: 0;
@@ -37,38 +36,29 @@
     background: #e6e6e6;
   }
 }
-table {
-  margin-bottom: 0;
-}
 .tabs, .tabs-content{
   border-color: #cacaca;
 }
+.codes {
+  .table {
+    width: 1100px;
+    text-align: center;
+  }
+  th {
+    text-align: center;
+  }
+}
 .joiner {
-  .item {
-    .row {
-      margin-bottom: 1.15rem;
-    }
-    >.row{
-      width: 100%;
-      max-width: 1300px;
-      margin-left: 0;
-      margin-right: 0;
-    }
-    .button {
-      margin-bottom: 0;
-    }
+  background: #fff;
+  .row{
+    max-width: 68.5rem;
   }
-  .columns.middle{
-    display: flex;
-    align-items: center;
+  .callout {
+    display: inline-block;
+    background: #fefefe;
   }
-  .columns {
-    padding-right: .45rem;
-  }
-
-  .search-area {
-    .button {
-      margin: 0;
-    }
+  a {
+    margin-bottom: 0;
+    margin-right: 0.4rem;
   }
 }

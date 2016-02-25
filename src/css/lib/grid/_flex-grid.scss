@@ -226,17 +226,17 @@
       }
 
       // Auto-stacking/unstacking
-      @at-root (without: media) {
-        .row.#{$-zf-size}-unstack {
-          .column {
-            flex: flex-grid-column(100%);
+      // @at-root (without: media) {
+      //   .row.#{$-zf-size}-unstack {
+      //     .column {
+      //       flex: flex-grid-column(100%);
 
-            @include breakpoint($-zf-size) {
-              flex: flex-grid-column();
-            }
-          }
-        }
-      }
+      //       @include breakpoint($-zf-size) {
+      //         flex: flex-grid-column();
+      //       }
+      //     }
+      //   }
+      // }
     }
 
     // Responsive collapsing

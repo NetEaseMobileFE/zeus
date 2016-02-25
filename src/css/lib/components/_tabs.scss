@@ -5,7 +5,7 @@
 ////
 /// @group tabs
 ////
-
+$tab-item-color: #2199e8;
 /// Default margin of the tab bar.
 /// @type Number
 $tab-margin: 0 !default;
@@ -76,12 +76,13 @@ $tab-content-padding: 1rem !default;
     padding: $tab-item-padding;
     line-height: 1;
     font-size: $tab-item-font-size;
-
+    color: $tab-item-color;
     &:hover {
       background: $tab-item-background-hover;
     }
 
     &:focus,
+    &.is-active,
     &[aria-selected='true'] {
       background: $tab-background-active;
     }

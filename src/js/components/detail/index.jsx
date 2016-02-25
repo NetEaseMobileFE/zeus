@@ -34,11 +34,10 @@ class DetailPage extends Component {
     }
     return (
       <div>
-        <ul className="tabs">
-              
-          <li className={'tabs-title' + (active === 'detail' ? ' is-active' : '')}><Link to={`match/${id}/detail`}>查看活动详情</Link></li>
-          <li className={'tabs-title' + (active === 'codes' ? ' is-active' : '')}><Link to={`match/${id}/codes`}>查看邀请码</Link></li>
-          <li className={'tabs-title' + (active === 'participants' ? ' is-active' : '')}><Link to={`match/${id}/participants`}>查看报名人</Link></li>
+        <ul className="tabs" styleName="tabs">
+          <li className="tabs-title"><Link className={active === 'detail' ? ' is-active' : ''} to={`match/${id}/detail`}>查看活动详情</Link></li>
+          <li className="tabs-title"><Link className={active === 'codes' ? ' is-active' : ''} to={`match/${id}/codes`}>查看邀请码</Link></li>
+          <li className="tabs-title"><Link className={active === 'participants' ? ' is-active' : ''} to={`match/${id}/participants`}>查看报名人</Link></li>
         </ul>
         <div className="tabs-content">
           <div className="tabs-panel is-active">

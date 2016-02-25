@@ -11,29 +11,29 @@ $btn-active: #b4141d;
 $back-color: #333;
 $bg-gray: #f2f2f2;
 @mixin text-align{
-    /*
-        text-{位置}
-    */
-    @each $hdir, $prop in (
-            'right': right,
-            'center': center,
-            'left': left
-    ) {
-        .text-#{$hdir} {
-            text-align: $prop;
-        }
+  /*
+    text-{位置}
+  */
+  @each $hdir, $prop in (
+    'right': right,
+    'center': center,
+    'left': left
+  ) {
+    .text-#{$hdir} {
+      text-align: $prop;
     }
+  }
 }
 @mixin panel{
-    .panel{
-        @include callout($white);
-        min-height: 600px;
-        margin-bottom: 30px;
-        padding-bottom: 30px;
-        h4{
-            font-size: 20px;
-            font-weight: 100;
-            margin: 0;
-        }
+  .panel{
+    @include callout($white);
+    min-height: 600px;
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    h4{
+      font-size: 20px;
+      font-weight: 100;
+      margin: 0;
     }
+  }
 }

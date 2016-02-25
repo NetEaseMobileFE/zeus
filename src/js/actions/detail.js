@@ -18,7 +18,8 @@ export function loadDetail(id) {
     return ajax({
       url: 'http://baoming.ws.netease.com/admin/competition/get',
       body: { cid: id }
-    }).then((json) => {
+    })
+    .then((json) => {
       dispatch({
         type: type.REQUEST_DETAIL,
         data: json.data,
@@ -51,7 +52,6 @@ export function updateDetail(data) {
 export function toggleBill(id) {
   return (dispatch, getState) => {
     const showBill = getState().details.showBill;
-    // debugger;
     dispatch({
       type: type.TOGGLE_BILL,
       status: !showBill
@@ -93,7 +93,7 @@ export function deleteMatch(id) {
 
 
 function requestCodes(id, pageNum = 1, dispatch) {
-  // return fetch(`http://localhost:3000/inviteCodes.json`)
+  // return ajax({ url: `http://localhost:3100/inviteCodes.json` })
   return ajax({
     url: `http://baoming.ws.netease.com/admin/invitecode/list`,
     body: { cid: id, pageNum }
@@ -117,7 +117,7 @@ export function loadInviteCodes(id, pageNum) {
 // 获取邀请码总数
 export function fetchCodesCount(id) {
   return (dispatch) => {
-    // return fetch(`http://localhost:3000/count.json`)
+    // return ajax({ url: `http://localhost:3100/count.json` })
     return ajax({
       url: `http://baoming.ws.netease.com/admin/invitecode/totalCount`,
       body: { cid: id }
@@ -157,9 +157,9 @@ export function changeCodesPage(next, recordsPerPage) {
 // 生成邀请码
 export function genCode(data) {
   return (dispatch, getState) => {
-    // const URL = `http://localhost:3000/genCode.json?${transformRequest(extend({}, { nums: 1 }, data))}`;
+    // const URL = `http://localhost:3100/genCode.json?${transformRequest(extend({}, { nums: 1 }, data))}`;
     const count = getState().inviteCodes.count;
-    // return fetch(`http://localhost:3000/inviteCodes.json`)
+    // return fetch(`http://localhost:3100/inviteCodes.json`)
     const body = extend({}, { nums: 1 }, data)
     console.log(body)
     return ajax({
@@ -212,7 +212,7 @@ export function loadParticipants(id, pageNum) {
 // 搜索报名人
 export function searchParticipants(id, condition) {
   return (dispatch) => {
-    // return fetch(`http://localhost:3000/search.json`)
+    // return fetch(`http://localhost:3100/search.json`)
     return ajax({
       url: `http://baoming.ws.netease.com/admin/signUp/search`,
       method: 'POST',
@@ -286,7 +286,7 @@ export function deleteParticipant(cid, pid) {
       }),
       id: cid
     });
-    // return fetch(`http://localhost:3000/delete.json`)
+    // return fetch(`http://localhost:3100/delete.json`)
     return ajax({
       url: `http://baoming.ws.netease.com/admin/signUp/delete?sid=${pid}`
     }).catch(errorHandler.bind(null, dispatch));

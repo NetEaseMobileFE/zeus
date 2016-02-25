@@ -1,13 +1,25 @@
 @import './modules/leadin';
 :global {
+  @include foundation-form-prepostfix;
+  @include foundation-text-alignment;
+  @include foundation-global-styles;
+  @include foundation-button-group;
+  @include foundation-close-button;
+  @include foundation-flex-grid;
+  @include foundation-callout;
+  @include foundation-button;
+  @include foundation-forms;
+  @include foundation-table;
+  @include foundation-label;
+  @include foundation-tabs;
+  @include text-align;
+  @include panel;
   body {
     font-family: $body-font-family;
   }
   .row {
     max-width: none;
   }
-  @include text-align;
-  @include panel;
 }
 .root {
   width: 100%;

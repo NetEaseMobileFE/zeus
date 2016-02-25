@@ -5,6 +5,7 @@ import CSSModules from 'react-css-modules';
 import moment from 'moment';
 
 import Modal from '../common/Modal';
+import Pagination from '../common/Pagination';
 import styles from '../../../css/modules/users.scss';
 import * as usersActions from '../../actions/users';
 
@@ -15,10 +16,14 @@ class Users extends Component {
   constructor(props) {
     super(props);
     this.modalTitle = '增加用户';
+    this.RECORDS_PER_PAGE = 10;
     this.hideModal = this.hideModal.bind(this);
     this.handleAddClick = this.handleAddClick.bind(this);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
     this.handleModifyClick = this.handleModifyClick.bind(this);
+  }
+  handlePageChangeClick(next) {
+    this.props.changePage(next, this.RECORDS_PER_PAGE);
   }
   handleDeleteClick(account) {
     this.props.deleteUser({ acount });
@@ -57,10 +62,11 @@ class Users extends Component {
   }
   componentDidMount() {
     this.props.fetchUsers();
+    this.props.fetchUsersCount();
   }
 
   render() {
-    const { users } = this.props;
+    const { users, changePage } = this.props;
     return (
       <div>
         <a styleName="button small" onClick={this.handleAddClick}>添加新用户</a>
@@ -90,6 +96,7 @@ class Users extends Component {
           }
           </tbody>
         </table>
+        <Pagination total={Math.ceil(users.count / this.RECORDS_PER_PAGE)} curPage={users.current} toPage={this.handlePageChangeClick} />
         <Modal title={this.modalTitle} isShown={users.showModal} hideCancelButton={false} hideModal={this.hideModal} >
           <form>
             <div styleName="row">

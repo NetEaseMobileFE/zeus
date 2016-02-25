@@ -3,25 +3,56 @@ import extend from 'lodash.assign';
 import ajax from '../utils/fetch';
 import errorHandler from '../utils/errorHandler';
 
+function loadUsers(pageNum = 1, dispatch) {
+  return ajax({
+    url: 'http://baoming.ws.netease.com/admin/permissions/list',
+    body: { pageNum }
+  })
+  .then((json) => {
+    dispatch({
+      type: type.REQUEST_USERS,
+      data: json.data,
+    });
+    return Promise.resolve(json);
+  }).catch(errorHandler.bind(null, dispatch));
+}
+
 // 获取管理员列表
-export function fetchUsers() {
+export function fetchUsers(pageNum = 1) {
   return (dispatch) => {
-    return ajax({
-      url: 'http://localhost:3100/users.json'
-    }).then((json) => {
-      dispatch({
-        type: type.REQUEST_USERS,
-        data: json.data
-      });
-    }).catch(errorHandler.bind(null, dispatch));
+    return loadUsers(pageNum, dispatch);
   };
+}
+
+// 分页
+export function changePage(next, recordsPerPage) {
+  return (dispatch, getState) => {
+    const { data } = getState().users;
+    const len = data.slice((next - 1) * recordsPerPage, next * recordsPerPage).length;
+    if (len < recordsPerPage) {
+      loadUsers(next, dispatch)
+        .then(() => {
+          dispatch({
+            type: type.SHOW_USERS,
+            current: next
+          });
+          return Promise.resolve({});
+        });
+    } else {
+      dispatch({
+        type: type.SHOW_USERS,
+        current: next
+      });
+    }
+  }
+
 }
 
 // 获取管理员总数
 export function fetchUsersCount() {
   return (dispatch) => {
     return ajax({
-      url: 'http://localhost:3100/userCount.json'
+      url: 'http://baoming.ws.netease.com/admin/permissions/totalCount'
     }).then((json) => {
       dispatch({
         type: type.REQUEST_USERS_COUNT,

@@ -49,26 +49,40 @@ class ProjectCard extends Component {
         })
     }
     render() {
-        let { project,type }=this.props;
+        let { isModification,type }=this.props;
         return (
             <ul styleName="small-8 medium-8 columns project-card">
                 {this.state.project.map((elm,index) => (
                     <li styleName="callout" key={`${type}-${index}`}
-                        onBlur={this.updateForm.bind(this,index)}
-                        onChange={this.changeValue.bind(this,index)}>
-                        <h5><input type="text" placeholder='请输入名称' name="name" value={ elm.name }/></h5>
+                        onBlur={this.updateForm.bind(this,index)}>
+                        <h5> {
+                            isModification ? elm.name : (<input type="text" placeholder='请输入名称' name="name" value={ elm.name }
+                                                                onChange={this.changeValue.bind(this,index)}/>)
+                        }</h5>
                         <p styleName="card-money">
-                            <input type="number" styleName="text-right" name="price" value={ elm.price || 0 }/>
+                            {
+                                isModification ? elm.price :
+                                    (<input type="number" styleName="text-right" name="price" value={ elm.price || 0 }
+                                            onChange={this.changeValue.bind(this,index)}/>)
+                            }
                             <span>元</span>
                         </p>
-                        <a styleName="close-button" onClick={this.removeItem.bind(this,index)}>
-                            <span aria-hidden="true">&times;</span>
-                        </a>
+                        {
+                            !isModification && (
+                                <a styleName="close-button" onClick={this.removeItem.bind(this,index)}>
+                                    <span aria-hidden="true">&times;</span>
+                                </a>
+                            )
+                        }
                     </li>
                 ))}
-                <li styleName="card-add">
-                    <a styleName="button secondary" onClick={this.addItem.bind(this)}>+</a>
-                </li>
+                {
+                    !isModification && (
+                        <li styleName="card-add">
+                            <a styleName="button secondary" onClick={this.addItem.bind(this)}>+</a>
+                        </li>
+                    )
+                }
             </ul>
         )
     }
@@ -76,7 +90,8 @@ class ProjectCard extends Component {
 ProjectCard.propTypes = {
     type: PropTypes.oneOfType([PropTypes.string,PropTypes.number]).isRequired,
     project: PropTypes.array.isRequired,
-    actions: PropTypes.object.isRequired
+    actions: PropTypes.object.isRequired,
+    isModification: PropTypes.bool
 };
 
 export default ProjectCard;

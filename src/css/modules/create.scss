@@ -2,6 +2,11 @@
 
 @include panel;
 @include text-align;
+
+form{
+    width: 100%;
+}
+
 [data-suffix]:after{
     content: attr(data-suffix);
     margin: 0 5px;

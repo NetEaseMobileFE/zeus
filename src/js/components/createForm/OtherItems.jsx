@@ -140,7 +140,8 @@ class OtherItems extends Component {
                                         </span>
                                         <input styleName="input-group-field"
                                                name={elm} type="text" data-index={index}
-                                               value={state.otherItems[elm].text}/>
+                                               onChange={this.updateRequiredItems.bind(this)}
+                                               value={state.otherItems[elm].text} placeholder="请填写名称"/>
                                     </div>) : (
                                     <label>
                                         <input type="checkbox" name="requiredItems"

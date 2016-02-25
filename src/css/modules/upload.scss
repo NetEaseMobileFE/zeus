@@ -79,6 +79,16 @@ div.filepicker {
     }
 }
 
+.dropzone{
+    padding: 10px;
+    border-style: dashed;
+    border-top: 0;
+}
+
+.dropzone .dz-message{
+    margin-top: 0;
+}
+
 .dropzone input[name="description"]{
     margin: 10px 0 0;
 }

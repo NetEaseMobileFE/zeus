@@ -1,27 +1,33 @@
-@import 'lib/vendor/normalize';
-@import 'lib/util/util';
-@import 'lib/global';
-@import "lib/foundation";
-
+@import './modules/leadin';
+:global {
+  body {
+    font-family: $body-font-family;
+  }
+  .row {
+    max-width: none;
+  }
+  @include text-align;
+  @include panel;
+}
 .root {
-    width: 100%;
-    .main{
-        margin-top: 15px;
-        padding: 0 20px;
-        @include clearfix;
-        aside{
-            width: 200px;
-            float: left;
-            border:1px solid $medium-gray;
-            text-align: center;
-        }
-        .content{
-            margin-left: 220px;
-            overflow: hidden;
-        }
+  width: 100%;
+  .main{
+    margin-top: 15px;
+    padding: 0 20px;
+    @include clearfix;
+    aside{
+      width: 200px;
+      float: left;
+      border:1px solid $medium-gray;
+      text-align: center;
     }
+    .content{
+      margin-left: 220px;
+      overflow: hidden;
+    }
+  }
 }
 
 ul{
-    list-style: none;
+  list-style: none;
 }

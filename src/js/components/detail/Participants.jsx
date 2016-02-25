@@ -109,20 +109,19 @@ export default class Participants extends Component {
     const { editId, detail, expandId, showResult, participants, current, count } = this.props;
     if (participants.length > 0) {
       return (
-        <form styleName="joiner" onBlur={this.handleEditBlur}>
-          <h2>报名用户管理</h2>
-          <div styleName="row search-area">
-            <div styleName="shrink columns">
-              <a styleName="button disabled">下载报名信息</a>
+        <form className="joiner" onBlur={this.handleEditBlur}>
+          <div className="row search-area">
+            <div className="shrink columns">
+              <a className="button disabled">下载报名信息</a>
             </div>
-            <div styleName="large-2 columns">
-              <input styleName="input" ref="searchInput" type="text" placeholder="输入姓名或电话查询" />
+            <div className="large-2 columns">
+              <input className="input" ref="searchInput" type="text" placeholder="输入姓名或电话查询" />
             </div>
-            <div styleName="columns shrink">
-              <a styleName="button" onClick={this.handleSearchClick}>搜索</a>  
+            <div className="columns shrink">
+              <a className="button" onClick={this.handleSearchClick}>搜索</a>  
             </div>
             {
-              showResult && <div styleName="columns"><a styleName="button" onClick={this.handleClearClick}>返回全部</a></div>
+              showResult && <div className="columns"><a className="button" onClick={this.handleClearClick}>返回全部</a></div>
             }
           </div>       
           <div>
@@ -131,15 +130,15 @@ export default class Participants extends Component {
                 const edit = +person.id === editId;
                 const expand = expandId === +person.id;
                 return (
-                  <div data-id={person.id} styleName={'row item align-middle' + (expand ? ' callout secondary' : '')} key={person.id}>
-                    <div styleName="row align-middle">
-                      <div styleName="text-center hollow secondary" onClick={this.handleExpandClick.bind(this, person.id)}>{expand ? '↑' : '↓'}</div>
-                      <div styleName="columns">
+                  <div data-id={person.id} className={'row item align-middle' + (expand ? ' callout secondary' : '')} key={person.id}>
+                    <div className="row align-middle">
+                      <div className="text-center hollow secondary" onClick={this.handleExpandClick.bind(this, person.id)}>{expand ? '↑' : '↓'}</div>
+                      <div className="columns">
                         <label>姓名： 
                           <input type="text" data-key="name" readOnly={!edit} defaultValue={person.name} />
                         </label>
                       </div>
-                      <div styleName="columns small-1">
+                      <div className="columns small-1">
                         <label>性别： 
                           <select disabled={!edit} defaultValue={person.sex} data-key="sex">
                             <option value="0">男</option>
@@ -147,69 +146,69 @@ export default class Participants extends Component {
                           </select> 
                         </label>
                       </div>
-                      <div styleName="columns">
+                      <div className="columns">
                         <label>联系电话： 
                           <input type="text" data-key="phoneNum" readOnly={!edit} defaultValue={person.phoneNum} />
                         </label>
                       </div>
-                      <div styleName="columns">
+                      <div className="columns">
                         <label>报名项目： 
                           <input type="text" data-key="productName" readOnly={!edit} defaultValue={person.productName} />
                         </label>
                       </div>
-                      <div styleName="columns small-2 text-center"><span styleName={'label' + (person.state === 10 ? ' secondary' : '')}>{STATE_MAP[person.state]}</span></div>
+                      <div className="columns small-2 text-center"><span className={'label' + (person.state === 10 ? ' secondary' : '')}>{STATE_MAP[person.state]}</span></div>
                       {
-                        detail.state !== 7 && (!edit ? <a styleName={'shrink button warning' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleEditClick.bind(this, person.id, i)}>编辑</a> : <a styleName="button success" onClick={this.handleSaveClick.bind(this, person.id, false)}>保存</a>)
+                        detail.state !== 7 && (!edit ? <a className={'shrink button warning' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleEditClick.bind(this, person.id, i)}>编辑</a> : <a className="button success" onClick={this.handleSaveClick.bind(this, person.id, false)}>保存</a>)
                       }
                       {
-                        detail.state !== 7 && (!edit ? <a styleName={'shrink button alert' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleDeleteClick.bind(this, person.id)}>删除</a> : <a styleName="button" onClick={this.handleSaveClick.bind(this, person.id, true)}>取消</a>)
+                        detail.state !== 7 && (!edit ? <a className={'shrink button alert' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleDeleteClick.bind(this, person.id)}>删除</a> : <a className="button" onClick={this.handleSaveClick.bind(this, person.id, true)}>取消</a>)
                       }
                       { 
-                        detail.state === 7 && person.state === 9 && <label styleName="columns shrink">成绩：<input type="time" data-key="score" step="1" defaultValue={moment(person.score || 0).format('hh:mm:ss')} /></label>
+                        detail.state === 7 && person.state === 9 && <label className="columns shrink">成绩：<input type="time" data-key="score" step="1" defaultValue={moment(person.score || 0).format('hh:mm:ss')} /></label>
                       }
                       {
-                        detail.state === 7 && person.state === 9 && <a styleName="shrink button success" onClick={this.handleSaveClick.bind(this, person.id, false)}>保存</a>
+                        detail.state === 7 && person.state === 9 && <a className="shrink button success" onClick={this.handleSaveClick.bind(this, person.id, false)}>保存</a>
                       }
                     </div>
                     {
                       expand && (
-                        <div styleName="columns">
-                          <div styleName="row">
-                            <div styleName="columns">
+                        <div className="columns">
+                          <div className="row">
+                            <div className="columns">
                               <label>出生年月： 
                                 <input type="date" data-key="birthday" readOnly={!edit} defaultValue={moment(person.birthday).format('YYYY-MM-DD')} />
                               </label>
                             </div>
-                            <div styleName="columns">
+                            <div className="columns">
                               <label>身份证号： 
                                 <input type="text" data-key="idCard" readOnly={!edit} defaultValue={person.idCard} />
                               </label>
                             </div>
-                            <div styleName="columns">
+                            <div className="columns">
                               <label>电子邮箱： 
                                 <input type="email" data-key="eMail" readOnly={!edit} defaultValue={person.eMail} />
                               </label>
                             </div>
                           </div>
-                          <div styleName="row">
-                            <div styleName="columns">
+                          <div className="row">
+                            <div className="columns">
                               <label>收货地址： 
                                 <textarea row="2" data-key="address" readOnly={!edit} defaultValue={person.address}></textarea> 
                               </label>
                             </div>
                           </div>
-                          <div styleName="row">
-                            <div styleName="columns">
+                          <div className="row">
+                            <div className="columns">
                               <label>身高： 
                                 <input type="number" placeholder="cm." data-key="height" readOnly={!edit} defaultValue={person.height} />
                               </label>
                             </div>
-                            <div styleName="columns">
+                            <div className="columns">
                               <label>体重： 
                                 <input type="number" placeholder="kg." data-key="weight" readOnly={!edit} defaultValue={person.weight} />
                               </label>
                             </div>
-                            <div styleName="columns">
+                            <div className="columns">
                               <label>衣服尺码： 
                                 <select disabled={!edit} defaultValue={person.dressSize} data-key="dressSize">
                                   <option value="0">S</option>
@@ -221,38 +220,38 @@ export default class Participants extends Component {
                                 </select> 
                               </label>
                             </div>
-                            <div styleName="columns">
+                            <div className="columns">
                               <label>跑鞋尺码： 
                                 <input type="text" data-key="shoesSize" readOnly={!edit} defaultValue={person.shoesSize} />
                               </label>
                             </div>
                           </div>
-                          <div styleName="row">
-                            <div styleName="columns">
+                          <div className="row">
+                            <div className="columns">
                               <label>紧急联系人姓名： 
                                 <input type="text" data-key="emergencyName" readOnly={!edit} defaultValue={person.emergencyName} />
                               </label>
                             </div>
-                            <div styleName="columns">
+                            <div className="columns">
                               <label>紧急联系人电话： 
                                 <input type="text" data-key="emergencyPhone" readOnly={!edit} defaultValue={person.emergencyPhone} />
                               </label>
                             </div>
                           </div>
-                          <div styleName="row">
-                            <div styleName="columns">
+                          <div className="row">
+                            <div className="columns">
                               <label>备注：
                                 <textarea row="2" data-key="note" readOnly={!edit} defaultValue={person.note}></textarea> 
                               </label>
                             </div>
                           </div>
-                          <div styleName="row">
-                            <div styleName="columns">
+                          <div className="row">
+                            <div className="columns">
                               <label>参加过马拉松： 
                                 <input type="text" data-key="takePartName" readOnly={!edit} defaultValue={person.takePartName} />
                               </label>
                             </div>
-                            <div styleName="columns">
+                            <div className="columns">
                               <label>报名时间： 
                                 <input type="date" data-key="createTime" readOnly={!edit} defaultValue={moment(person.createTime).format('YYYY-MM-DD')} />
                               </label>

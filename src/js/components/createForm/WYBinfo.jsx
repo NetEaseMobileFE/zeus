@@ -22,22 +22,22 @@ import styles from '../../../css/modules/WYBinfo.scss';
         let { defaultTenant,tenantAccount,privkey,publickey,plateformId }=this.props.data;
         return (
             <div>
-                <div styleName="row">
-                    <div styleName="small-4 medium-2 columns">
-                        <h5 styleName="text-right middle" data-suffix=":">网易宝信息</h5>
+                <div className="row">
+                    <div className="small-4 medium-2 columns">
+                        <h5 className="text-right middle" data-suffix=":">网易宝信息</h5>
                     </div>
                 </div>
-                <div styleName="row" onChange={this.switchTenant.bind(this)}>
-                    <div styleName="small-2 columns"></div>
-                    <div styleName="small-3 columns">
-                        <label styleName="align-spaced">
+                <div className="row" onChange={this.switchTenant.bind(this)}>
+                    <div className="small-2 columns"></div>
+                    <div className="small-3 columns">
+                        <label className="align-spaced">
                             <input type="radio" name="defaultTenant"
                                    value="0" defaultChecked/>
                             默认帐号
                         </label>
                     </div>
-                    <div styleName="small-3 columns">
-                        <label styleName="align-spaced">
+                    <div className="small-3 columns">
+                        <label className="align-spaced">
                             <input type="radio" name="defaultTenant"
                                    value="1"/>
                             新增收款帐号
@@ -47,35 +47,35 @@ import styles from '../../../css/modules/WYBinfo.scss';
                 {
                     defaultTenant === '1' && (
                         <div>
-                            <div styleName="row">
-                                <div styleName="small-4 medium-2 columns">
-                                    <label styleName="text-right middle" data-suffix=":">商户帐号</label>
+                            <div className="row">
+                                <div className="small-4 medium-2 columns">
+                                    <label className="text-right middle" data-suffix=":">商户帐号</label>
                                 </div>
-                                <div styleName="small-8 medium-8 columns">
+                                <div className="small-8 medium-8 columns">
                                     <input type="text" name="tenantAccount" defaultValue={tenantAccount}/>
                                 </div>
                             </div>
-                            <div styleName="row">
-                                <div styleName="small-4 medium-2 columns">
-                                    <label styleName="text-right middle" data-suffix=":">商户流水号</label>
+                            <div className="row">
+                                <div className="small-4 medium-2 columns">
+                                    <label className="text-right middle" data-suffix=":">商户流水号</label>
                                 </div>
-                                <div styleName="small-8 medium-8 columns">
+                                <div className="small-8 medium-8 columns">
                                     <input type="text" name="plateformId" defaultValue={plateformId}/>
                                 </div>
                             </div>
-                            <div styleName="row">
-                                <div styleName="small-4 medium-2 columns">
-                                    <label styleName="text-right middle" data-suffix=":">16位公钥</label>
+                            <div className="row">
+                                <div className="small-4 medium-2 columns">
+                                    <label className="text-right middle" data-suffix=":">16位公钥</label>
                                 </div>
-                                <div styleName="small-8 medium-8 columns">
+                                <div className="small-8 medium-8 columns">
                                     <textarea rows="5" name="publickey" defaultValue={publickey}/>
                                 </div>
                             </div>
-                            <div styleName="row">
-                                <div styleName="small-4 medium-2 columns">
-                                    <label styleName="text-right middle" data-suffix=":">16位私钥</label>
+                            <div className="row">
+                                <div className="small-4 medium-2 columns">
+                                    <label className="text-right middle" data-suffix=":">16位私钥</label>
                                 </div>
-                                <div styleName="small-8 medium-8 columns">
+                                <div className="small-8 medium-8 columns">
                                     <textarea rows="5" name="privkey" defaultValue={privkey}/>
                                 </div>
                             </div>

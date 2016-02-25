@@ -51,9 +51,9 @@ class ProjectCard extends Component {
     render() {
         let { isModification,type }=this.props;
         return (
-            <ul styleName="small-8 medium-8 columns project-card">
+            <ul className="small-8 medium-8 columns" styleName="project-card">
                 {this.state.project.map((elm,index) => (
-                    <li styleName="callout" key={`${type}-${index}`}
+                    <li className="callout" key={`${type}-${index}`}
                         onBlur={this.updateForm.bind(this,index)}>
                         <h5> {
                             isModification ? elm.name : (<input type="text" placeholder='请输入名称' name="name" value={ elm.name }
@@ -62,14 +62,14 @@ class ProjectCard extends Component {
                         <p styleName="card-money">
                             {
                                 isModification ? elm.price :
-                                    (<input type="number" styleName="text-right" name="price" value={ elm.price || 0 }
+                                    (<input type="number" className="text-right" name="price" value={ elm.price || 0 }
                                             onChange={this.changeValue.bind(this,index)}/>)
                             }
                             <span>元</span>
                         </p>
                         {
                             !isModification && (
-                                <a styleName="close-button" onClick={this.removeItem.bind(this,index)}>
+                                <a className="close-button" onClick={this.removeItem.bind(this,index)}>
                                     <span aria-hidden="true">&times;</span>
                                 </a>
                             )
@@ -79,7 +79,7 @@ class ProjectCard extends Component {
                 {
                     !isModification && (
                         <li styleName="card-add">
-                            <a styleName="button secondary" onClick={this.addItem.bind(this)}>+</a>
+                            <a className="button secondary" onClick={this.addItem.bind(this)}>+</a>
                         </li>
                     )
                 }

@@ -87,26 +87,26 @@ class AppList extends Component {
         const { data,param,pagination } = this.props.applist;
         let [self,count] = [this,10];
         return (
-            <div styleName="panel applist">
-                <div styleName="row">
-                    <div styleName="columns"><h4>首页</h4></div>
-                    <div styleName="columns">
-                        <div styleName="input-group ">
-                            <input styleName="input-group-field" type="text" name="name"
+            <div className="panel" styleName="applist">
+                <div className="row" styleName="line">
+                    <div className="columns"><h4>首页</h4></div>
+                    <div className="columns">
+                        <div className="input-group ">
+                            <input className="input-group-field" type="text" name="name"
                                    value={this.state.name}
                                    onChange={(event)=>{this.setState({name:event.target.value})}}
                                    onBlur={this.updateValue.bind(this)}/>
-                            <div styleName="input-group-button">
-                                <input type="submit" styleName="button" value="搜 索"
+                            <div className="input-group-button">
+                                <input type="submit" className="button" value="搜 索"
                                        onClick={this.search.bind(this)}/>
                             </div>
                         </div>
                     </div>
-                    <div styleName="shrink columns text-right">
-                        <Link styleName="button alert" to="/create">创建活动</Link>
+                    <div className="shrink columns text-right">
+                        <Link className="button alert" to="/create">创建活动</Link>
                     </div>
                 </div>
-                <div styleName="row">
+                <div className="row" styleName="line">
                     <table>
                         <thead>
                             <tr>
@@ -137,7 +137,7 @@ class AppList extends Component {
                                 toPage={this.handlePageChangeClick.bind(this)} />
                     {
                         this.state.is_search && (
-                            <button onClick={this.returnAll.bind(this)}  styleName="button alert">返回全部</button>
+                            <button onClick={this.returnAll.bind(this)}  className="button alert">返回全部</button>
                         )
                     }
                 </div>

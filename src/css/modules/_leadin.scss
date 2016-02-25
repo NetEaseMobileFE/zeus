@@ -5,19 +5,11 @@ modules 公用文件
 @import '../lib/global';
 @import "../lib/foundation";
 $closebutton-size: 18px;
-@include foundation-form-prepostfix;
-@include foundation-text-alignment;
-@include foundation-global-styles;
-@include foundation-button-group;
-@include foundation-close-button;
-@include foundation-flex-grid;
-@include foundation-callout;
-@include foundation-button;
-@include foundation-forms;
-@include foundation-table;
-@include foundation-label;
-@include foundation-tabs;
-
+$main-color: #c1252e;
+$btn-hover: #d6313a;
+$btn-active: #b4141d;
+$back-color: #333;
+$bg-gray: #f2f2f2;
 @mixin text-align{
     /*
         text-{位置}

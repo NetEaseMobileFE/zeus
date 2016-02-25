@@ -1,17 +1,21 @@
-@import 'leadin';
-form {
+.wrap {
+  padding: 20px;
+  background: #fff;
+}
+.form {
   width: 400px;
   margin-left: -0.9375rem;
   margin-bottom: -8px;
   padding-top: 12px;
 }
-table {
-  width: 1000px;
+.table {
+  width: 1300px;
   text-align: center;
   thead th {
     text-align: center;
   }
-}
-table .button {
-  margin-bottom: 0;
+  .btn {
+    margin-bottom: 0;
+    margin-right: 20px;
+  }
 }

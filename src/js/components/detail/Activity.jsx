@@ -54,39 +54,39 @@ export default class Activity extends Component {
     return (
       <div>
         <h3>活动详情</h3>
-        <div styleName="row">
-          <div styleName="shrink columns text-right">赛事名称：</div>
-          <div styleName="columns">{detail.name}</div>
+        <div className="row" >
+          <div className="small-4 medium-2 columns">赛事名称：</div>
+          <div className="small-8 medium-8 columns">{detail.name}</div>
         </div>
-        <div styleName="row">
-          <div styleName="shrink columns">活动状态：</div>
-          <div styleName="columns"><span styleName={'label ' + (detail.state === 10 ? 'secondary' : 'success')}>{STATE_MAP[detail.state]}</span></div>
+        <div className="row">
+          <div className="small-4 medium-2 columns">活动状态：</div>
+          <div className="small-8 medium-8 columns"><span className={'label ' + (detail.state === 10 ? 'secondary' : 'success')}>{STATE_MAP[detail.state]}</span></div>
         </div>
-        <div styleName="row">
-          <div styleName="shrink columns">前台是否显示报名人数：</div>
-          <div styleName="columns">
-          {detail.display === 1 ? <span styleName="label success">显示</span> : <span styleName="label secondary">隐藏</span>}
+        <div className="row">
+          <div className="small-4 medium-2 columns">前台是否显示报名人数：</div>
+          <div className="small-8 medium-8 columns">
+          {detail.display === 1 ? <span className="label success">显示</span> : <span className="label secondary">隐藏</span>}
           </div>
         </div>
-        <div styleName="row">
-          <div styleName="shrink columns">报名人数：</div>
-          <div styleName="columns">{`${detail.signUpNum || 0}/${detail.limitNum}`}</div>
+        <div className="row">
+          <div className="shrink columns">报名人数：</div>
+          <div className="columns">{`${detail.signUpNum || 0}/${detail.limitNum}`}</div>
         </div>
-        <div styleName="row">
-          <div styleName="shrink columns text-right">报名时间：</div>
-          <div styleName="columns">{moment(detail.signUpStart).format('YYYY-MM-DD') + '~' + moment(detail.signUpEnd).format('YYYY-MM-DD')}</div>
+        <div className="row">
+          <div className="shrink columns text-right">报名时间：</div>
+          <div className="columns">{moment(detail.signUpStart).format('YYYY-MM-DD') + '~' + moment(detail.signUpEnd).format('YYYY-MM-DD')}</div>
         </div>
-        <div styleName="row">
-          <div styleName="shrink columns">赛事时间：</div>
-          <div styleName="columns">{moment(detail.gameStart).format('YYYY-MM-DD') + '~' + moment(detail.gameEnd).format('YYYY-MM-DD')}</div>
+        <div className="row">
+          <div className="shrink columns">赛事时间：</div>
+          <div className="columns">{moment(detail.gameStart).format('YYYY-MM-DD') + '~' + moment(detail.gameEnd).format('YYYY-MM-DD')}</div>
         </div>
-        <div styleName="row">
-          <div styleName="shrink columns">赛事官网：</div>
-          <div styleName="columns">{detail.siteUrl}</div>
+        <div className="row">
+          <div className="shrink columns">赛事官网：</div>
+          <div className="columns">{detail.siteUrl}</div>
         </div>
-        <div styleName="row">
-          <div styleName="shrink columns">报名费用：</div>
-          <div styleName="columns">
+        <div className="row">
+          <div className="shrink columns">报名费用：</div>
+          <div className="columns">
           {
             items.map((item) => {
               return `${item.name} ${item.price}元/人 `;
@@ -94,17 +94,17 @@ export default class Activity extends Component {
           }
           </div>
         </div>
-        <div styleName="row">
-          <div styleName="shrink columns">赛事介绍：</div>
-          <div styleName="columns">{detail.introduce}</div>
+        <div className="row">
+          <div className="shrink columns">赛事介绍：</div>
+          <div className="columns">{detail.introduce}</div>
         </div>
-        <div styleName="row">
-          <div styleName="shrink columns">免责说明：</div>
-          <div styleName="columns">{detail.disclaimer}</div>
+        <div className="row">
+          <div className="shrink columns">免责说明：</div>
+          <div className="columns">{detail.disclaimer}</div>
         </div>
-        <div styleName="row">
-          <div styleName="shrink columns text-right">商户帐号：</div>
-          <div styleName="columns">{detail.tenantAccount}</div>
+        <div className="row">
+          <div className="shrink columns text-right">商户帐号：</div>
+          <div className="columns">{detail.tenantAccount}</div>
         </div>
         <Modal title="账单查询" isShown={showBill} hideCancleButton={true} hideModal={this.hideBillModal}>
           <div>
@@ -132,12 +132,12 @@ export default class Activity extends Component {
             </table>
           </div>
         </Modal>
-        <div styleName="button-group">
-          <a onClick={this.handleViewBillClick} styleName="secondary button">账单查询</a>
+        <div className="button-group">
+          <a onClick={this.handleViewBillClick} className="secondary button">账单查询</a>
           {detail.display === 1}
-          <a onClick={this.handleDisplayClick} styleName="success button">{(detail.display === 1 ? '隐藏' : '显示') + '报名人数'}</a>
-          <Link styleName="warning button" to={`modification/${id}`}>修改</Link>
-          <a onClick={this.handleDeleteClick} styleName={'alert button' + (detail.state === 10 ? ' disabled' : '')}>取消报名</a>
+          <a onClick={this.handleDisplayClick} className="success button">{(detail.display === 1 ? '隐藏' : '显示') + '报名人数'}</a>
+          <Link className="warning button" to={`modification/${id}`}>修改</Link>
+          <a onClick={this.handleDeleteClick} className={'alert button' + (detail.state === 10 ? ' disabled' : '')}>取消报名</a>
         </div>
       </div>
     );

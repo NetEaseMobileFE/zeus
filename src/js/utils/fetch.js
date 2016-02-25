@@ -31,7 +31,6 @@ export default function ajax(opt, dispatch) {
   if (options.method === 'POST' && typeof options.body === 'object') {
     options.body = transformRequest(options.body);
   }
-
   return fetch(options.url, options)
     .then((response) => {
       if (response.status >= 200 && response.status < 300 || response.status === 302) {
@@ -61,6 +60,10 @@ export default function ajax(opt, dispatch) {
       return Promise.reject(result);
     })
     .catch((fail) => {
-      return Promise.reject(fail);
+      let reason = fail;
+      if (typeof fail.code === 'undefined') {
+        reason = { code: -1, msg: '未登录，请刷新页面。'}
+      }
+      return Promise.reject(reason);
     });
 }

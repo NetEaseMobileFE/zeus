@@ -34,14 +34,14 @@ class DetailPage extends Component {
     }
     return (
       <div>
-        <ul styleName="tabs">
+        <ul className="tabs">
               
-          <li styleName={'tabs-title' + (active === 'detail' ? ' is-active' : '')}><Link to={`match/${id}/detail`}>查看活动详情</Link></li>
-          <li styleName={'tabs-title' + (active === 'codes' ? ' is-active' : '')}><Link to={`match/${id}/codes`}>查看邀请码</Link></li>
-          <li styleName={'tabs-title' + (active === 'participants' ? ' is-active' : '')}><Link to={`match/${id}/participants`}>查看报名人</Link></li>
+          <li className={'tabs-title' + (active === 'detail' ? ' is-active' : '')}><Link to={`match/${id}/detail`}>查看活动详情</Link></li>
+          <li className={'tabs-title' + (active === 'codes' ? ' is-active' : '')}><Link to={`match/${id}/codes`}>查看邀请码</Link></li>
+          <li className={'tabs-title' + (active === 'participants' ? ' is-active' : '')}><Link to={`match/${id}/participants`}>查看报名人</Link></li>
         </ul>
-        <div styleName="tabs-content">
-          <div styleName="tabs-panel is-active">
+        <div className="tabs-content">
+          <div className="tabs-panel is-active">
             { this.props.children && React.cloneElement(this.props.children, { id, detail }) }
           </div>
         </div>

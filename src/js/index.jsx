@@ -5,7 +5,7 @@ import { Router, Route, IndexRoute, Redirect, hashHistory } from 'react-router';
 import configureStore from './configureStore';
 import AppList from './components/AppList';
 import DetailPage, { Participants, Activity, InviteCodes } from './components/detail';
-import Users from './components/user';
+import Users from './components/Users';
 import Create from './components/Create';
 import NotFoundView from './components/NotFoundView';
 import App from './components/App';

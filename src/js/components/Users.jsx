@@ -4,10 +4,10 @@ import { Link } from 'react-router';
 import CSSModules from 'react-css-modules';
 import moment from 'moment';
 
-import Modal from '../common/Modal';
-import Pagination from '../common/Pagination';
-import styles from '../../../css/modules/users.scss';
-import * as usersActions from '../../actions/users';
+import Modal from './common/Modal';
+import Pagination from './common/Pagination';
+import styles from '../../css/modules/users.scss';
+import * as usersActions from '../actions/users';
 
 @CSSModules(styles, {
   allowMultiple: true
@@ -68,9 +68,9 @@ class Users extends Component {
   render() {
     const { users, changePage } = this.props;
     return (
-      <div>
-        <a styleName="button small" onClick={this.handleAddClick}>添加新用户</a>
-        <table>
+      <div styleName="wrap">
+        <a className="button small" onClick={this.handleAddClick}>添加新用户</a>
+        <table styleName="table">
           <thead>
             <tr>
               <th>账号</th>
@@ -90,7 +90,7 @@ class Users extends Component {
                 <td>{moment(user.lastLogin).format('YYYY-MM-DD hh:mm:ss')}</td>
                 <td>{moment(user.createTime).format('YYYY-MM-DD hh:mm:ss')}</td>
                 <td>111</td>
-                <td><a styleName="button warning tiny" onClick={this.handleModifyClick.bind(this, user)}>修改</a><a styleName="button alert tiny"  onClick={this.handleDeleteClick.bind(this, user.account)}>删除</a></td>
+                <td><a styleName="btn" className="button warning tiny" onClick={this.handleModifyClick.bind(this, user)}>修改</a><a className="button alert tiny" styleName="btn" onClick={this.handleDeleteClick.bind(this, user.account)}>删除</a></td>
               </tr>)
             }) 
           }
@@ -98,28 +98,28 @@ class Users extends Component {
         </table>
         <Pagination total={Math.ceil(users.count / this.RECORDS_PER_PAGE)} curPage={users.current} toPage={this.handlePageChangeClick} />
         <Modal title={this.modalTitle} isShown={users.showModal} hideCancelButton={false} hideModal={this.hideModal} >
-          <form>
-            <div styleName="row">
-              <div styleName="small-3 columns">
-                <label styleName="text-right middle">邮箱前缀：</label>
+          <form styleName="form">
+            <div className="row">
+              <div className="small-3 columns">
+                <label className="text-right middle">邮箱前缀：</label>
               </div>
-              <div styleName="small-9 columns">
+              <div className="small-9 columns">
                 <input type="text" ref="account" placeholder="corp邮箱前缀"  />
               </div>
             </div>
-            <div styleName="row">
-              <div styleName="small-3 columns">
-                <label styleName="text-right middle">姓名：</label>
+            <div className="row">
+              <div className="small-3 columns">
+                <label className="text-right middle">姓名：</label>
               </div>
-              <div styleName="small-9 columns">
-                <input styleName="alert" type="text" ref="name" placeholder="姓名" />
+              <div className="small-9 columns">
+                <input className="alert" type="text" ref="name" placeholder="姓名" />
               </div>
             </div>
-            <div styleName="row">
-              <div styleName="small-3 columns">
-                <label styleName="text-right middle">权限：</label>
+            <div className="row">
+              <div className="small-3 columns">
+                <label className="text-right middle">权限：</label>
               </div>
-              <div styleName="small-9 columns">
+              <div className="small-9 columns">
                 <select ref="select">
                   <option value="0">用户</option>
                   <option value="1">管理员</option>

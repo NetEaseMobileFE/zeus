@@ -45,15 +45,15 @@ export default class InviteCodes extends Component {
     return (
       <div>
         <h2>邀请码</h2>
-        <div styleName="row">
-          <select styleName="medium-2 columns" ref="select">
+        <div className="row">
+          <select className="medium-2 columns" ref="select">
             {
               items.map((item, i) => {
                 return <option value={`${item.name}|${item.price}`} key={i}>{`${item.name}(${item.price}元)`}</option>;
               })
             }
           </select>
-          <a styleName="button medium-1" onClick={() => { this.handleGenCodeClick(this.refs.select.value); }}>生成邀请码</a>
+          <a className="button medium-1" onClick={() => { this.handleGenCodeClick(this.refs.select.value); }}>生成邀请码</a>
         </div>
         <table>
           <thead>

@@ -3,10 +3,11 @@
  */
 import React, { Component, PropTypes } from 'react';
 import CSSModules from 'react-css-modules';
-import styles from '../../../css/modules/Modal.scss';
+import styles from '../../../css/widgets/modal.scss';
 
 @CSSModules(styles, {
-  allowMultiple: true
+  allowMultiple: true,
+  errorWhenNotFound: false
 })
 class Modal extends Component {
   constructor(props, context){
@@ -22,10 +23,10 @@ class Modal extends Component {
     const { title = '提示', isShown, hideModal, bodyTextCenter = false, buttonEnable = true, hideCancelButton = true } = this.props;
     return(
       <div styleName={["modal", isShown ? "in" : ""].join(" ")}>
-        <div styleName="modal-overlay"></div>
-        <div styleName="modal-plane">
+        <div styleName="overlay"></div>
+        <div styleName="plane">
           <div styleName="inner">
-            <div styleName="modal-header">
+            <div styleName="header">
               <h6>{title}</h6>
               <button styleName="close-button"
                   type="button"
@@ -33,13 +34,13 @@ class Modal extends Component {
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div styleName={'modal-body' + (bodyTextCenter ? ' text-center' : '')}>
+            <div styleName="body" className={(bodyTextCenter ? 'text-center' : '')}>
               {this.props.children}
             </div>
-            <div styleName="modal-footer">
-              <button styleName={'alert button' + (buttonEnable ? '' : ' disabled')} onClick={this.handleButtonClick.bind(this, true)}>确定</button>
+            <div styleName="footer">
+              <button className={'alert button' + (buttonEnable ? '' : ' disabled')} onClick={this.handleButtonClick.bind(this, true)}>确定</button>
               {
-                !hideCancelButton && (<button styleName="alert button hollow" onClick={this.handleButtonClick.bind(this, false)}>取消</button>)
+                !hideCancelButton && (<button className="alert button hollow" onClick={this.handleButtonClick.bind(this, false)}>取消</button>)
               }
             </div>
           </div>

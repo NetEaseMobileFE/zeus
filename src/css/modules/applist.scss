@@ -1,8 +1,5 @@
 @import "leadin";
 
-@include panel;
-@include text-align;
-
 .applist{
     @include table;
     table {
@@ -11,5 +8,8 @@
         th{
             text-align: center;
         }
+    }
+    .line{
+        max-width: none;
     }
 }

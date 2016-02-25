@@ -23,25 +23,25 @@ class Modal extends Component {
         let { msg, config, didInvalidate } = this.props.modal;
         let { modal_cancel } = this.props.actions;
         return(
-            <div styleName={["modal", didInvalidate ? "in" : ""].join(" ")}>
-                <div styleName="modal-overlay"></div>
-                <div styleName="modal-plane">
-                    <div styleName="modal-header">
+            <div className={["modal", didInvalidate ? "in" : ""].join(" ")}>
+                <div className="modal-overlay"></div>
+                <div className="modal-plane">
+                    <div className="modal-header">
                         <h6>提示</h6>
-                        <button styleName="close-button"
+                        <button className="close-button"
                                 type="button"
                                 onClick={modal_cancel}>
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div styleName="modal-body">
+                    <div className="modal-body">
                         {this.props.children || msg}
                     </div>
-                    <div styleName="modal-footer">
+                    <div className="modal-footer">
                         {
-                            config.type !== 'alert' && (<button styleName="alert button hollow" onClick={modal_cancel}>取消</button>)
+                            config.type !== 'alert' && (<button className="alert button hollow" onClick={modal_cancel}>取消</button>)
                         }
-                        <button styleName="alert button" onClick={this.modal_ok.bind(this)}>确定</button>
+                        <button className="alert button" onClick={this.modal_ok.bind(this)}>确定</button>
                     </div>
                 </div>
             </div>

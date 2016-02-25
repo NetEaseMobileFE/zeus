@@ -23,8 +23,8 @@ export default class Pagination extends Component {
     return (
       <div styleName="wrap">
         <span styleName="middle">{`${curPage} / ${total}`}</span>
-        <a styleName={'button tiny' + (curPage === 1 ? ' disabled' : '')} onClick={this.handleClick.bind(this, -1)}>上一页</a>
-        <a styleName={'button tiny' + (curPage === total ? ' disabled' : '')} onClick={this.handleClick.bind(this, 1)}>下一页</a>
+        <a styleName="btn" className={'button tiny' + (curPage === 1 ? ' disabled' : '')} onClick={this.handleClick.bind(this, -1)}>上一页</a>
+        <a styleName="btn" className={'button tiny' + (curPage === total ? ' disabled' : '')} onClick={this.handleClick.bind(this, 1)}>下一页</a>
       </div>
     );
   }

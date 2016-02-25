@@ -286,20 +286,20 @@ class Create extends Component {
         let self = this;
         let curType = self.types[self.state.type];
         return (
-            <div styleName="panel">
-                <div styleName="row">
-                    <div styleName="columns"><h4>创建活动</h4></div>
-                    <div styleName="shrink columns text-right"></div>
+            <div className="panel">
+                <div className="row">
+                    <div className="columns"><h4>创建活动</h4></div>
+                    <div className="shrink columns text-right"></div>
                 </div>
                 <form onBlur={this.updateValue.bind(this)}
                       onFocus={this.focusInput.bind(this)}
                       onChange={this.updateStateValue.bind(this)}>
-                    <div styleName="row">
-                        <div styleName="small-2 columns"></div>
+                    <div className="row">
+                        <div className="small-2 columns"></div>
                         {
                             Object.keys(self.types).map((elm, index)=>(
-                                <div styleName="small-2 columns" key={ index }>
-                                    <label styleName="align-spaced">
+                                <div className="small-2 columns" key={ index }>
+                                    <label className="align-spaced">
                                         <input type="radio" name="type"
                                                value={ elm } data-text={ self.types[elm].text }
                                                checked={ +elm === +self.state.type }
@@ -310,27 +310,27 @@ class Create extends Component {
                             ))
                         }
                     </div>
-                    <div styleName="row">
-                        <div styleName="small-4 medium-2 columns">
-                            <label styleName="text-right middle" data-suffix=":">{curType.text}名称</label>
+                    <div className="row">
+                        <div className="small-4 medium-2 columns">
+                            <label className="text-right middle" data-suffix=":">{curType.text}名称</label>
                         </div>
-                        <div styleName="small-8 medium-8 columns">
+                        <div className="small-8 medium-8 columns">
                             <input type="text" placeholder={`请填写${curType.text}名称`}
                                    name="name" value={self.state.name}/>
                         </div>
                     </div>
-                    <div styleName="row">
-                        <div styleName="small-4 medium-2 columns">
-                            <label styleName="text-right middle" data-suffix=":">报名日期</label>
+                    <div className="row">
+                        <div className="small-4 medium-2 columns">
+                            <label className="text-right middle" data-suffix=":">报名日期</label>
                         </div>
-                        <div styleName="small-8 medium-4 columns">
+                        <div className="small-8 medium-4 columns">
                             <Datetime input={true} locale="zh-cn"
                                       inputProps={{placeholder:'起始日期',name:'signUpStart',readOnly:true}}
                                       value={data.signUpStart}
                                       onChange={this.updateTime.bind(this,'signUpStart')}
                                       onBlur={this.updateTime.bind(this,'signUpStart')}/>
                         </div>
-                        <div styleName="small-8 medium-4 columns">
+                        <div className="small-8 medium-4 columns">
                             <Datetime input={true} locale="zh-cn"
                                       inputProps={{placeholder:'结束日期',name:'signUpEnd',readOnly:true}}
                                       value={data.signUpEnd}
@@ -338,18 +338,18 @@ class Create extends Component {
                                       onBlur={this.updateTime.bind(this,'signUpEnd')}/>
                         </div>
                     </div>
-                    <div styleName="row">
-                        <div styleName="small-4 medium-2 columns">
-                            <label styleName="text-right middle" data-suffix=":">{curType.text}日期</label>
+                    <div className="row">
+                        <div className="small-4 medium-2 columns">
+                            <label className="text-right middle" data-suffix=":">{curType.text}日期</label>
                         </div>
-                        <div styleName="small-8 medium-4 columns">
+                        <div className="small-8 medium-4 columns">
                             <Datetime input={true} locale="zh-cn"
                                       inputProps={{placeholder:'起始日期',name:'gameStart',readOnly:true}}
                                       value={data.gameStart}
                                       onChange={this.updateTime.bind(this,'gameStart')}
                                       onBlur={this.updateTime.bind(this,'gameStart')}/>
                         </div>
-                        <div styleName="small-8 medium-4 columns">
+                        <div className="small-8 medium-4 columns">
                             <Datetime input={true} locale="zh-cn"
                                       inputProps={{placeholder:'结束日期',name:'gameEnd',readOnly:true}}
                                       value={data.gameEnd}
@@ -357,57 +357,57 @@ class Create extends Component {
                                       onBlur={this.updateTime.bind(this,'gameEnd')}/>
                         </div>
                     </div>
-                    <div styleName="row">
-                        <div styleName="small-4 medium-2 columns">
-                            <label styleName="text-right middle" data-suffix=":">{curType.text}官网</label>
+                    <div className="row">
+                        <div className="small-4 medium-2 columns">
+                            <label className="text-right middle" data-suffix=":">{curType.text}官网</label>
                         </div>
-                        <div styleName="small-8 medium-8 columns">
+                        <div className="small-8 medium-8 columns">
                             <input type="text" name="siteUrl" value={self.state.siteUrl} placeholder="http://"/>
                         </div>
                     </div>
-                    <div styleName="row">
-                        <div styleName="small-4 medium-2 columns">
-                            <label styleName="text-right middle" data-suffix=":">{curType.text}项目</label>
-                            <label styleName="text-right middle" data-suffix=":">报名费用</label>
+                    <div className="row">
+                        <div className="small-4 medium-2 columns">
+                            <label className="text-right middle" data-suffix=":">{curType.text}项目</label>
+                            <label className="text-right middle" data-suffix=":">报名费用</label>
                         </div>
                         <ProjectCard project={data.items}
                                      actions={actions}
                                      type={self.state.type}
                                      isModification={this.is_modification}/>
                     </div>
-                    <div styleName="row">
-                        <div styleName="small-4 medium-2 columns">
-                            <label styleName="text-right middle" data-suffix=":">报名限额</label>
+                    <div className="row">
+                        <div className="small-4 medium-2 columns">
+                            <label className="text-right middle" data-suffix=":">报名限额</label>
                         </div>
-                        <div styleName="small-6 medium-6 columns">
-                            <input type="number" styleName="text-right"
+                        <div className="small-6 medium-6 columns">
+                            <input type="number" className="text-right"
                                    name="limitNum" value={self.state.limitNum}/>
                         </div>
-                        <div styleName="small-2 medium-2 columns">
-                            <label styleName="middle">人</label>
+                        <div className="small-2 medium-2 columns">
+                            <label className="middle">人</label>
                         </div>
                     </div>
-                    <div styleName="row">
-                        <div styleName="small-4 medium-2 columns">
-                            <label styleName="text-right middle" data-suffix=":">{curType.text}介绍</label>
+                    <div className="row">
+                        <div className="small-4 medium-2 columns">
+                            <label className="text-right middle" data-suffix=":">{curType.text}介绍</label>
                         </div>
-                        <div styleName="small-8 medium-8 columns">
+                        <div className="small-8 medium-8 columns">
                             <textarea rows="5" name="introduce" value={self.state.introduce}/>
                         </div>
                     </div>
-                    <div styleName="row">
-                        <div styleName="small-4 medium-2 columns">
-                            <label styleName="text-right middle" data-suffix=":">免责说明</label>
+                    <div className="row">
+                        <div className="small-4 medium-2 columns">
+                            <label className="text-right middle" data-suffix=":">免责说明</label>
                         </div>
-                        <div styleName="small-8 medium-8 columns">
+                        <div className="small-8 medium-8 columns">
                             <textarea rows="5" name="disclaimer" value={self.state.disclaimer}/>
                         </div>
                     </div>
-                    <div styleName="row">
-                        <div styleName="small-4 medium-2 columns">
-                            <label styleName="text-right middle" data-suffix=":">上传图片</label>
+                    <div className="row">
+                        <div className="small-4 medium-2 columns">
+                            <label className="text-right middle" data-suffix=":">上传图片</label>
                         </div>
-                        <div styleName="small-8 medium-8 columns" onBlur={self.updateDescription.bind(self)}>
+                        <div className="small-8 medium-8 columns" onBlur={self.updateDescription.bind(self)}>
                             <DropzoneComponent config={this.uploadComponentConfig()}
                                                eventHandlers={this.uploadEventHandlers()}
                                                djsConfig={this.uploadDjsConfig()}/>
@@ -433,11 +433,11 @@ class Create extends Component {
                             }
                         </div>
                     </div>
-                    <div styleName="row">
-                        <div styleName="small-4 medium-2 columns">
-                            <label styleName="text-right middle" data-suffix=":">报名填写信息</label>
+                    <div className="row">
+                        <div className="small-4 medium-2 columns">
+                            <label className="text-right middle" data-suffix=":">报名填写信息</label>
                         </div>
-                        <div styleName="small-8 medium-8 columns">
+                        <div className="small-8 medium-8 columns">
                             <OtherItems actions={actions}
                                         requiredItems={data.requiredItems}
                                         addItems={data.addItems}/>
@@ -446,9 +446,9 @@ class Create extends Component {
                     {
                         !self.is_modification && ( <WYBinfo actions={actions} data={data}/> )
                     }
-                    <div styleName="row submit-button">
-                        <div styleName="small-2 columns"></div>
-                        <button type="submit" styleName="button small-2 columns"
+                    <div className="row" styleName="submit-button">
+                        <div className="small-2 columns"></div>
+                        <button type="submit" className="button small-2 columns"
                                 onClick={self.submitForm.bind(self)} disabled={self.state.is_submitting}>提交</button>
                     </div>
                 </form>

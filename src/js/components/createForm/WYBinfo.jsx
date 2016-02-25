@@ -22,6 +22,11 @@ import styles from '../../../css/modules/WYBinfo.scss';
         let { defaultTenant,tenantAccount,privkey,publickey,plateformId }=this.props.data;
         return (
             <div>
+                <div styleName="row">
+                    <div styleName="small-4 medium-2 columns">
+                        <h5 styleName="text-right middle" data-suffix=":">网易宝信息</h5>
+                    </div>
+                </div>
                 <div styleName="row" onChange={this.switchTenant.bind(this)}>
                     <div styleName="small-2 columns"></div>
                     <div styleName="small-3 columns">

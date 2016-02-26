@@ -11,5 +11,5 @@ const STATE_MAP = {
   9: '报名成功-支付成功',
   10: '报名取消',
   11: '我关注的赛事',
-}
+};
 export default STATE_MAP;

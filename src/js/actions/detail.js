@@ -10,8 +10,6 @@ export function loadDetail(id) {
     if (detail.id) {
       return detail;
     }
-
-    let data = {};
     // return ajax({
     //   url: `http://localhost:3100/detail.json`
     // })
@@ -46,7 +44,7 @@ export function updateDetail(data) {
       });
       return Promise.resolve(json);
     }).catch(errorHandler.bind(null, dispatch));
-  }
+  };
 }
 // 显隐账单
 export function toggleBill(id) {
@@ -70,7 +68,6 @@ export function toggleBill(id) {
         return Promise.resolve(json);
       }).catch(errorHandler.bind(null, dispatch));
     }
-    
   };
 }
 // 删除赛事
@@ -88,7 +85,7 @@ export function deleteMatch(id) {
       });
       return Promise.resolve(json);
     }).catch(errorHandler.bind(null, dispatch));
-  }
+  };
 }
 
 
@@ -156,15 +153,12 @@ export function changeCodesPage(next, recordsPerPage) {
 
 // 生成邀请码
 export function genCode(data) {
-  return (dispatch, getState) => {
-    // const URL = `http://localhost:3100/genCode.json?${transformRequest(extend({}, { nums: 1 }, data))}`;
-    const count = getState().inviteCodes.count;
+  return (dispatch) => {
     // return fetch(`http://localhost:3100/inviteCodes.json`)
-    const body = extend({}, { nums: 1 }, data);
     return ajax({
       url: `http://baoming.ws.netease.com/admin/invitecode/generateInvitecode`, 
       method: 'POST',
-      body: body
+      body: extend({}, { nums: 1 }, data)
     })
     .then((json) => {
       dispatch({
@@ -172,6 +166,7 @@ export function genCode(data) {
         data: json.data,
         id: json.data[0].cid
       });
+      return Promise.resolve(json);
     }).catch(errorHandler.bind(null, dispatch));
   };
 }
@@ -190,7 +185,7 @@ function requestParticipants(id, pageNum = 1, dispatch, getState) {
       temp = [
         ...participants.data,
         ...json.data
-      ]
+      ];
     }
     dispatch({
       type: type.REQUEST_PARTICIPANTS,
@@ -227,7 +222,7 @@ export function searchParticipants(id, condition) {
       });
       return Promise.resolve(json);
     }).catch(errorHandler.bind(null, dispatch));
-  }
+  };
 }
 // 清除搜索结果
 export function clearSearchResults() {
@@ -235,7 +230,7 @@ export function clearSearchResults() {
     dispatch({
       type: type.CLEAR_RESULTS
     });
-  }
+  };
 }
 
 // 获取报名人总数
@@ -268,17 +263,15 @@ export function changeParticipantsCount(delta) {
 // 删除报名人
 export function deleteParticipant(cid, pid) {
   return (dispatch, getState) => {
-
     // 判断当前是否处于搜索状态（searchResults长度大于0）
     // 若是，更改searchResults, 否则更改data
     const searchResults = getState().participants.searchResults;
-    const count = getState().participants.count;
     const participants = searchResults.length > 0 ? searchResults : getState().participants.data;
     dispatch({
       type: searchResults.length > 0 ? type.SEARCH_PARTICIPANTS : type.REQUEST_PARTICIPANTS,
       data: participants.map((person) => {
         if (person.id === pid) {
-          const temp = extend({}, person, { state: 10 })
+          const temp = extend({}, person, { state: 10 });
           return temp;
         }
         return person;
@@ -289,7 +282,7 @@ export function deleteParticipant(cid, pid) {
     return ajax({
       url: `http://baoming.ws.netease.com/admin/signUp/delete?sid=${pid}`
     }).catch(errorHandler.bind(null, dispatch));
-  }
+  };
 }
 
 // 报名人信息分页
@@ -337,7 +330,6 @@ export function editInfo(id) {
 // 保存报名人信息
 export function saveInfo(id, data) {
   return (dispatch) => {
-    console.log(data);
     if (Object.keys(data).length === 0) {
       return Promise.resolve({});
     }

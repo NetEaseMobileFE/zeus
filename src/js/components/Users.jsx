@@ -32,7 +32,7 @@ class Users extends Component {
       this.props.deleteUser({ account });
     }
   }
-  handleAddClick(title) {
+  handleAddClick() {
     this.modalTitle = '增加用户';
     this.props.toggleModal();
   }
@@ -47,7 +47,6 @@ class Users extends Component {
       if (!data.account || !data.name) {
         return;
       }
-      console.log(data);
       this.props.addUser(data);
     }
     account.value = '';
@@ -58,7 +57,7 @@ class Users extends Component {
   }
 
   render() {
-    const { users, changePage } = this.props;
+    const { users } = this.props;
     return (
       <div styleName="wrap">
         <a className="button small" onClick={this.handleAddClick}>添加新用户</a>
@@ -83,8 +82,8 @@ class Users extends Component {
                 <td>{moment(user.createTime).format('YYYY-MM-DD hh:mm:ss')}</td>
                 <td>{user.authority === 0 ? '普通用户' : '管理员'}</td>
                 <td><a className="button alert tiny" styleName="btn" onClick={this.handleDeleteClick.bind(this, user.account)}>删除</a></td>
-              </tr>)
-            });
+              </tr>);
+            })
           }
           </tbody>
         </table>
@@ -96,7 +95,7 @@ class Users extends Component {
                 <label className="text-right middle">邮箱前缀：</label>
               </div>
               <div className="small-9 columns">
-                <input type="text" ref="account" placeholder="corp邮箱前缀"  />
+                <input type="text" ref="account" placeholder="corp邮箱前缀" />
               </div>
             </div>
             <div className="row">
@@ -128,10 +127,10 @@ Users.propTypes = {
   users: PropTypes.object.isRequired,
   changePage: PropTypes.func.isRequired,
   deleteUser: PropTypes.func.isRequired,
-  toggleModal: PropTypes.func.isRequired,
   fetchUsers: PropTypes.func.isRequired,
   fetchUsersCount: PropTypes.func.isRequired,
   toggleModal: PropTypes.func.isRequired,
+  addUser: PropTypes.func.isRequired,
 };
 function mapStateToProps(state) {
   const users = state.users;

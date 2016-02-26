@@ -1,5 +1,4 @@
 import * as type from './actionType';
-import extend from 'lodash.assign';
 import ajax from '../utils/fetch';
 import errorHandler from '../utils/errorHandler';
 
@@ -44,8 +43,7 @@ export function changePage(next, recordsPerPage) {
         current: next
       });
     }
-  }
-
+  };
 }
 
 // 获取管理员总数
@@ -74,23 +72,7 @@ export function toggleModal() {
 }
 
 // 添加管理员
-export function addUser(data = { account: '', name: '', authority: 1}) {
-  return (dispatch, getState) => {
-    return ajax({
-      // url: 'http://localhost:3100/addUser.json',
-      url: 'http://baoming.ws.netease.com/admin/permissions/save',
-      method: 'POST',
-      body: data
-    }).then((json) => {
-      dispatch({
-        type: type.ADD_USER,
-        data,
-      });
-    }).catch(errorHandler.bind(null, dispatch));
-  };
-}
-// 修改管理员
-export function modifyUser(data = { account: '', name: ''}) {
+export function addUser(data = { account: '', name: '', authority: 1 }) {
   return (dispatch) => {
     return ajax({
       // url: 'http://localhost:3100/addUser.json',
@@ -102,11 +84,8 @@ export function modifyUser(data = { account: '', name: ''}) {
         type: type.ADD_USER,
         data,
       });
+      return Promise.resolve(json);
     }).catch(errorHandler.bind(null, dispatch));
-    dispatch({
-      type: type.MODIFY_USER,
-      modifying: data
-    });
   };
 }
 
@@ -114,8 +93,9 @@ export function modifyUser(data = { account: '', name: ''}) {
 export function deleteUser(data = { account: '' }) {
   return (dispatch, getState) => {
     if (data.account === getState().app.name) {
-      errorHandler(dispatch, { code: 3, msg: '不能删除自己的账号。' });
-      return;
+      const error = { code: 3, msg: '不能删除自己的账号。' };
+      errorHandler(dispatch, error);
+      return Promise.reject(error);
     }
     return ajax({
       // url: 'http://localhost:3100/addUser.json',
@@ -127,7 +107,7 @@ export function deleteUser(data = { account: '' }) {
         type: type.DELETE_USER,
         account: data.account
       });
+      return Promise.resolve(json);
     }).catch(errorHandler.bind(null, dispatch));
   };
 }
-

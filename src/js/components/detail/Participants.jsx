@@ -27,7 +27,7 @@ export default class Participants extends Component {
   componentDidMount() {
     // 清空临时信息
     this.tempInfo = {};
-    const { id, detail, participants, loadParticipants, fetchParticipantsCount } = this.props;
+    const { id, participants, loadParticipants, fetchParticipantsCount } = this.props;
     if (participants.length === 0) {
       loadParticipants(id);
       fetchParticipantsCount(id);
@@ -41,11 +41,11 @@ export default class Participants extends Component {
       return;
     }
     this.props.searchParticipants(this.props.id, value).then((json) => {
-      if (!json.data || json.data.length === 0){
+      if (!json.data || json.data.length === 0) {
         alert('未找到搜索结果');
       }
       this.props.changeParticipantsPage(1, this.RECORDES_PER_PAGE);
-    })
+    });
   }
   // 清除查询结果
   handleClearClick() {
@@ -53,7 +53,7 @@ export default class Participants extends Component {
     this.refs.searchInput.value = '';
   }
   // 翻页
-  handleChangePageClick(next){
+  handleChangePageClick(next) {
     this.props.changeParticipantsPage(next, this.RECORDES_PER_PAGE);
   }
   handleEditBlur(event) {
@@ -67,13 +67,12 @@ export default class Participants extends Component {
     }
     if (value !== this.tempInfo[key]) {
       extend(this.tempInfo, { [key]: value });
-      console.log(this.tempInfo)
     }
   }
 
   // 编辑报名人信息
-  handleEditClick(id, index) {
-    const { editInfo, participants, expandInfo } = this.props;
+  handleEditClick(id) {
+    const { editInfo, expandInfo } = this.props;
     expandInfo(id);
     editInfo(id);
   }
@@ -81,7 +80,7 @@ export default class Participants extends Component {
     const { editInfo, saveInfo } = this.props;
     editInfo(0);
     if (!cancel) {
-      saveInfo(id, this.tempInfo).then((json)=> {
+      saveInfo(id, this.tempInfo).then((json) => {
         if (json.code === 1) {
           alert('操作成功');
         }
@@ -103,8 +102,9 @@ export default class Participants extends Component {
 
   // 删除报名人信息
   handleDeleteClick(id) {
-    const value = confirm('是否取消此用户报名？')
-    value && this.props.deleteParticipant(this.props.id, id);
+    if (confirm('是否取消此用户报名？')) {
+      this.props.deleteParticipant(this.props.id, id);
+    }
   }
   render() {
     const { editId, detail, expandId, showResult, participants, current, count } = this.props;
@@ -285,6 +285,7 @@ export default class Participants extends Component {
   }
 }
 Participants.propTypes = {
+  id: PropTypes.number.isRequired,
   count: PropTypes.number.isRequired, 
   editId: PropTypes.number.isRequired, 
   detail: PropTypes.object.isRequired,
@@ -294,7 +295,11 @@ Participants.propTypes = {
   saveInfo: PropTypes.func.isRequired, 
   editInfo: PropTypes.func.isRequired, 
   expandInfo: PropTypes.func.isRequired, 
+  showResult: PropTypes.func.isRequired, 
   loadParticipants: PropTypes.func.isRequired, 
+  deleteParticipant: PropTypes.func.isRequired, 
+  searchParticipants: PropTypes.func.isRequired, 
+  clearSearchResults: PropTypes.func.isRequired, 
   changeParticipantsPage: PropTypes.func.isRequired,
   fetchParticipantsCount: PropTypes.func.isRequired,
 };

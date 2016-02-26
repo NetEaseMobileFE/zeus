@@ -39,7 +39,7 @@ class SlideBar extends Component {
   }
 }
 SlideBar.propTypes = {
-  route:PropTypes.object.isRequired
+  route: PropTypes.object.isRequired
 };
 
 export default SlideBar;

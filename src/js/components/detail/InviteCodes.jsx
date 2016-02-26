@@ -18,7 +18,7 @@ export default class InviteCodes extends Component {
     this.handlePageChangeClick = this.handlePageChangeClick.bind(this);
   }
   componentDidMount() {
-    const { id, codes, detail, loadInviteCodes, fetchCodesCount } = this.props;
+    const { id, codes, loadInviteCodes, fetchCodesCount } = this.props;
     if (codes.length === 0) {
       loadInviteCodes(id);
       fetchCodesCount(id);
@@ -43,7 +43,9 @@ export default class InviteCodes extends Component {
     let items = [];
     try {
       items = JSON.parse(detail.items);
-    } catch (e) {}
+    } catch (e) {
+      throw new Error(e);
+    }
     return (
       <div styleName="codes">
         <div className="row">
@@ -97,11 +99,13 @@ export default class InviteCodes extends Component {
   }
 }
 InviteCodes.propTypes = {
+  id: PropTypes.number.isRequired,
   codes: PropTypes.array.isRequired, 
   count: PropTypes.number.isRequired, 
   detail: PropTypes.object.isRequired, 
   current: PropTypes.number.isRequired, 
   genCode: PropTypes.func.isRequired,
+  fetchCodesCount: PropTypes.func.isRequired,
   changeCodesPage: PropTypes.func.isRequired,
   loadInviteCodes: PropTypes.func.isRequired
 };

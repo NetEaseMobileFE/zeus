@@ -37,7 +37,7 @@ export default class Activity extends Component {
   }
   handleDisplayClick() {
     const display = Math.abs(this.props.detail.display - 1);
-    this.props.updateDetail({ id: this.props.id, display}).then((json) => {
+    this.props.updateDetail({ id: this.props.id, display }).then((json) => {
       if (json.code === 1) {
         alert('操作成功');
       } else {
@@ -50,7 +50,9 @@ export default class Activity extends Component {
     let items = [];
     try {
       items = JSON.parse(detail.items);
-    } catch (e) {}
+    } catch (e) {
+      throw new Error(e);
+    }
     return (
       <div styleName="activity">
         <div className="row" styleName="row">
@@ -105,7 +107,7 @@ export default class Activity extends Component {
           <div className="small-4 medium-2 columns text-right text-right">商户帐号：</div>
           <div className="small-8 medium-8 columns">{detail.tenantAccount}</div>
         </div>
-        <Modal title="账单查询" isShown={showBill} hideCancleButton={true} hideModal={this.hideBillModal}>
+        <Modal title="账单查询" isShown={showBill} hideCancleButton hideModal={this.hideBillModal}>
           <div>
             总收入： {
               bill.length > 0 && bill.reduce((pre, curr) => {
@@ -143,10 +145,13 @@ export default class Activity extends Component {
   }
 }
 Activity.propTypes = {
-  detail: PropTypes.object.isRequired, 
+  id: PropTypes.number.isRequired, 
   bill: PropTypes.array.isRequired, 
+  detail: PropTypes.object.isRequired, 
   showBill: PropTypes.bool.isRequired, 
-  toggleBill: PropTypes.func.isRequired
+  toggleBill: PropTypes.func.isRequired,
+  deleteMatch: PropTypes.func.isRequired,
+  updateDetail: PropTypes.func.isRequired,
 };
 function mapStateToProps(state, props) {
   const { id, detail } = props;

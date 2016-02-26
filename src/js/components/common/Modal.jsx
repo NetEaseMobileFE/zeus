@@ -10,27 +10,24 @@ import styles from '../../../css/widgets/modal.scss';
   errorWhenNotFound: false
 })
 class Modal extends Component {
-  constructor(props, context){
+  constructor(props, context) {
     super(props, context);
     this.handleButtonClick = this.handleButtonClick.bind(this);
   }
-  handleButtonClick(isOK){
+  handleButtonClick(isOK) {
     this.props.hideModal(isOK);
-    console.log(isOK)
   }
 
-  render(){
-    const { title = '提示', isShown, hideModal, bodyTextCenter = false, buttonEnable = true, hideCancelButton = true } = this.props;
-    return(
-      <div styleName={["modal", isShown ? "in" : ""].join(" ")}>
+  render() {
+    const { title = '提示', isShown, bodyTextCenter = false, buttonEnable = true, hideCancelButton = true } = this.props;
+    return (
+      <div styleName={['modal', isShown ? 'in' : ''].join(' ')}>
         <div styleName="overlay"></div>
         <div styleName="plane">
           <div styleName="inner">
             <div styleName="header">
               <h6>{title}</h6>
-              <button styleName="close-button"
-                  type="button"
-                  onClick={this.handleButtonClick.bind(this, false)}>
+              <button styleName="close-button" type="button" onClick={this.handleButtonClick.bind(this, false)}>
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -46,13 +43,14 @@ class Modal extends Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
-Modal.propTypes={
+Modal.propTypes = {
   title: PropTypes.string,
   isShown: PropTypes.bool.isRequired,
+  children: PropTypes.element,
   buttonEnable: PropTypes.bool,
   bodyTextCenter: PropTypes.bool,
   hideCancelButton: PropTypes.bool,

@@ -20,7 +20,7 @@ class DetailPage extends Component {
   componentDidMount() {
     this.props.loadDetail(this.props.id);
   }
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     if (+nextProps.id !== +this.props.id) {
       this.props.loadDetail(nextProps.id);
     }
@@ -49,15 +49,20 @@ class DetailPage extends Component {
   }
 }
 DetailPage.propTypes = {
+  id: PropTypes.object.isRequired,
+  detail: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  children: PropTypes.element.isRequired,
+  loadDetail: PropTypes.func.isRequired,
 };
 function mapStateToProps(state, props) {
-  const { id } = props.params;
+  const id = +props.params.id;
   const detail = state.details[id] || {};
   return {
     id,
     detail,
-  }
+  };
 }
 export default connect(mapStateToProps, { loadDetail })(DetailPage);
 
-export { Participants, Activity, InviteCodes};
+export { Participants, Activity, InviteCodes };

@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/re54k/webpack-postcss-boilerplate.git"
+    "url": "git+https://github.com/NetEaseMobileFE/zeus.git"
   },
   "keywords": [
     "webpack",
@@ -24,12 +24,11 @@
     "boilerplate",
     "gulpjs"
   ],
-  "author": "re54k",
+  "author": ["ybduan", "jruif"],
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/re54k/webpack-postcss-boilerplate/issues"
+    "url": "https://github.com/NetEaseMobileFE/zeus/issues"
   },
-  "homepage": "https://github.com/re54k/webpack-postcss-boilerplate",
   "devDependencies": {
     "babel-core": "^6.3.15",
     "babel-eslint": "^5.0.0-beta4",

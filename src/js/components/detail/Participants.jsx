@@ -86,6 +86,8 @@ export default class Participants extends Component {
           alert('操作成功');
         }
       });
+    } else {
+      this.refs.form.reset();
     }
     this.tempInfo = {};
   }
@@ -108,7 +110,7 @@ export default class Participants extends Component {
     const { editId, detail, expandId, showResult, participants, current, count } = this.props;
     if (participants.length > 0) {
       return (
-        <form styleName="joiner" onBlur={this.handleEditBlur}>
+        <form ref="form" styleName="joiner" onBlur={this.handleEditBlur}>
           <div className="row search-area">
             <div className="shrink columns">
               <a className="button disabled">下载报名信息</a>
@@ -131,7 +133,7 @@ export default class Participants extends Component {
                 return (
                   <div data-id={person.id} styleName="callout" className={'align-middle' + (expand ? ' callout' : '')} key={person.id}>
                     <div styleName="row" className="row align-middle">
-                      <div className="text-center columns medium-1 small-1" onClick={this.handleExpandClick.bind(this, person.id)}><span className="info label">{expand ? '收起' : '展开'}</span></div>
+                      <div className="text-center align-middle columns medium-1 small-1" onClick={this.handleExpandClick.bind(this, person.id)}><span className="info label">{expand ? '收起' : '展开'}</span></div>
                       <div className="columns medium-2 small-2">
                         <label>姓名： 
                           <input type="text" data-key="name" readOnly={!edit} defaultValue={person.name} />
@@ -155,7 +157,8 @@ export default class Participants extends Component {
                           <input type="text" data-key="productName" readOnly={!edit} defaultValue={person.productName} />
                         </label>
                       </div>
-                      <div className="columns medium-2 small-2 text-center"><span className={'label' + (person.state === 10 ? ' secondary' : '')}>{STATE_MAP[person.state]}</span></div>
+                      <div className="columns medium-2 small-2 text-center align-middle"><span className={'label' + (person.state === 10 ? ' secondary' : '')}>{STATE_MAP[person.state]}</span></div>
+                      <div styleName="operation" className="columns medium-2 small-2 align-middle">
                       {
                         detail.state !== 7 && (!edit ? <a className={'shrink button warning' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleEditClick.bind(this, person.id, i)}>编辑</a> : <a className="button success" onClick={this.handleSaveClick.bind(this, person.id, false)}>保存</a>)
                       }
@@ -163,11 +166,16 @@ export default class Participants extends Component {
                         detail.state !== 7 && (!edit ? <a className={'shrink button alert' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleDeleteClick.bind(this, person.id)}>删除</a> : <a className="button secondary" onClick={this.handleSaveClick.bind(this, person.id, true)}>取消</a>)
                       }
                       { 
-                        detail.state === 7 && person.state === 9 && <label className="columns shrink">成绩：<input type="time" data-key="score" step="1" defaultValue={moment(person.score || 0).format('hh:mm:ss')} /></label>
+                        detail.state === 7 && person.state === 9 && (
+                        <div styleName="score" className="input-group">
+                          <label>成绩：<input type="time" data-key="score" step="0.001" defaultValue={person.score} /></label>
+                          <div className="input-group-button">
+                            <a styleName="save" className="shrink small button success" onClick={this.handleSaveClick.bind(this, person.id, false)}>保存</a>
+                          </div>
+                        </div>
+                        )
                       }
-                      {
-                        detail.state === 7 && person.state === 9 && <a className="shrink button success" onClick={this.handleSaveClick.bind(this, person.id, false)}>保存</a>
-                      }
+                      </div>
                     </div>
                     {
                       expand && (
@@ -273,7 +281,7 @@ export default class Participants extends Component {
         </form>
       );
     }
-    return (<div />);
+    return (<div styleName="callout" className="callout warning"><h5>暂无报名人</h5></div>);
   }
 }
 Participants.propTypes = {

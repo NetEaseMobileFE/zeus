@@ -19,8 +19,10 @@ export default class InviteCodes extends Component {
   }
   componentDidMount() {
     const { id, codes, detail, loadInviteCodes, fetchCodesCount } = this.props;
-    loadInviteCodes(id);
-    fetchCodesCount(id);
+    if (codes.length === 0) {
+      loadInviteCodes(id);
+      fetchCodesCount(id);
+    }
   }
 
   // 生成邀请码
@@ -54,33 +56,42 @@ export default class InviteCodes extends Component {
           </select>
           <a className="button shrink" onClick={() => { this.handleGenCodeClick(this.refs.select.value); }}>生成邀请码</a>
         </div>
-        <table styleName="table">
-          <thead>
-            <tr>
-              <th>序号</th>
-              <th>邀请码</th>
-              <th>创建人</th>
-              <th>报名项目</th>
-              <th>使用人</th>
-            </tr>
-          </thead>
-          <tbody>
-          {
-            codes.slice((current - 1) * delta, current * delta).map((code, i) => {
-              return (
-                <tr key={i}>
-                  <td>{i}</td>
-                  <td>{code.code}</td>
-                  <td>{code.creater}</td>
-                  <td>{`${code.productName}(${code.productPrice}元)`}</td>
-                  <td>{code.user || '未使用'}</td>
-                </tr>
-              );
-            })
-          }
-          </tbody>
-        </table>
-        <Pagination total={Math.ceil(count / delta)} curPage={current} toPage={this.handlePageChangeClick} />
+        {
+          codes.length === 0 ? 
+          (<div styleName="callout" className="callout warning"><h5>暂无邀请码</h5></div>)
+          :
+          (
+            <div>
+              <table styleName="table">
+                <thead>
+                  <tr>
+                    <th>序号</th>
+                    <th>邀请码</th>
+                    <th>创建人</th>
+                    <th>报名项目</th>
+                    <th>使用人</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {
+                  codes.slice((current - 1) * delta, current * delta).map((code, i) => {
+                    return (
+                      <tr key={i}>
+                        <td>{i}</td>
+                        <td>{code.code}</td>
+                        <td>{code.creater}</td>
+                        <td>{`${code.productName}(${code.productPrice}元)`}</td>
+                        <td>{code.user || '未使用'}</td>
+                      </tr>
+                    );
+                  })
+                }
+                </tbody>
+              </table>
+              <Pagination total={Math.ceil(count / delta)} curPage={current} toPage={this.handlePageChangeClick} />
+            </div>
+          )
+        }
       </div>
     );
   }

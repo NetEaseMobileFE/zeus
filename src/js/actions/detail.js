@@ -160,8 +160,7 @@ export function genCode(data) {
     // const URL = `http://localhost:3100/genCode.json?${transformRequest(extend({}, { nums: 1 }, data))}`;
     const count = getState().inviteCodes.count;
     // return fetch(`http://localhost:3100/inviteCodes.json`)
-    const body = extend({}, { nums: 1 }, data)
-    console.log(body)
+    const body = extend({}, { nums: 1 }, data);
     return ajax({
       url: `http://baoming.ws.netease.com/admin/invitecode/generateInvitecode`, 
       method: 'POST',
@@ -339,6 +338,9 @@ export function editInfo(id) {
 export function saveInfo(id, data) {
   return (dispatch) => {
     console.log(data);
+    if (Object.keys(data).length === 0) {
+      return Promise.resolve({});
+    }
     dispatch({
       type: type.SAVE_INFO,
       id,

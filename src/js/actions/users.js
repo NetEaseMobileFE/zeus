@@ -74,11 +74,12 @@ export function toggleModal() {
 }
 
 // 添加管理员
-export function addUser(data = { account: '', name: ''}) {
+export function addUser(data = { account: '', name: '', authority: 1}) {
   return (dispatch, getState) => {
     return ajax({
-      url: 'http://localhost:3100/addUser.json',
-      // method: 'POST',
+      // url: 'http://localhost:3100/addUser.json',
+      url: 'http://baoming.ws.netease.com/admin/permissions/save',
+      method: 'POST',
       body: data
     }).then((json) => {
       dispatch({
@@ -91,6 +92,17 @@ export function addUser(data = { account: '', name: ''}) {
 // 修改管理员
 export function modifyUser(data = { account: '', name: ''}) {
   return (dispatch) => {
+    return ajax({
+      // url: 'http://localhost:3100/addUser.json',
+      url: 'http://baoming.ws.netease.com/admin/permissions/save',
+      method: 'POST',
+      body: data
+    }).then((json) => {
+      dispatch({
+        type: type.ADD_USER,
+        data,
+      });
+    }).catch(errorHandler.bind(null, dispatch));
     dispatch({
       type: type.MODIFY_USER,
       modifying: data
@@ -101,15 +113,19 @@ export function modifyUser(data = { account: '', name: ''}) {
 // 删除管理员
 export function deleteUser(data = { account: '' }) {
   return (dispatch, getState) => {
-    const count = getState().users.count;
+    if (data.account === getState().app.name) {
+      errorHandler(dispatch, { code: 3, msg: '不能删除自己的账号。' });
+      return;
+    }
     return ajax({
-      url: 'http://localhost:3100/addUser.json',
-      // method: 'POST',
+      // url: 'http://localhost:3100/addUser.json',
+      url: 'http://baoming.ws.netease.com/admin/permissions/delete',
+      method: 'POST',
       body: data
     }).then((json) => {
       dispatch({
         type: type.DELETE_USER,
-        count: count - 1,
+        account: data.account
       });
     }).catch(errorHandler.bind(null, dispatch));
   };

@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 import CSSModules from 'react-css-modules';
 import moment from 'moment';
 
@@ -20,21 +19,18 @@ class Users extends Component {
     this.hideModal = this.hideModal.bind(this);
     this.handleAddClick = this.handleAddClick.bind(this);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
-    this.handleModifyClick = this.handleModifyClick.bind(this);
+  }
+  componentDidMount() {
+    this.props.fetchUsers();
+    this.props.fetchUsersCount();
   }
   handlePageChangeClick(next) {
     this.props.changePage(next, this.RECORDS_PER_PAGE);
   }
   handleDeleteClick(account) {
-    this.props.deleteUser({ acount });
-  }
-  handleModifyClick(user) {
-    this.modalTitle = '修改用户';
-    const { account, name, select } = this.refs;
-    account.value = user.account;
-    name.value = user.name;
-    select.value = user.select;
-    this.props.toggleModal();
+    if (confirm('确认删除该用户吗？')) {
+      this.props.deleteUser({ account });
+    }
   }
   handleAddClick(title) {
     this.modalTitle = '增加用户';
@@ -45,7 +41,7 @@ class Users extends Component {
     const data = {
       account: account.value.trim(),
       name: name.value.trim(),
-      select: select.value
+      authority: select.value
     };
     if (isOK) {
       if (!data.account || !data.name) {
@@ -59,10 +55,6 @@ class Users extends Component {
     select.value = '0';
     this.modifyingUser = {};
     this.props.toggleModal();
-  }
-  componentDidMount() {
-    this.props.fetchUsers();
-    this.props.fetchUsersCount();
   }
 
   render() {
@@ -89,10 +81,10 @@ class Users extends Component {
                 <td>{user.name}</td>
                 <td>{moment(user.lastLogin).format('YYYY-MM-DD hh:mm:ss')}</td>
                 <td>{moment(user.createTime).format('YYYY-MM-DD hh:mm:ss')}</td>
-                <td>111</td>
-                <td><a styleName="btn" className="button warning tiny" onClick={this.handleModifyClick.bind(this, user)}>修改</a><a className="button alert tiny" styleName="btn" onClick={this.handleDeleteClick.bind(this, user.account)}>删除</a></td>
+                <td>{user.authority === 0 ? '普通用户' : '管理员'}</td>
+                <td><a className="button alert tiny" styleName="btn" onClick={this.handleDeleteClick.bind(this, user.account)}>删除</a></td>
               </tr>)
-            }) 
+            });
           }
           </tbody>
         </table>
@@ -133,11 +125,18 @@ class Users extends Component {
   }
 }
 Users.propTypes = {
+  users: PropTypes.object.isRequired,
+  changePage: PropTypes.func.isRequired,
+  deleteUser: PropTypes.func.isRequired,
+  toggleModal: PropTypes.func.isRequired,
+  fetchUsers: PropTypes.func.isRequired,
+  fetchUsersCount: PropTypes.func.isRequired,
+  toggleModal: PropTypes.func.isRequired,
 };
-function mapStateToProps(state, props) {
+function mapStateToProps(state) {
   const users = state.users;
   return {
     users,
-  }
+  };
 }
 export default connect(mapStateToProps, usersActions)(Users);

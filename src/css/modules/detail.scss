@@ -48,17 +48,28 @@
     text-align: center;
   }
 }
+.callout {
+  display: inline-block;
+  min-width: 68.5rem;
+  background: #fefefe;
+}
 .joiner {
   background: #fff;
   .row{
     max-width: 68.5rem;
   }
-  .callout {
-    display: inline-block;
-    background: #fefefe;
-  }
   a {
     margin-bottom: 0;
     margin-right: 0.4rem;
+  }
+  .operation {
+    padding: 0;
+  }
+  .score {
+    margin-bottom: 0;
+  }
+  .save {
+    margin-left: 20px;
+    width: 50px;
   }
 }

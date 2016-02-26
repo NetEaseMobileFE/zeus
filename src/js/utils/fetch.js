@@ -9,10 +9,10 @@ function transformRequest(obj) {
   return str.join('&');
 }
 
-export default function ajax(opt, dispatch) {
+export default function ajax(opt) {
   const userName = checkLogin();
   if (!userName && window.location.hostname !== 'localhost') {
-    return Promise.reject({ code: -1, msg: '未登录，刷新页面' });
+    return Promise.reject({ code: -1, msg: '未登录，即将跳转登录页。' });
   }
 
   let options = extend({}, {
@@ -35,9 +35,12 @@ export default function ajax(opt, dispatch) {
     .then((response) => {
       if (response.status >= 200 && response.status < 300 || response.status === 302) {
         return response.json();
-      } else {
-        return Promise.reject({ code: 6, msg: '网络错误' });
       }
+      let fail = { code: 6, msg: '网络错误' };
+      if (response.url && response.url.match(/notManager$/)) {
+        fail = { code: -2, msg: '没有权限，请联系xuening@corp.netease.com' };
+      }
+      return Promise.reject(fail);
     })
     .then((result) => {
        /*
@@ -62,7 +65,7 @@ export default function ajax(opt, dispatch) {
     .catch((fail) => {
       let reason = fail;
       if (typeof fail.code === 'undefined') {
-        reason = { code: -1, msg: '未登录，请刷新页面。'}
+        reason = { code: -1, msg: '未登录，即将跳转登录页' };
       }
       return Promise.reject(reason);
     });

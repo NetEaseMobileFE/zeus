@@ -114,8 +114,9 @@ gulp.task('img', ['isux'], function () {
 
 // Start
 gulp.task('default', ['html'], function(cb) {
+	var f2e = profile.f2e;
 	if (publishMode === 'test') {
-	  exec('scp -r -P 16322 dist/* ' + profile.f2e.developer + '@223.252.197.245:/home/' + profile.f2e.developer + '/' + projectName + '/', function(err){
+	  exec('scp -r -P ' + f2e.port + ' dist/* ' + f2e.developer + '@' + f2e.host + ':/home/' + f2e.developer + '/' + projectName + '/', function(err){
 	    if (err) return cb(err); // return error
 			gutil.log('Done!');
 	  })

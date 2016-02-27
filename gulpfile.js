@@ -113,13 +113,11 @@ gulp.task('img', ['isux'], function () {
 });
 
 // Start
-gulp.task('default', ['html'], function() {
+gulp.task('default', ['html'], function(cb) {
 	if (publishMode === 'test') {
-	  exec('scp -r -P 16322 dist/* ' + profile.developer + '@223.252.197.245:/home/' + profile.developer + '/' + projectName + '/', function(err){
+	  exec('scp -r -P 16322 dist/* ' + profile.f2e.developer + '@223.252.197.245:/home/' + profile.f2e.developer + '/' + projectName + '/', function(err){
 	    if (err) return cb(err); // return error
 			gutil.log('Done!');
-			gutil.log('HTML published at ' + gutil.colors.bgCyan.white(publishConfig.htmlPath));
-			gutil.log('Assets deployed at ' + gutil.colors.bgCyan.white(publishConfig.assetPathRevised));
 	  })
 	} else {
 		gutil.log('Done!');

@@ -36,7 +36,7 @@ var deployConfig = {
 var projectName = JSON.parse(fs.readFileSync('package.json', 'utf-8')).name;
 var profile = JSON.parse(fs.readFileSync('.profile', 'utf-8'));
 var publishMode = gutil.env.p ? 'pro' : 'test';
-var publishConfig = global.publish = initPublishConfig(publishMode);
+var publishConfig = global.publish = deployConfig.pro;
 var webpackConfig = require('./webpack.config.prod');
 var webpackStats;  // Record webpack build stats
 
@@ -55,7 +55,7 @@ gulp.task('clean', function(callback) {
 
 // Compile js/css/img by webpack
 gulp.task('assets', ['clean'], function() {
-	var conn = createConnection(publishConfig.assetFtp);
+	// var conn = createConnection(publishConfig.assetFtp);
 
 	return gulp.src('src/js/index.js')
 		.pipe(webpackStream(webpackConfig, null, function(err, stats) {
@@ -71,14 +71,13 @@ gulp.task('assets', ['clean'], function() {
 			fs.writeFile('./analyse.log', JSON.stringify(webpackStats), null, 2);
 		}))
 		.pipe(gulp.dest('dist'))
-		.pipe(gulpIgnore.exclude(['**/*.map', '**/{img,img/**}', '**/webpackBootstrap.*.js']))
 		// .pipe(conn.dest(publishConfig.assetDir));
 });
 
 // Replace assets' path in html files
 gulp.task('html', ['assets'], function() {
 	var apr = publishConfig.assetPathRevised;
-	var conn = createConnection(publishConfig.htmlFtp);
+	// var conn = createConnection(publishConfig.htmlFtp);
 	var assetsNames = webpackStats.assetsByChunkName;
 
 	return gulp.src('src/*.html')
@@ -106,11 +105,15 @@ gulp.task('isux', function() {
 });
 
 gulp.task('img', ['isux'], function () {
-	var conn = createConnection(publishConfig.assetFtp);
+	// var conn = createConnection(publishConfig.assetFtp);
 
 	gulp.src(['dist/img/_min/**'], { buffer: false })
 		.pipe(conn.dest(publishConfig.assetDir + '/img'));
 });
+
+gulp.task('deploy', ['html'], function(cb) {
+	return gulp.src([])
+})
 
 // Start
 gulp.task('default', ['html'], function(cb) {
@@ -132,6 +135,7 @@ gulp.task('default', ['html'], function(cb) {
  * Utils
  */
 function initPublishConfig(mode) {
+
 	var dc = deployConfig[mode],
 		revision = dc.revision === false ? '' : Date.now() + '',
 		hash = dc.withHash !== false,

@@ -8,6 +8,16 @@ git clone https://github.com/NetEaseMobileFE/zeus.git
 cd zeus
 npm i --registry=https://registry.npm.taobao.org
 ```
+**npm安装插件存在bug，请按照如下方式修改**
+在`node_modules/extract-text-webpack-plugin/index.js` 文件的第21行下方增加`if (typeof c === 'undefined') return;`  
+增加后如下：
+```
+chunk.chunks.forEach(function(c) {
+  if (typeof c === 'undefined') return;
+  if(c.initial) return;
+  this.mergeNonInitialChunks(c, chunk, checkedChunks);
+}, this);
+```
 测试打包必要条件：  
 
 1. 开通F2E SERVER，f2e没有缓存切存在外网访问域名，适合测试使用。（开通此服务器账号联系ybduan）。  

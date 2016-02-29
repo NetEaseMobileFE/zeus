@@ -8,7 +8,7 @@ require('es6-promise').polyfill();
 
 const userName = checkLogin();
 if (!userName && window.location.hostname !== 'localhost') {
-  // window.location.href = 'http://baoming.ws.netease.com/login/login'; 
+  window.location.href = 'http://baoming.ws.netease.com/login/login'; 
 }
 
 // 路由:https://github.com/rackt/react-router-redux

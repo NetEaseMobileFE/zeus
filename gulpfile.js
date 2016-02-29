@@ -119,7 +119,7 @@ gulp.task('deploy', ['html'], function(cb) {
 gulp.task('default', ['html'], function(cb) {
 	var f2e = profile.f2e;
 	if (publishMode === 'test') {
-	  exec('scp -r -P ' + f2e.port + ' dist/* ' + f2e.developer + '@' + f2e.host + ':/home/' + f2e.developer + '/' + projectName + '/', function(err){
+	  exec('scp -r -P ' + f2e.port + ' dist/* ' + f2e.name + '@' + f2e.host + ':/home/' + f2e.name + '/' + projectName + '/', function(err){
 	    if (err) return cb(err); // return error
 			gutil.log('Done!');
 	  })

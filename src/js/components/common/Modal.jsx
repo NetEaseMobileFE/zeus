@@ -50,7 +50,7 @@ class Modal extends Component {
 Modal.propTypes = {
   title: PropTypes.string,
   isShown: PropTypes.bool.isRequired,
-  children: PropTypes.element,
+  children: PropTypes.node,
   buttonEnable: PropTypes.bool,
   bodyTextCenter: PropTypes.bool,
   hideCancelButton: PropTypes.bool,

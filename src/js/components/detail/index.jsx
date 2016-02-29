@@ -49,10 +49,10 @@ class DetailPage extends Component {
   }
 }
 DetailPage.propTypes = {
-  id: PropTypes.object.isRequired,
+  id: PropTypes.number.isRequired,
   detail: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
-  children: PropTypes.element.isRequired,
+  children: PropTypes.element,
   loadDetail: PropTypes.func.isRequired,
 };
 function mapStateToProps(state, props) {

@@ -160,15 +160,9 @@ class Create extends Component {
                     path: result.data,
                     description: ''
                 });
-                //self.picturesPaths.push({path:result.data,type:0});
                 file.previewElement.getElementsByTagName('input')[0].dataset.path = result.data;
                 this.removeFile(file);
             }
-            //,
-            //removedfile(file){
-            //    //let path = JSON.parse(file.xhr.response).data;
-            //    //self.removedPictures(path);
-            //}
         }
     }
 
@@ -181,7 +175,6 @@ class Create extends Component {
                 index = i;
             }
         });
-        //this.picturesPaths.splice(index, 1);
     }
 
     updateDescription(event) {

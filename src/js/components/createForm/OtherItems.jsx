@@ -17,6 +17,7 @@ class OtherItems extends Component {
             birthday: {value: false, text: '生日'},
             sex: {value: false, text: '性别'},
             idCard: {value: false, text: '身份证'},
+            code: {value: false, text: '邀请码'},
             phoneNum: {value: false, text: '手机号'},
             eMail: {value: false, text: '邮箱'},
             address: {value: false, text: '收货地址'},
@@ -72,7 +73,7 @@ class OtherItems extends Component {
         const { updateForm } = this.props.actions;
         let [name, value] = [event.target.name, event.target.value];
         let { addItems } = this.props;
-        if (this.state.otherItems[name].type) {
+        if (this.state.otherItems[name] && this.state.otherItems[name].type) {
             updateForm('addItems', extend({}, addItems, {
                 [name]: value
             }));

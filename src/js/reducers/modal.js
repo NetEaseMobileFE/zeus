@@ -27,13 +27,10 @@ export default function modal(state = INIT_STATE, action) {
         msg: action.msg
       });
     case SUCCESS:
-      return extend({}, state, {
-        msg: '成功'
-      });
     case ERROR:
       return extend({}, state, {
         isFetching: false,
-        msg: action.result.msg,
+        msg: action.type === SUCCESS ? '成功' : action.result.msg,
         didInvalidate: true,
         config: {
           type: 'alert',

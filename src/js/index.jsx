@@ -76,6 +76,13 @@ const rootRoute = [
           });
         }
       }, {
+        path: 'training/:id/:cid',
+        getComponent(location, cb) {
+          require.ensure([], (require) => {
+            cb(null, require('./components/Training').default);
+          });
+        }
+      }, {
         path: '404',
         getComponent(location, cb) {
           require.ensure([], (require) => {

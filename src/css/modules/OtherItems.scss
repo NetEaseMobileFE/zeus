@@ -6,7 +6,7 @@
     li{
         float: left;
         margin: 0 20px 20px 0;
-        .input-group{
+        .ig{
             width: 150px;
         }
         button{
@@ -19,19 +19,18 @@
     input{
         margin-bottom: 0;
     }
-}
-
-.i-g {
-    margin-bottom: 0;
-    .i-p-l{
-        background-color:transparent ;
-        border: none;
-        padding: 0 10px 0 0;
-        input{
-            margin-bottom: 0;
-        }
-    }
-    .i-p-f{
-        margin-bottom: 0;
-    }
+    .ig{
+         margin-bottom: 0;
+         .igl{
+             background-color:transparent ;
+             border: none;
+             padding: 0 10px 0 0;
+             input{
+                 margin-bottom: 0;
+             }
+         }
+         .igf{
+             margin-bottom: 0;
+         }
+     }
 }

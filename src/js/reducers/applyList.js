@@ -2,10 +2,11 @@
  * Created by jruif on 16/2/2.
  */
 
-import { UPDATE_APP_LIST,UPDATE_LIST_PAGINATION,UPDATE_LIST_PARAM } from '../actions/actionType';
+import { UPDATE_APP_LIST,UPDATE_PAGE,UPDATE_LIST_PARAM,UPDATE_DATA } from '../actions/actionType';
 import extend from 'lodash.assign';
 
 const INIT_STATE = {
+    is_search:false,
     param:{
         type:'',
         pageNum:1,
@@ -27,9 +28,17 @@ export default function applyList(state = INIT_STATE, action) {
             return extend({}, state, {
                 data: action.value
             });
-        case UPDATE_LIST_PAGINATION:
+        case UPDATE_PAGE:
             return extend({},state,{
-                pagination:action.value
+                [action.name]:action.value
+            });
+        case UPDATE_DATA:
+            return extend({},state,{
+                data:[
+                    ...state.data.slice(0,action.index),
+                    extend(state.data[action.index],{weight:action.value}),
+                    ...state.data.slice(action.index+1)
+                ]
             });
         default:
             return state;

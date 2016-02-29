@@ -7,6 +7,7 @@
 import fetch from 'isomorphic-fetch';
 import extend from 'lodash.assign';
 import * as modal from './modal';
+//import checkLogin from '../utils/checkLogin';
 
 let url = '/admin/competition';
 let $_ = {};
@@ -57,6 +58,7 @@ export function ajax(opt,callback) {
     return (dispatch, getState) => {
         let state = getState();
         let options = extend({}, DEFAULT, _opt);
+
         // todo..
         switch(opt.queryType){
             case 'create':
@@ -65,15 +67,19 @@ export function ajax(opt,callback) {
             case 'applist':
                 options.body = extend({},state.applyList.param);
                 break;
+            case 'other':
+                options.body = stringifyJSON(options.body);
+                break;
             default:
                 break;
         }
-        // end
+
         if (options.method === 'GET') {
             options.body = extend({},options.body,{_:Date.now()});
             _opt.url = `${options.url}?${transformRequest(options.body)}`;
             options.body = void(0);
         }
+
         return fetch(_opt.url, options)
             .then((response) => {
                 if (response.status >= 200 && response.status < 300 || response.status === 302) {
@@ -110,7 +116,7 @@ export function ajax(opt,callback) {
                 error.response = result;
                 throw error;
             })
-            .then(callback.bind(this))
+            .then(callback && callback.bind(this) || function(rs){return rs;})
             .catch((fail) => {
                 dispatch(modal.error(fail.response || {msg:'未知错误,请联系程序猿 或 刷新页面'}));
                 console.error(fail);

@@ -9,6 +9,7 @@ import { routeActions } from 'react-router-redux';
 import { Router, Route, Link } from 'react-router';
 import CSSModules from 'react-css-modules';
 import moment from 'moment';
+import extend from 'lodash.assign';
 import * as AppListAction from '../actions/applist';
 import * as Ajax from '../actions/fetch';
 import styles from '../../css/modules/applist.scss';
@@ -20,6 +21,7 @@ import Pagination from './common/Pagination.jsx'
 class AppList extends Component {
     constructor(props, context) {
         super(props, context);
+        let { param,data } = this.props.applist;
         this.curState= [
             "","报名中","报名未开始",
             "名额已满","报名结束","未开赛",
@@ -27,12 +29,18 @@ class AppList extends Component {
             "报名成功-支付成功","取消报名","我关注的赛事"
         ];
         this.state={
-            is_search:false,
-            name:''
+            name:param.name,
+            data:data.slice()
         };
     }
     componentDidMount(){
         this.init();
+    }
+    componentWillReceiveProps(nextProps){
+        let applist = nextProps.applist;
+        this.setState({
+            data:applist.data.slice()
+        });
     }
     updateValue(event){
         let target = event.target;
@@ -46,15 +54,14 @@ class AppList extends Component {
     }
     search(){
         if(this.state.name){
-            let { updateParam } = this.props.actions;
-            this.setState({
-                is_search:true
-            });
+            let { updateParam,updateList } = this.props.actions;
+            updateList(true,'is_search');
             updateParam('pageNum',1);
             this.init();
         }
     }
     init(){
+        let self = this;
         let { ajax } = this.props.ajax;
         let { updateList } = this.props.actions;
         ajax({
@@ -62,6 +69,9 @@ class AppList extends Component {
             queryType:'applist'
         },function(result){
             updateList(result.data);
+            self.setState({
+                data:result.data.map((elm)=>extend({},elm,{is_editing:false}))
+            });
         });
 
         ajax({
@@ -72,19 +82,67 @@ class AppList extends Component {
         })
     }
     returnAll(){
-        this.setState({
-            is_search:false
-        });
-        let { updateParam } = this.props.actions;
+        let { updateParam,updateList } = this.props.actions;
         updateParam('pageNum',1);
         updateParam('name','');
+        updateList(false,'is_search');
         this.setState({
             name:''
         });
         this.init();
     }
+    switchInput(index,event){
+        let data = this.state.data;
+        let parent = event.target.parentElement;
+        this.setState({
+            data:[
+                ...data.slice(0,index),
+                extend({},data[index],{is_editing:true}),
+                ...data.slice(index+1)
+            ]
+        });
+        setTimeout(()=>{
+            let input = parent.children[0];
+            input.focus()
+        },100);
+    }
+    blurWeight(index,event){
+        let [self, data, value] = [this, this.state.data, parseInt(event.target.value,10)];
+        let {ajax} = this.props.ajax;
+        let {updateData} = this.props.actions;
+        ajax({
+            url: '/update',
+            method:'POST',
+            queryType:'other',
+            body:{
+                id: data[index].id,
+                weight: value
+            }
+        },function(){
+            updateData(value,index);
+            self.setState({
+                data:[
+                    ...data.slice(0,index),
+                    extend({},data[index],{is_editing:false}),
+                    ...data.slice(index+1)
+                ]
+            });
+        });
+    }
+    changeWeight(index,event){
+        event.stopPropagation();
+        let data = this.state.data;
+        this.setState({
+            data:[
+                ...data.slice(0,index),
+                extend(data[index],{weight:event.target.value}),
+                ...data.slice(index+1)
+            ]
+        });
+    }
+
     render() {
-        const { data,param,pagination } = this.props.applist;
+        const { param,pagination,is_search } = this.props.applist;
         let [self,count] = [this,10];
         return (
             <div className="panel" styleName="applist">
@@ -111,7 +169,7 @@ class AppList extends Component {
                         <thead>
                             <tr>
                             {
-                                ["","活动名称","比赛时间","权重","当前状态","总名额/报名数"].map((elm,index)=>(
+                                ["","活动名称","比赛时间","权重","当前状态","报名数/总名额"].map((elm,index)=>(
                                     <th key={`title-${index}`}>{elm}</th>
                                 ))
                             }
@@ -119,12 +177,20 @@ class AppList extends Component {
                         </thead>
                         <tbody>
                         {
-                            data.map((elm,index)=>(
+                            self.state.data.map((elm,index)=>(
                                 <tr key={`content-${index}`}>
                                     <td>{(param.pageNum-1)*count+(index+1)}</td>
                                     <td><Link to={`/match/${elm.id}`}>{elm.name || '-'}</Link></td>
                                     <td>{moment(elm.gameStart).local('zh-cn').format('lll')}</td>
-                                    <td>{elm.weight || '-'}</td>
+                                    <td width="80">
+                                        {
+                                            elm.is_editing ?
+                                                <input type="number" value={elm.weight || '-'}
+                                                       onChange={this.changeWeight.bind(this,index)}
+                                                       onBlur={this.blurWeight.bind(this,index)}/> :
+                                                <span  onClick={this.switchInput.bind(this,index)}>{elm.weight || '-'}</span>
+                                        }
+                                    </td>
                                     <td>{self.curState[elm.state] || '-'}</td>
                                     <td>{elm.signUpNum || "0"}/{elm.limitNum || "0"}</td>
                                 </tr>
@@ -132,12 +198,17 @@ class AppList extends Component {
                         }
                         </tbody>
                     </table>
+                </div>
+                <div className="row">
                     <Pagination total={Math.ceil(pagination / count)}
                                 curPage={param.pageNum}
                                 toPage={this.handlePageChangeClick.bind(this)} />
                     {
-                        this.state.is_search && (
-                            <button onClick={this.returnAll.bind(this)}  className="button alert">返回全部</button>
+                        is_search && (
+                            <div className="columns text-right">
+                                <button onClick={this.returnAll.bind(this)}
+                                        className="button alert tiny" styleName="return">返回全部</button>
+                            </div>
                         )
                     }
                 </div>

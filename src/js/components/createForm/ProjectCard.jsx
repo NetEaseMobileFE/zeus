@@ -34,7 +34,7 @@ class ProjectCard extends Component {
         let target = event.target;
         let { updateForm } = this.props.actions;
         updateForm('items',{
-            [target.name]:target.value
+            [target.name]: target.name==='price'? parseInt(target.value, 10): target.value
         },index);
     }
     changeValue(index,event){
@@ -56,13 +56,15 @@ class ProjectCard extends Component {
                     <li className="callout" key={`${type}-${index}`}
                         onBlur={this.updateForm.bind(this,index)}>
                         <h5> {
-                            isModification ? elm.name : (<input type="text" placeholder='请输入名称' name="name" value={ elm.name }
+                            isModification ? elm.name :
+                                (<input type="text" placeholder='请输入名称' name="name" value={ elm.name }
                                                                 onChange={this.changeValue.bind(this,index)}/>)
                         }</h5>
                         <p styleName="card-money">
                             {
                                 isModification ? elm.price :
-                                    (<input type="number" className="text-right" name="price" value={ elm.price || 0 }
+                                    (<input type="number" className="text-right" name="price" min="0"
+                                            value={ parseInt(elm.price, 10) || 0 }
                                             onChange={this.changeValue.bind(this,index)}/>)
                             }
                             <span>元</span>

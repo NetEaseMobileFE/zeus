@@ -17,7 +17,6 @@ export default function training(state = INIT_STATE,action){
                 [action.name]:action.value
             });
         case UPDATE_RUNNING_PLAN_ITEM:
-            console.log(action);
             return extend({},state,{
                 [action.name]: [
                     ...state[action.name].slice(0, action.index),

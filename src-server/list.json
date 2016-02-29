@@ -1,0 +1,12 @@
+{
+  "code":1,
+  "data":[{
+    "id":1,
+    "name":"打算打算",
+    "gameStart":1456789203,
+    "weight":59,
+    "state":8,
+    "limitNum":100,
+    "signUpNum":89
+  }]
+}

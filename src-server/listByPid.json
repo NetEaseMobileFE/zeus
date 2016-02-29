@@ -1,0 +1,30 @@
+{
+  "code": 1,
+  "msg": null,
+  "data": [
+    {
+      "id": 1,
+      "pid": 0,
+      "name": "8周计划",
+      "path": null,
+      "weight": 30,
+      "state": 0
+    },
+    {
+      "id": 2,
+      "pid": 0,
+      "name": "12周计划",
+      "path": null,
+      "weight": 20,
+      "state": 0
+    },
+    {
+      "id": 3,
+      "pid": 0,
+      "name": "100周计划",
+      "path": null,
+      "weight": 10,
+      "state": 0
+    }
+  ]
+}

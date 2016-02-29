@@ -33,7 +33,11 @@ class ContentItem extends Component {
         ajax({
             url:'/admin/runningPlan/update',
             method:'POST',
-            queryType:'other',
+            queryType:'application-www',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
             body: params
         },function(){
             updateItem('content', params ,index);

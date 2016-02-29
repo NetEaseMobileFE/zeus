@@ -7,41 +7,10 @@
 import fetch from 'isomorphic-fetch';
 import extend from 'lodash.assign';
 import * as modal from './modal';
+import { transformRequest, stringifyJSON } from '../utils/tools'
 //import checkLogin from '../utils/checkLogin';
 
 let url = '/admin/competition';
-let $_ = {};
-
-// $_.isObject(obj) => true / false
-!function(){
-    var type = ['Object','Function','Number','String','Array'];
-    type.map((elm)=>{
-        $_[`is${elm}`] = function(obj){
-            return Object.prototype.toString.call(obj) === `[object ${elm}]`;
-        }
-    });
-}();
-
-
-function transformRequest(obj) {
-    let str = [];
-    Object.keys(obj).forEach((key) => {
-        str.push(`${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`);
-    });
-    return str.join('&');
-}
-
-function stringifyJSON(obj){
-    Object.keys(obj).forEach((key) => {
-        let param = obj[key];
-        if($_.isObject(param) || $_.isArray(param)){
-            param = JSON.stringify(param);
-            obj[key] = param;
-        }
-    });
-    return JSON.stringify(obj);
-}
-
 export function ajax(opt,callback) {
     const DEFAULT = {
         method: 'GET',
@@ -68,7 +37,11 @@ export function ajax(opt,callback) {
                 options.body = extend({},state.applyList.param);
                 break;
             case 'other':
+            case 'application-json':
                 options.body = stringifyJSON(options.body);
+                break;
+            case 'application-www':
+                options.body = transformRequest(options.body);
                 break;
             default:
                 break;

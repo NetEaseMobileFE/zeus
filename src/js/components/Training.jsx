@@ -81,7 +81,7 @@ import ContentItem from './runningPlan/ContentItem.jsx';
         let { updateValue } = this.props.actions;
         let self = this;
         self.getDataById('/admin/runningPlan/listByCid', {cid}, function (rs) {
-            updateValue('content', extend({is_editing:false},rs.data));
+            updateValue('content', rs.data.map((elm)=>extend({is_editing:false},elm)));
         })
     }
 

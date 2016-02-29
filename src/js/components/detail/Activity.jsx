@@ -51,7 +51,7 @@ export default class Activity extends Component {
     try {
       items = JSON.parse(detail.items);
     } catch (e) {
-      throw new Error(e);
+      console.log(e);
     }
     return (
       <div styleName="activity">

@@ -1,7 +1,13 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router, Route, IndexRoute, Redirect, hashHistory } from 'react-router';
+import { Router, Route, IndexRoute, Redirect, IndexRedirect, hashHistory } from 'react-router';
+import AppList from './components/AppList';
+import DetailPage, { Participants, Activity, InviteCodes } from './components/detail';
+import Users from './components/Users';
+import Create from './components/Create';
+import NotFoundView from './components/NotFoundView';
+import App from './components/App';
 import configureStore from './configureStore';
 import checkLogin from './utils/checkLogin';
 require('es6-promise').polyfill();
@@ -17,6 +23,7 @@ const store = configureStore({
     name: userName
   }
 });
+/*
 const rootRoute = [
   {
     path: '/',
@@ -70,28 +77,26 @@ const rootRoute = [
     ]
   }
 ];
-
-/*
-  <Route path="/" component={App}>
-    <IndexRoute component={AppList}/>
-    <Route path="appList" component={AppList}/>
-    <Route path="match/:id" component={DetailPage}>
-      <IndexRoute component={Activity}/>
-      <Route path="detail" component={Activity}/>
-      <Route path="codes" component={InviteCodes}/>
-      <Route path="participants" component={Participants}/>
-    </Route>
-    <Route path="users" component={Users} />
-    <Route path="create" component={Create} />
-    <Route path="modification/:id" component={Create} />
-    <Route path="/404" component={NotFoundView} />
-    <Redirect from="*" to="/404" />
-  </Route>
 */
-
 render(
   <Provider store={store}>
-    <Router history={hashHistory} routes={rootRoute} />
+    <Router history={hashHistory}>
+      <Route path="/" component={App}>
+        <IndexRedirect to="/appList" />
+        <Route path="appList" component={AppList}/>
+        <Route path="match/:id" component={DetailPage}>
+          <IndexRedirect to="detail" />
+          <Route path="detail" component={Activity}/>
+          <Route path="codes" component={InviteCodes}/>
+          <Route path="participants" component={Participants}/>
+        </Route>
+        <Route path="users" component={Users} />
+        <Route path="create" component={Create} />
+        <Route path="modification/:id" component={Create} />
+        <Route path="/404" component={NotFoundView} />
+        <Redirect from="*" to="/404" />
+      </Route>
+    </Router>
   </Provider>
   , document.getElementById('root')
 );

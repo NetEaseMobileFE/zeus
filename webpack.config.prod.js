@@ -24,6 +24,7 @@ module.exports = {
     publicPath: publicPath
   },
   plugins: [
+    new webpack.IgnorePlugin(/^\.\/locale$/, [/moment$/]),
   	new ExtractTextPlugin(revision + 'css/app.css'),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendor', 'webpackBootstrap'],

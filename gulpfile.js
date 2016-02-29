@@ -2,7 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var posixPath = path.posix;
 var exec = require('child_process').exec;
-
+var moment = require('moment');
 var gulp = require('gulp');
 var gutil = require("gulp-util");
 var rimraf = require('rimraf');
@@ -28,9 +28,11 @@ var deployConfig = {
 		withHash: false        // If build "vendor" file with hash. Default: true. Equals to "js/vendor.[chunkhash].js"
 	},
 	pro: {
-		htmlFtp: 'c_m',
-		htmlRoot: 'test',
-		assetRoot: 'apps/test/hh'
+		assetRoot: 'apps/test/hh',
+		assetFtp: 'img',
+		assetRoot: '/utf8/apps/zeus',
+		revision: true,
+		withHash: true
 	}
 };
 var projectName = JSON.parse(fs.readFileSync('package.json', 'utf-8')).name;
@@ -112,7 +114,10 @@ gulp.task('img', ['isux'], function () {
 });
 
 gulp.task('deploy', ['html'], function(cb) {
-	return gulp.src([])
+	var conn = createConnection(publishConfig.assetFtp);
+	return gulp.src(['dist/'])
+	.pipe(gulpIgnore.exclude(['**/*.map', '**/{img,img/**}', '**/webpackBootstrap.*.js']))
+	.pipe(conn.dest(publishConfig.assetDir));
 })
 
 // Start
@@ -137,7 +142,7 @@ gulp.task('default', ['html'], function(cb) {
 function initPublishConfig(mode) {
 
 	var dc = deployConfig[mode],
-		revision = dc.revision === false ? '' : Date.now() + '',
+		revision = dc.revision === false ? '' : moment().format('YYYYMMDD_hhmmss') + '',
 		hash = dc.withHash !== false,
 
 		assetFtp = profile.ftp[dc.assetFtp || 'img'],

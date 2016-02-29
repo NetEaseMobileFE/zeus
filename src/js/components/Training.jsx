@@ -13,6 +13,8 @@ import { routeActions } from 'react-router-redux';
 import * as TrainingAction from '../actions/training';
 import * as Ajax from '../actions/fetch';
 
+import ContentItem from './runningPlan/ContentItem.jsx';
+
 @CSSModules(styles, {
     allowMultiple: true
 }) class Training extends Component {
@@ -21,50 +23,103 @@ import * as Ajax from '../actions/fetch';
     }
 
     componentDidMount(){
-        let { ajax } = this.props.ajax;
         let { updateValue } = this.props.actions;
+        let { routeParams } = this.props;
         let self = this;
-        ajax({
-            url:'/admin/category/listByPid',
-            body:{
-                pid:0
+        self.getDataById('/admin/category/listByPid',{ pid:0 },function(rs){
+            updateValue('topMenu',rs.data);
+            if( rs.data.length ){
+                return routeParams.id || rs.data[0].id;
             }
-        },function(rs){
-            updateValue('topTitle',rs.data);
-        }).then(()=>{
-            ajax({
-                url:'/admin/runningPlan/getRunningPlanBySecondCategoryId',
-                body:{
-                    id:1
-                }
-            },function(rs){
-                updateValue('data',rs.data);
-            })
+            updateValue('content', []);
+        }).then(( pid ) => {
+            if( pid !== void 0){
+                return self.getDataById('/admin/category/listByPid',{ pid },function(rs){
+                    updateValue('subMenu',rs.data);
+                    if( rs.data.length ){
+                        return routeParams.cid || rs.data[0].id;
+                    }
+                });
+            }
+        }).then((cid)=>{
+            if( cid !== void 0){
+                return self.getDataById('/admin/runningPlan/listByCid',{ cid },function(rs){
+                    updateValue('content',rs.data.map((elm)=>extend({is_editing:false},elm)) );
+                });
+            }
         });
     }
 
+    getDataById(url,params,callback){
+        let { ajax } = this.props.ajax;
+        return ajax({
+            url: url,
+            body: extend({},params)
+        },callback.bind(this));
+    }
+
+    updateSubMenu(pid){
+        let { updateValue } = this.props.actions;
+        let { routeParams } = this.props;
+        let self = this;
+        self.getDataById('/admin/category/listByPid', {pid}, function (rs) {
+            updateValue('subMenu', rs.data);
+            if( rs.data.length ){
+                return routeParams.cid || rs.data[0].id;
+            }
+            updateValue('content', []);
+        }).then((cid)=> {
+            if( cid !== void 0){
+                return self.getDataById('/admin/runningPlan/listByCid', {cid}, function (rs) {
+                    updateValue('content', rs.data.map((elm)=>extend({is_editing:false},elm)) );
+                });
+            }
+        })
+    }
+
+    updateContent(cid){
+        let { updateValue } = this.props.actions;
+        let self = this;
+        self.getDataById('/admin/runningPlan/listByCid', {cid}, function (rs) {
+            updateValue('content', extend({is_editing:false},rs.data));
+        })
+    }
+
     render() {
-        let { data }=this.props;
+        let { data,routeParams,actions,ajax }=this.props;
         return (
             <div styleName="panel">
-                <div className="row">
-                    <div className="columns"><h4>跑步培训</h4></div>
-                    <div className="shrink columns text-right"></div>
-                </div>
-                <ul styleName="tabs" data-tabs id="example-tabs">
+                <ul className="menu expanded" styleName="menu top-menu">
                     {
-                        data.topTitle.map((elm)=>(
-                            <li className="tabs-title is-active">
+                        data.topMenu.map((elm,index)=>(
+                            <li key={`top-menu-${index}`} onClick={ this.updateSubMenu.bind(this,elm.id)}
+                                styleName={ +routeParams.id === elm.id && 'is-active'}>
                                 <Link to={`training/${elm.id}`}>{elm.name}</Link>
                             </li>
                         ))
                     }
                 </ul>
-                <div styleName="tabs-content">
-                    <div styleName="tabs-panel">
+                <div className="row" styleName="panel-body">
+                    <div className="columns" styleName="content">
                         {
-                            data.data.map((elm)=> Object.keys(elm).join('|') )
+                            data.content.map((elm,index)=>(
+                                <ContentItem key={`content-${routeParams.id}-${routeParams.cid}-${elm.id}`}
+                                             content={elm} index={index}
+                                             actions={actions} ajax={ajax.ajax}/>
+                            ))
                         }
+                    </div>
+                    <div className="columns small-3" styleName="sub-menu">
+                        <ul className="menu vertical" styleName="menu">
+                            {
+                                data.subMenu.map((elm,index)=>(
+                                    <li key={`sub-menu-${index}`} onClick={ this.updateContent.bind(this,elm.id)}
+                                        styleName={ +routeParams.cid === elm.id && 'is-active'}>
+                                        <Link to={`training/${routeParams.id}/${elm.id}`}>{elm.name}</Link>
+                                    </li>
+                                ))
+                            }
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -73,9 +128,9 @@ import * as Ajax from '../actions/fetch';
 }
 Training.propTypes = {
     data: PropTypes.object,
-    actions: PropTypes.object,
-    route: PropTypes.object,
-    router: PropTypes.object
+    actions: PropTypes.object.isRequired,
+    route: PropTypes.object.isRequired,
+    router: PropTypes.object.isRequired
 };
 
 export default connect(

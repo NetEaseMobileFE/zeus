@@ -20,7 +20,7 @@ class AlertModal extends Component {
   render(){
     let { msg, config, didInvalidate } = this.props.modal;
     return(
-      <Modal isShown={didInvalidate}
+      <Modal isShown={ didInvalidate }
              hideCancleButton={config.type === 'alert'}
              bodyTextCenter={true}
              hideModal={this.modal_ok.bind(this)}>

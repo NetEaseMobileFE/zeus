@@ -86,7 +86,7 @@ export function ajax(opt,callback) {
                     return response.json();
                 } else {
                     let error = new Error('网络错误');
-                    error.response = response;
+                    error.response = extend({},response,{ msg : '网络错误' });
                     throw error;
                 }
             })

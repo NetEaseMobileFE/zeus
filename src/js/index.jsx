@@ -9,13 +9,7 @@ import Create from './components/Create';
 import NotFoundView from './components/NotFoundView';
 import App from './components/App';
 import configureStore from './configureStore';
-import AppList from './components/AppList';
-import DetailPage, { Participants, Activity, InviteCodes } from './components/detail';
-import Users from './components/Users';
-import Create from './components/Create';
 import Training from './components/Training';
-import NotFoundView from './components/NotFoundView';
-import App from './components/App';
 import checkLogin from './utils/checkLogin';
 require('es6-promise').polyfill();
 
@@ -30,6 +24,7 @@ const store = configureStore({
     name: userName
   }
 });
+
 render(
   <Provider store={store}>
     <Router history={hashHistory}>
@@ -46,7 +41,9 @@ render(
         <Route path="create" component={Create} />
         <Route path="training" component={Training} >
           <IndexRoute component={Training}/>
-          <Route path=":id" component={Training}/>
+          <Route path=":id" component={Training}>
+            <Route path=":cid" component={Training} />
+          </Route>
         </Route>
         <Route path="modification/:id" component={Create} />
         <Route path="/404" component={NotFoundView} />

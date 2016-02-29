@@ -3,3 +3,70 @@
 @include panel;
 @include text-align;
 @include foundation-tabs;
+
+.panel {
+    padding: 0;
+    .menu {
+        padding: 0;
+        li {
+            text-align: center;
+            transition: all .3s;
+            &:hover,
+            &.is-active {
+                background-color: $btn-hover;
+                a{
+                    color:$white;
+                }
+            }
+        }
+        a {
+            text-decoration: none;
+            color: $back-color;
+        }
+    }
+}
+.top-menu{
+    li{
+        border-bottom: 1px solid #ccc;
+        & + li{
+            border-left: 1px solid #ccc;
+        }
+    }
+}
+.panel-body{
+    padding-bottom: 50px;
+    .sub-menu{
+        padding: 0 20px;
+        text-align: center;
+    }
+    .menu{
+        padding: 0;
+        margin-top: 20%;
+        border: 1px solid #aaa;
+        border-radius: 5px;
+        li{
+            &:hover,
+            &.is-active{
+                border: 0;
+                background-color: $primary;
+                &:first-child{
+                    border-top-right-radius: 5px;
+                    border-top-left-radius: 5px;
+                }
+                &:last-child{
+                    border-bottom-right-radius: 5px;
+                    border-bottom-left-radius: 5px;
+                }
+                a{
+                    color:$white;
+                }
+            }
+        }
+        a{
+            color:$primary;
+        }
+    }
+    .content{
+        margin-top: 20px;
+    }
+}

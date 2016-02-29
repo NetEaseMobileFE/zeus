@@ -8,8 +8,19 @@
         th{
             text-align: center;
         }
+        input{
+            margin-bottom: 0;
+            line-height: 24px;
+            height: 24px;
+            padding: 0;
+            text-align: right;
+        }
     }
     .line{
         max-width: none;
+    }
+    .return{
+        margin-bottom: 0;
+        margin-top: 14px;
     }
 }

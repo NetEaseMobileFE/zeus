@@ -288,7 +288,7 @@ class Create extends Component {
         return (
             <div className="panel">
                 <div className="row">
-                    <div className="columns"><h4>创建活动</h4></div>
+                    <div className="columns"><h4>{this.is_modification ? '修改' : '创建'}活动</h4></div>
                     <div className="shrink columns text-right"></div>
                 </div>
                 <form onBlur={this.updateValue.bind(this)}

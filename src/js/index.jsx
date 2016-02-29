@@ -9,6 +9,13 @@ import Create from './components/Create';
 import NotFoundView from './components/NotFoundView';
 import App from './components/App';
 import configureStore from './configureStore';
+import AppList from './components/AppList';
+import DetailPage, { Participants, Activity, InviteCodes } from './components/detail';
+import Users from './components/Users';
+import Create from './components/Create';
+import Training from './components/Training';
+import NotFoundView from './components/NotFoundView';
+import App from './components/App';
 import checkLogin from './utils/checkLogin';
 require('es6-promise').polyfill();
 
@@ -23,61 +30,6 @@ const store = configureStore({
     name: userName
   }
 });
-/*
-const rootRoute = [
-  {
-    path: '/',
-    component: require('./components/App').default,
-    indexRoute: { component: require('./components/AppList').default },
-    childRoutes: [
-      {
-        path: 'appList',
-        getComponent(location, cb) {
-          require.ensure([], (require) => {
-            cb(null, require('./components/AppList').default);
-          });
-        }
-      }, {
-        path: 'match/:id',
-        getComponent(location, cb) {
-          require.ensure([], (require) => {
-            cb(null, require('./components/detail').default);
-          });
-        },
-        childRoutes: require('./components/detail/routes')
-      }, {
-        path: 'users',
-        getComponent(location, cb) {
-          require.ensure([], (require) => {
-            cb(null, require('./components/Users').default);
-          });
-        }
-      }, {
-        path: 'create',
-        getComponent(location, cb) {
-          require.ensure([], (require) => {
-            cb(null, require('./components/Create').default);
-          });
-        }
-      }, {
-        path: 'modification/:id',
-        getComponent(location, cb) {
-          require.ensure([], (require) => {
-            cb(null, require('./components/Create').default);
-          });
-        }
-      }, {
-        path: '404',
-        getComponent(location, cb) {
-          require.ensure([], (require) => {
-            cb(null, require('./components/NotFoundView').default);
-          });
-        }
-      }
-    ]
-  }
-];
-*/
 render(
   <Provider store={store}>
     <Router history={hashHistory}>
@@ -92,6 +44,10 @@ render(
         </Route>
         <Route path="users" component={Users} />
         <Route path="create" component={Create} />
+        <Route path="training" component={Training} >
+          <IndexRoute component={Training}/>
+          <Route path=":id" component={Training}/>
+        </Route>
         <Route path="modification/:id" component={Create} />
         <Route path="/404" component={NotFoundView} />
         <Redirect from="*" to="/404" />

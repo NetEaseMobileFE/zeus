@@ -131,14 +131,14 @@ class OtherItems extends Component {
                         <li key={`other-${index}`}>
                             {
                                 state.otherItems[elm].type ? (
-                                    <div className="input-group" styleName="i-g">
-                                        <span className="input-group-label" styleName="i-g-l">
+                                    <div className="input-group" styleName="ig">
+                                        <span className="input-group-label" styleName="igl">
                                             <input type="checkbox" name="requiredItems"
                                                    data-index={index} value={elm}
                                                    onChange={this.updateRequiredItems.bind(this)}
                                                    checked={state.otherItems[elm].value}/>
                                         </span>
-                                        <input className="input-group-field" styleName="i-g-f"
+                                        <input className="input-group-field" styleName="igf"
                                                name={elm} type="text" data-index={index}
                                                onChange={this.updateRequiredItems.bind(this)}
                                                value={state.otherItems[elm].text} placeholder="请填写名称"/>

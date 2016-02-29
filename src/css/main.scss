@@ -16,6 +16,7 @@
   @include panel;
   body {
     font-family: $body-font-family;
+    background-color: $bg-gray;
   }
   .row {
     max-width: none;

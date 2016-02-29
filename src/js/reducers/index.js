@@ -5,6 +5,7 @@ import { combineReducers } from 'redux';
 import { routeReducer } from 'react-router-redux';
 import applyList from './applyList';
 import create from './create';
+import training from './training';
 import { details, participants, inviteCodes } from './detail';
 import app from './app';
 import modal from './modal';
@@ -14,11 +15,12 @@ const rootReducer = combineReducers({
   participants,
   inviteCodes,
   applyList,
+  training,
   details,
   create,
   modal,
   users,
-  app,
+  app
 });
 
 export default rootReducer;

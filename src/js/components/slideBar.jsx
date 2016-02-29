@@ -12,13 +12,16 @@ class SlideBar extends Component {
     const menu = [
       {
         link: '/appList',
-        name: '报名列表'
-      }, {
-        link: '/create',
-        name: '创建活动'
+        name: '报名列表',
+        other: ['/appList','/create','/match','/modification']
       }, {
         link: '/users',
-        name: '管理员管理'
+        name: '管理员管理',
+        other: ['/users']
+      }, {
+        link: '/training/1',
+        name: '跑步培训',
+        other: ['/training']
       }
     ];
     let { route } = this.props;
@@ -28,7 +31,7 @@ class SlideBar extends Component {
         <ul>
           {
             menu.map((elm, index) => (
-              <li styleName={elm.link === pathname && 'active'} key={index}>
+              <li styleName={ elm.other.filter((e)=>pathname.indexOf(e)===0).length && 'active'} key={index}>
                 <Link to={elm.link}>{elm.name}</Link>
               </li>
             ))

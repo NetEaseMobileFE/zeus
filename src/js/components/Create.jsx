@@ -126,7 +126,7 @@ class Create extends Component {
             addRemoveLinks: true,
             dictRemoveFile: '✘',
             dictCancelUpload:'✘',
-            dictDefaultMessage: '拖拽或点击上传文件',
+            dictDefaultMessage: '点击此处上传文件<br/>(拖拽上传只适用于 Chrome / Firefox / Safari 等最新版本)',
             previewTemplate: ReactDOMServer.renderToString(
                 <div className="dz-preview dz-file-preview">
                     <div className="dz-image">

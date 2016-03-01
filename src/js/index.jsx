@@ -39,12 +39,8 @@ render(
         </Route>
         <Route path="users" component={Users} />
         <Route path="create" component={Create} />
-        <Route path="training" component={Training} >
-          <IndexRoute component={Training}/>
-          <Route path=":id" component={Training}>
-            <Route path=":cid" component={Training} />
-          </Route>
-        </Route>
+        <Route path="training/:id/:cid" component={Training} />
+        <Route path="training/:id" component={Training} />
         <Route path="modification/:id" component={Create} />
         <Route path="/404" component={NotFoundView} />
         <Redirect from="*" to="/404" />

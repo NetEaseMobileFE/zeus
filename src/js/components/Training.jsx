@@ -114,7 +114,7 @@ import ContentItem from './runningPlan/ContentItem.jsx';
                             {
                                 data.subMenu.map((elm,index)=>(
                                     <li key={`sub-menu-${index}`} onClick={ this.updateContent.bind(this,elm.id)}
-                                        styleName={ +routeParams.cid === elm.id && 'is-active'}>
+                                        styleName={ +routeParams.cid === +elm.id && 'is-active'}>
                                         <Link to={`training/${routeParams.id}/${elm.id}`}>{elm.name}</Link>
                                     </li>
                                 ))

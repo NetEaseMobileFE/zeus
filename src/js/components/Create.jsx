@@ -43,8 +43,7 @@ class Create extends Component {
 
     componentWillMount(){
         let { type,items } = this.props.data;
-        const { updateForm,reset } = this.props.actions;
-        reset();
+        const { updateForm } = this.props.actions;
         this.types = {
             1: {
                 text: '活动',
@@ -103,6 +102,11 @@ class Create extends Component {
     componentWillReceiveProps(nextProps){
         let data = nextProps.data;
         this.setState(extend({},data));
+    }
+
+    componentWillUnmount(){
+        const { reset } = this.props.actions;
+        reset();
     }
 
     // 图片上传 属性 配置

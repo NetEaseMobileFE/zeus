@@ -34,7 +34,7 @@ class ProjectCard extends Component {
         let target = event.target;
         let { updateForm } = this.props.actions;
         updateForm('items',{
-            [target.name]: target.name==='price'? parseInt(target.value, 10): target.value
+            [target.name]: target.name==='price'? parseFloat(target.value): target.value
         },index);
     }
     changeValue(index,event){
@@ -64,7 +64,7 @@ class ProjectCard extends Component {
                             {
                                 isModification ? elm.price :
                                     (<input type="number" className="text-right" name="price" min="0"
-                                            value={ parseInt(elm.price, 10) || 0 }
+                                            value={ parseFloat(elm.price) || 0 }
                                             onChange={this.changeValue.bind(this,index)}/>)
                             }
                             <span>元</span>

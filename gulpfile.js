@@ -121,7 +121,7 @@ gulp.task('deploy', ['html'], function(cb) {
 })
 
 // Start
-gulp.task('default', ['html'], function(cb) {
+gulp.task('default', function(cb) {
 	var f2e = profile.f2e;
 	if (publishMode === 'test') {
 	  exec('scp -r -P ' + f2e.port + ' dist/* ' + f2e.name + '@' + f2e.host + ':/home/' + f2e.name + '/' + projectName + '/', function(err){

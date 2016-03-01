@@ -75,11 +75,11 @@ export default class Activity extends Component {
         </div>
         <div className="row" styleName="row">
           <div className="small-4 medium-2 columns text-right">报名时间：</div>
-          <div className="small-8 medium-8 columns">{moment(detail.signUpStart).format('YYYY-MM-DD') + '~' + moment(detail.signUpEnd).format('YYYY-MM-DD')}</div>
+          <div className="small-8 medium-8 columns">{moment(detail.signUpStart).format('YYYY-MM-DD hh:mm:ss') + '~' + moment(detail.signUpEnd).format('YYYY-MM-DD hh:mm:ss')}</div>
         </div>
         <div className="row" styleName="row">
           <div className="small-4 medium-2 columns text-right">赛事时间：</div>
-          <div className="small-8 medium-8 columns">{moment(detail.gameStart).format('YYYY-MM-DD') + '~' + moment(detail.gameEnd).format('YYYY-MM-DD')}</div>
+          <div className="small-8 medium-8 columns">{moment(detail.gameStart).format('YYYY-MM-DD hh:mm:ss') + '~' + moment(detail.gameEnd).format('YYYY-MM-DD hh:mm:ss')}</div>
         </div>
         <div className="row" styleName="row">
           <div className="small-4 medium-2 columns text-right">赛事官网：</div>
@@ -89,8 +89,8 @@ export default class Activity extends Component {
           <div className="small-4 medium-2 columns text-right">报名费用：</div>
           <div className="small-8 medium-8 columns">
           {
-            items.map((item) => {
-              return `${item.name} ${item.price}元/人 `;
+            items.map((item, i) => {
+              return <span styleName="item" key={i} className="label secondary">{`${item.name} ${item.price}元/人 `}</span>;
             })
           }
           </div>
@@ -111,7 +111,7 @@ export default class Activity extends Component {
           <div>
             总收入： {
               bill.length > 0 && bill.reduce((pre, curr) => {
-                return { total: pre.total || 0 + curr.total || 0 };
+                return { total: (pre.total || 0) + (curr.total || 0) };
               }).total
             }
             <table>
@@ -124,7 +124,7 @@ export default class Activity extends Component {
                     return (<tr key={i}>
                       <td>{item.productName}</td>
                       <td>{item.total}</td>
-                      <td>{item.signUpNums}</td>
+                      <td>{item.signUpNums - item.codeNums}</td>
                       <td>{item.codeNums}</td>
                     </tr>);
                   })

@@ -112,9 +112,6 @@ export default class Participants extends Component {
       return (
         <form ref="form" styleName="joiner" onBlur={this.handleEditBlur}>
           <div className="row search-area">
-            <div className="shrink columns">
-              <a className="button disabled">下载报名信息</a>
-            </div>
             <div className="large-2 columns">
               <input styleName="input" ref="searchInput" type="text" placeholder="输入姓名或电话查询" />
             </div>
@@ -163,7 +160,7 @@ export default class Participants extends Component {
                         detail.state !== 7 && (!edit ? <a className={'shrink button warning' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleEditClick.bind(this, person.id, i)}>编辑</a> : <a className="button success" onClick={this.handleSaveClick.bind(this, person.id, false)}>保存</a>)
                       }
                       {
-                        detail.state !== 7 && (!edit ? <a className={'shrink button alert' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleDeleteClick.bind(this, person.id)}>删除</a> : <a className="button secondary" onClick={this.handleSaveClick.bind(this, person.id, true)}>取消</a>)
+                        detail.state !== 7 && (!edit ? <a className={'shrink button alert' + ((person.state === 10 || person.state === 9) ? ' disabled' : '')} onClick={this.handleDeleteClick.bind(this, person.id)}>删除</a> : <a className="button secondary" onClick={this.handleSaveClick.bind(this, person.id, true)}>取消</a>)
                       }
                       { 
                         detail.state === 7 && person.state === 9 && (
@@ -291,11 +288,11 @@ Participants.propTypes = {
   detail: PropTypes.object.isRequired,
   current: PropTypes.number.isRequired, 
   expandId: PropTypes.number.isRequired, 
+  showResult: PropTypes.bool.isRequired, 
   participants: PropTypes.array.isRequired, 
   saveInfo: PropTypes.func.isRequired, 
   editInfo: PropTypes.func.isRequired, 
   expandInfo: PropTypes.func.isRequired, 
-  showResult: PropTypes.func.isRequired, 
   loadParticipants: PropTypes.func.isRequired, 
   deleteParticipant: PropTypes.func.isRequired, 
   searchParticipants: PropTypes.func.isRequired, 

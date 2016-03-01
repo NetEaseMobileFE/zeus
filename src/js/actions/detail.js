@@ -7,9 +7,9 @@ import errorHandler from '../utils/errorHandler';
 export function loadDetail(id) {
   return (dispatch, getState) => {
     const detail = getState().details[id] || {};
-    if (detail.id) {
-      return detail;
-    }
+    // if (detail.id) {
+    //   return detail;
+    // }
     // return ajax({
     //   url: `http://localhost:3100/detail.json`
     // })

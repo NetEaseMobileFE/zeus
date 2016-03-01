@@ -31,8 +31,8 @@ class AlertModal extends Component {
 }
 
 AlertModal.propTypes={
-  actions:PropTypes.object.isRequired,
-  modal:PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
+  modal: PropTypes.object.isRequired
 };
 
 export default AlertModal;

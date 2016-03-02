@@ -5,16 +5,16 @@
     "modules": true
   },
   "env": {
-    "browser": true,
-    "node": false
+    "node": false,
+    "browser": true
   },
   "parser": "babel-eslint",
   "rules": {
-    "no-alert": 0,
-    "no-trailing-spaces": 0,
-    "prefer-template": 0,
-    "max-len": 0,
     "semi": 1,
+    "max-len": 0,
+    "no-alert": 0,
+    "prefer-template": 0,
+    "no-trailing-spaces": 0,
     "react/prop-types": 1,
     "react/jsx-no-bind": 0,
     "comma-dangle": 0,

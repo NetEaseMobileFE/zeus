@@ -3,7 +3,7 @@
 ## 准备
 必要条件：安装NODE.JS
 ```bash
-npm i -g webpack gulp --registry=https://registry.npm.taobao.org
+npm i -g webpack gulp coffee-script --registry=https://registry.npm.taobao.org
 git clone https://github.com/NetEaseMobileFE/zeus.git
 cd zeus
 npm i --registry=https://registry.npm.taobao.org

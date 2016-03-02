@@ -13,22 +13,22 @@ class OtherItems extends Component {
     constructor(props, context) {
         super(props, context);
         this.otherItems = {
-            sex: {value: false, text: '性别'},
-            name: {value: false, text: '用户名称'},
-            code: {value: false, text: '邀请码'},
-            eMail: {value: false, text: '邮箱'},
-            idCard: {value: false, text: '身份证'},
-            height: {value: false, text: '身高'},
-            weight: {value: false, text: '体重'},
-            address: {value: false, text: '收货地址'},
-            phoneNum: {value: false, text: '手机号'},
-            birthday: {value: false, text: '生日'},
-            dressSize: {value: false, text: '衣服尺寸'},
-            shoesSize: {value: false, text: '鞋码'},
-            emergencyName: {value: false, text: '紧急联系人'},
-            emergencyPhone: {value: false, text: '紧急联系人电话'},
-            takePartName: {value: false, text: '是否参加过其它马拉松项目'},
-            remark: {value: true, text: '备注'}
+            sex: { value: false, text: '性别' },
+            name: { value: false, text: '用户名称' },
+            code: { value: false, text: '邀请码' },
+            eMail: { value: false, text: '邮箱' },
+            idCard: { value: false, text: '身份证' },
+            height: { value: false, text: '身高' },
+            weight: { value: false, text: '体重' },
+            address: { value: false, text: '收货地址' },
+            phoneNum: { value: false, text: '手机号' },
+            birthday: { value: false, text: '生日' },
+            dressSize: { value: false, text: '衣服尺寸' },
+            shoesSize: { value: false, text: '鞋码' },
+            emergencyName: { value: false, text: '紧急联系人' },
+            emergencyPhone: { value: false, text: '紧急联系人电话' },
+            takePartName: { value: false, text: '是否参加过其它马拉松项目' },
+            remark: { value: true, text: '备注' }
         };
         this.addItems = [];
     }
@@ -46,14 +46,14 @@ class OtherItems extends Component {
     }
 
     concatOtherItems(Props) {
-        const { requiredItems,addItems } = Props;
+        const { requiredItems, addItems } = Props;
         let other = extend({}, this.otherItems);
         // 无力吐槽这extend的实现了,你深度遍历下会死啊
-        Object.keys(this.otherItems).map((elm)=> {
+        Object.keys(this.otherItems).map((elm) => {
             other[elm] = extend({}, this.otherItems[elm]);
         });
         // 合并addItems到预设
-        this.addItems = Object.keys(addItems).map((elm)=> {
+        this.addItems = Object.keys(addItems).map((elm) => {
             other[elm] = {
                 value: false,
                 text: addItems[elm],
@@ -61,10 +61,10 @@ class OtherItems extends Component {
             };
             return elm;
         });
-        Object.keys(requiredItems).map((elm)=> {
+        Object.keys(requiredItems).map((elm) => {
             extend(other[elm], {
                 value: requiredItems[elm]
-            })
+            });
         });
         return other;
     }
@@ -96,7 +96,7 @@ class OtherItems extends Component {
         updateForm('addItems', extend({}, addItems, {
             [name]: null
         }));
-        this.setState({otherItems});
+        this.setState({ otherItems });
     }
 
     updateRequiredItems(event) {
@@ -104,7 +104,7 @@ class OtherItems extends Component {
         let target = event.target;
         if (target.name === 'requiredItems') {
             event.stopPropagation();
-            let [otherItems,requiredItems] = [extend({}, this.state.otherItems), {}];
+            let [otherItems, requiredItems] = [extend({}, this.state.otherItems), {}];
             otherItems[target.value].value = target.checked;
             // 抽取 requiredItems
             Object.keys(otherItems).map((elm)=> {
@@ -158,7 +158,7 @@ class OtherItems extends Component {
                 }
                 <li><a className="button secondary" onClick={this.addOther.bind(this)}>+</a></li>
             </ul>
-        )
+        );
     }
 }
 OtherItems.propTypes = {

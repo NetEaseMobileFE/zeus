@@ -12,10 +12,10 @@ import styles from '../../../css/modules/ProjectCard.scss';
 class ProjectCard extends Component {
     constructor(props, context) {
         super(props, context);
-        let { project }=this.props;
+        let { project } = this.props;
         this.state = { project };
     }
-    componentWillReceiveProps(nextProps){
+    componentWillReceiveProps(nextProps) {
         let project = nextProps.project;
         this.setState({
             project
@@ -23,9 +23,9 @@ class ProjectCard extends Component {
     }
     addItem(){
         const { addItem } = this.props.actions;
-        addItem('items',{name:'',price:0});
+        addItem('items', { name: '', price: 0 });
     }
-    removeItem(index){
+    removeItem(index) {
         const { removeItem } = this.props.actions;
         removeItem('items',index);
     }
@@ -41,30 +41,30 @@ class ProjectCard extends Component {
         event.stopPropagation();
         let [target,project] = [event.target,this.state.project];
         this.setState({
-            project:[
-                ...project.slice(0,index),
-                extend(project[index],{[target.name]:[target.value]}),
-                ...project.slice(index+1)
+            project: [
+                ...project.slice(0, index),
+                extend(project[index], { [target.name] : [target.value] }),
+                ...project.slice(index + 1)
             ]
-        })
+        });
     }
     render() {
         let { isModification,type }=this.props;
         return (
             <ul className="small-8 medium-8 columns" styleName="project-card">
-                {this.state.project.map((elm,index) => (
+                {this.state.project.map((elm, index) => (
                     <li className="callout" key={`${type}-${index}`}
-                        onBlur={this.updateForm.bind(this,index)}>
+                        onBlur={this.updateForm.bind(this, index)} >
                         <h5> {
                             isModification ? elm.name :
                                 (<input type="text" placeholder='请输入名称' name="name" value={ elm.name }
-                                                                onChange={this.changeValue.bind(this,index)}/>)
+                                        onChange={this.changeValue.bind(this,index)}/>)
                         }</h5>
                         <p styleName="card-money">
                             {
                                 isModification ? elm.price :
-                                    (<input type="number" className="text-right" name="price" min="0"
-                                            value={ parseFloat(elm.price) || 0 }
+                                    (<input type="number" className="text-right" name="price" min="0.00"
+                                            value={ elm.price || 0.00 }  step="1"
                                             onChange={this.changeValue.bind(this,index)}/>)
                             }
                             <span>元</span>

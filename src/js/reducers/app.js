@@ -10,7 +10,7 @@ export default function create(state = INIT_STATE, action) {
   switch (action.type) {
     case REQUEST:
       return extend({}, state, {
-        app: action.app,
+        app: action.app
       });
     default:
       return state;

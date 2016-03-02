@@ -13,21 +13,22 @@ class OtherItems extends Component {
     constructor(props, context) {
         super(props, context);
         this.otherItems = {
-            name: {value: false, text: '用户名称'},
-            birthday: {value: false, text: '生日'},
             sex: {value: false, text: '性别'},
-            idCard: {value: false, text: '身份证'},
+            name: {value: false, text: '用户名称'},
             code: {value: false, text: '邀请码'},
-            phoneNum: {value: false, text: '手机号'},
             eMail: {value: false, text: '邮箱'},
-            address: {value: false, text: '收货地址'},
+            idCard: {value: false, text: '身份证'},
             height: {value: false, text: '身高'},
             weight: {value: false, text: '体重'},
+            address: {value: false, text: '收货地址'},
+            phoneNum: {value: false, text: '手机号'},
+            birthday: {value: false, text: '生日'},
             dressSize: {value: false, text: '衣服尺寸'},
             shoesSize: {value: false, text: '鞋码'},
             emergencyName: {value: false, text: '紧急联系人'},
             emergencyPhone: {value: false, text: '紧急联系人电话'},
-            takePartName: {value: false, text: '是否参加过其它马拉松项目'}
+            takePartName: {value: false, text: '是否参加过其它马拉松项目'},
+            remark: {value: true, text: '备注'}
         };
         this.addItems = [];
     }

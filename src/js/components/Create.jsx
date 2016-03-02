@@ -35,12 +35,13 @@ class Create extends Component {
     constructor(props, context) {
         super(props, context);
         let { data } = this.props;
-        this.cache = {};
-        this.state = extend({},data,{is_submitting:false});
-        this.postUrl = '/save';
-        this.is_modification = false;
+        this.cache = {};    // 缓存: 避免无实际意义的点击 导致的更新视图
+        this.state = extend({},data,{is_submitting:false});     // 初始化 state
+        this.postUrl = '/save';     // 初始化 提交接口,完整接口是: '/admin/competition/save'
+        this.is_modification = false;   // 状态描述: 是修改
     }
-
+    // 下面四个函数作用:
+    // 文档: https://facebook.github.io/react/docs/component-specs.html#lifecycle-methods
     componentWillMount(){
         let { type,items } = this.props.data;
         const { updateForm } = this.props.actions;
@@ -73,6 +74,8 @@ class Create extends Component {
         const { ajax } = this.props.ajax;
         const { modificationInit } = this.props.actions;
         let self = this;
+        // 根据路由判断是否为修改页
+        // 是: 请求所要修改的数据,并回填
         if( route.location.pathname.indexOf('modification')>-1 ){
             this.is_modification = true;
             ajax({
@@ -98,12 +101,12 @@ class Create extends Component {
             this.postUrl = '/update';
         }
     }
-
+    // 组件{ 接受到新的prop时 }
     componentWillReceiveProps(nextProps){
         let data = nextProps.data;
         this.setState(extend({},data));
     }
-
+    // 组件{ 卸载时 }
     componentWillUnmount(){
         const { reset } = this.props.actions;
         reset();
@@ -117,7 +120,6 @@ class Create extends Component {
             postUrl: '/admin/competition/imageUpload'
         };
     }
-
     // 图片上传 UI 配置
     uploadDjsConfig() {
         var self = this;
@@ -150,7 +152,7 @@ class Create extends Component {
             )
         }
     }
-
+    // 上传组件 { 事件 }
     uploadEventHandlers() {
         //[{"path": "pic1", "description": "introduce"},{"path": "pic2", "description": "introduce"}]
         let [name, self] = ['pictures', this];
@@ -169,7 +171,7 @@ class Create extends Component {
             }
         }
     }
-
+    // { 移除 } 图片
     removedPictures(path){
         let index = null;
         const { removeItem } = this.props.actions;
@@ -180,7 +182,7 @@ class Create extends Component {
             }
         });
     }
-
+    // { 更新 } 图片描述
     updateDescription(event) {
         event.stopPropagation();
         let target = event.target;
@@ -193,15 +195,13 @@ class Create extends Component {
             }
         });
     }
-
-    // 切换类型
+    // { 切换 } 类型
     switchType(event) {
         let target = event.target;
         const { updateForm } = this.props.actions;
         updateForm(target.name, target.value);
         updateForm('items', this.types[target.value].project);
     }
-
     // input/textarea 等获得焦点时
     focusInput(event) {
         let target = event.target;
@@ -209,8 +209,7 @@ class Create extends Component {
             [target.name]: target.value
         });
     }
-
-    // 使出焦点时,更新 store 中的 state 值
+    // 失去焦点时,更新 store 中的 state 值
     updateValue(event) {
         const { updateForm } = this.props.actions;
         let [name, value] = [event.target.name, event.target.value];
@@ -221,7 +220,6 @@ class Create extends Component {
             updateForm(name, value);
         }
     }
-
     // @param { name }
     // @param { Moment } moment 实例
     updateTime(name, mom) {

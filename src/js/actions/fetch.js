@@ -8,10 +8,11 @@ import fetch from 'isomorphic-fetch';
 import extend from 'lodash.assign';
 import * as modal from './modal';
 import { transformRequest, stringifyJSON } from '../utils/tools'
-//import checkLogin from '../utils/checkLogin';
+import errorHandler from '../utils/errorHandler';
 
 let url = '/admin/competition';
 export function ajax(opt,callback) {
+
     const DEFAULT = {
         method: 'GET',
         credentials: 'same-origin',
@@ -52,15 +53,14 @@ export function ajax(opt,callback) {
             _opt.url = `${options.url}?${transformRequest(options.body)}`;
             options.body = void(0);
         }
-
         return fetch(_opt.url, options)
             .then((response) => {
                 if (response.status >= 200 && response.status < 300 || response.status === 302) {
                     return response.json();
                 } else {
-                    let error = new Error('网络错误');
-                    error.response = extend({},response,{ msg : '网络错误' });
-                    throw error;
+                    Promise.reject({
+                        msg: '网络错误'
+                    });
                 }
             })
             .then((result) => {
@@ -84,14 +84,24 @@ export function ajax(opt,callback) {
                     result.msg = '参数错误'
                 }else if(result.code === 3){
                     result.msg = '服务器错误'
+                }else if(result.code === -1){
+                    result.msg = '您尚未登录,请登录!'
                 }
-                let error = new Error(result.msg);
-                error.response = result;
-                throw error;
+                Promise.reject({
+                    msg: result.msg,
+                    code: result.code
+                });
             })
             .then(callback && callback.bind(this) || function(rs){return rs;})
             .catch((fail) => {
-                dispatch(modal.error(fail.response || {msg:'未知错误,请联系程序猿 或 刷新页面'}));
+                if ( fail instanceof TypeError && fail.message === 'Failed to fetch') {
+                    fail = { code: -1, msg: '检测未登录，点击 确定 将跳转至登录页。' }
+                }
+                dispatch(modal.error(fail || {msg:'未知错误,请联系程序猿 或 刷新页面'} , ()=>{
+                    if(fail.code === -1){
+                        window.location.href = 'http://baoming.ws.netease.com/login/login';
+                    }
+                }));
                 console.error(fail);
             });
     };

@@ -12,54 +12,60 @@ import extend from 'lodash.assign';
 class ContentItem extends Component {
   constructor(props, context) {
     super(props, context);
-    let { content }=this.props;
-    this.state = extend({},content);
+    let { content } = this.props;
+    this.state = extend({}, content);
   }
-  updateVale(event){
+
+  updateVale(event) {
     let target = event.target;
     this.setState({
-      [target.name]:target.value
+      [target.name]: target.value
     });
   }
-  saveItem(){
+
+  saveItem() {
     let self = this;
-    let { index,ajax } = this.props;
+    let { index, ajax } = this.props;
     let { updateItem } = this.props.actions;
     let params = {
-      id:self.state.id,
-      title:self.state.title,
-      content:self.state.content
+      id: self.state.id,
+      title: self.state.title,
+      content: self.state.content
     };
     ajax({
-      url:'/admin/runningPlan/update',
-      method:'POST',
-      queryType:'application-www',
+      url: '/admin/runningPlan/update',
+      method: 'POST',
+      queryType: 'application-www',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: params
-    },function(){
-      updateItem('content', params ,index);
+    }, () => {
+      updateItem('content', params, index);
       self.editHandle(false);
     });
   }
-  editItem(){
+
+  editItem() {
     this.editHandle(true);
   }
-  cancelHandle(){
+
+  cancelHandle() {
     this.editHandle(false);
   }
-  editHandle(value){
+
+  editHandle(value) {
     let { index } = this.props;
     let { updateItem } = this.props.actions;
-    updateItem('content',{
-      is_editing:!!value
-    },index);
+    updateItem('content', {
+      is_editing: !!value
+    }, index);
   }
+
   render() {
     let state = this.state;
-    let { content }=this.props;
+    let { content } = this.props;
     return (
       <div className="row">
         <div className="column" onChange={this.updateVale.bind(this)}>
@@ -75,12 +81,12 @@ class ContentItem extends Component {
         </div>
         <div className="column small-3 align-middle">
           {
-            ! content.is_editing ?
-              ( <button className="button tiny" onClick={this.editItem.bind(this)}>编 辑</button> ) :
-              ( <div>
+            !content.is_editing ?
+              <button className="button tiny" onClick={this.editItem.bind(this)}>编 辑</button> :
+              <div>
                 <button className="button tiny" onClick={this.saveItem.bind(this)}>保 存</button>
                 <button className="button tiny alert" onClick={this.cancelHandle.bind(this)}>取 消</button>
-              </div> )
+              </div>
           }
         </div>
       </div>

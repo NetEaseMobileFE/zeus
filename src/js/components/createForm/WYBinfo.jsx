@@ -7,19 +7,20 @@ import styles from '../../../css/modules/WYBinfo.scss';
 
 @CSSModules(styles, {
   allowMultiple: true
-}) class WYBinfo extends Component {
+})
+class WYBinfo extends Component {
   constructor(props, context) {
     super(props, context);
   }
 
-  switchTenant(event){
+  switchTenant(event) {
     const { updateForm } = this.props.actions;
     let target = event.target;
-    updateForm(target.name,target.value);
+    updateForm(target.name, target.value);
   }
 
   render() {
-    let { defaultTenant,tenantAccount,privkey,publickey,plateformId }=this.props.data;
+    let { defaultTenant, tenantAccount, privkey, publickey, plateformId } = this.props.data;
     return (
       <div>
         <div className="row">

@@ -129,7 +129,7 @@ class OtherItems extends Component {
       <ul styleName="other"
           onBlur={this.updateAddItems.bind(this)}>
         {
-          Object.keys(state.otherItems).map((elm, index)=>(
+          Object.keys(state.otherItems).map((elm, index) => (
             <li key={`other-${index}`}>
               {
                 state.otherItems[elm].type ? (

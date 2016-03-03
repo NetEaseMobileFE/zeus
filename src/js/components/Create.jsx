@@ -163,11 +163,12 @@ class Create extends Component {
     const { addItem } = this.props.actions;
     return {
       success(file, result) {
+        let preview = file.previewElement;
         addItem(name, {
           path: result.data,
           description: ''
         });
-        file.previewElement.getElementsByTagName('input')[0].dataset.path = result.data;
+        preview.getElementsByTagName('input')[0].dataset.path = result.data;
         this.removeFile(file);
       }
     };
@@ -325,14 +326,14 @@ class Create extends Component {
             </div>
             <div className="small-8 medium-4 columns">
               <Datetime input={true} locale="zh-cn"
-                        inputProps={{ placeholder: '起始日期', name: 'signUpStart', readOnly:true}}
+                        inputProps={{ placeholder: '起始日期', name: 'signUpStart', readOnly: true }}
                         value={data.signUpStart}
                         onChange={this.updateTime.bind(this, 'signUpStart')}
                         onBlur={this.updateTime.bind(this, 'signUpStart')}/>
             </div>
             <div className="small-8 medium-4 columns">
               <Datetime input={true} locale="zh-cn"
-                        inputProps={{ placeholder: '结束日期', name: 'signUpEnd', readOnly:true}}
+                        inputProps={{ placeholder: '结束日期', name: 'signUpEnd', readOnly: true }}
                         value={data.signUpEnd}
                         onChange={this.updateTime.bind(this, 'signUpEnd')}
                         onBlur={this.updateTime.bind(this, 'signUpEnd')}/>
@@ -353,8 +354,8 @@ class Create extends Component {
               <Datetime input={true} locale="zh-cn"
                         inputProps={{ placeholder: '结束日期', name: 'gameEnd', readOnly: true }}
                         value={data.gameEnd}
-                        onChange={this.updateTime.bind(this,'gameEnd')}
-                        onBlur={this.updateTime.bind(this,'gameEnd')}/>
+                        onChange={this.updateTime.bind(this, 'gameEnd')}
+                        onBlur={this.updateTime.bind(this, 'gameEnd')}/>
             </div>
           </div>
           <div className="row">
@@ -415,7 +416,7 @@ class Create extends Component {
                 !!self.state.pictures.length && (
                   <div className="dropzone">
                     {
-                      self.state.pictures.map((elm, index ) => (
+                      self.state.pictures.map((elm, index) => (
                         <div className="dz-preview dz-file-preview" key={`preview_${index}`}>
                           <div className="dz-image">
                             <img src={elm.path}/>
@@ -464,6 +465,7 @@ Create.propTypes = {
   data: PropTypes.object.isRequired,
   modal: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
+  router: PropTypes.object.isRequired,
   ajax: PropTypes.object.isRequired
 };
 

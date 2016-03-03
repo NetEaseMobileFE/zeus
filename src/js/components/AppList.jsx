@@ -162,7 +162,7 @@ class AppList extends Component {
             <div className="input-group ">
               <input className="input-group-field" type="text" name="name"
                      value={this.state.name}
-                     onChange={(event) => {this.setState({ name: event.target.value })}}
+                     onChange={(event) => {this.setState({ name: event.target.value })} }
                      onBlur={this.updateValue.bind(this)}/>
               <div className="input-group-button">
                 <input type="submit" className="button" value="搜 索"
@@ -187,7 +187,7 @@ class AppList extends Component {
             </thead>
             <tbody>
             {
-              self.state.data.map((elm, index)=>(
+              self.state.data.map((elm, index) => (
                 <tr key={`content-${index}`}>
                   <td>{(param.pageNum - 1) * count + (index + 1)}</td>
                   <td><Link to={`/match/${elm.id}`}>{elm.name || '-'}</Link></td>
@@ -196,9 +196,9 @@ class AppList extends Component {
                     {
                       elm.is_editing ?
                         <input type="number" value={elm.weight || '-'}
-                               onChange={this.changeWeight.bind(this,index)}
-                               onBlur={this.blurWeight.bind(this,index)}/> :
-                        <span onClick={this.switchInput.bind(this,index)}>{elm.weight || '-'}</span>
+                               onChange={this.changeWeight.bind(this, index)}
+                               onBlur={this.blurWeight.bind(this, index)}/> :
+                        <span onClick={this.switchInput.bind(this, index)}>{elm.weight || '-'}</span>
                     }
                   </td>
                   <td>{self.curState[elm.state] || '-'}</td>

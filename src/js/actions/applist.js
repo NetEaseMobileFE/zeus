@@ -9,31 +9,31 @@ export const updateParam = actionCreate(UPDATE_LIST_PARAM,'name','value');
 export const updateData = actionCreate(UPDATE_DATA,'value','index');
 
 export function updateList(value,name){
-    if(name !== void 0){
-        return {
-            type:UPDATE_PAGE,
-            value,
-            name
-        }
-    }
+  if(name !== void 0){
     return {
-        type:UPDATE_APP_LIST,
-        value
+      type:UPDATE_PAGE,
+      value,
+      name
     }
+  }
+  return {
+    type:UPDATE_APP_LIST,
+    value
+  }
 }
 
 //export function  updateParam(name,value){
-//    return {
-//        type:UPDATE_LIST_PARAM,
-//        name,
-//        value
-//    }
+//  return {
+//    type:UPDATE_LIST_PARAM,
+//    name,
+//    value
+//  }
 //}
 //
 //export function  updateData(value,index){
-//    return {
-//        type:UPDATE_DATA,
-//        value,
-//        index
-//    }
+//  return {
+//    type:UPDATE_DATA,
+//    value,
+//    index
+//  }
 //}

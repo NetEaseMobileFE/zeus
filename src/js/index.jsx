@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router, Route, IndexRoute, Redirect, IndexRedirect, hashHistory } from 'react-router';
+import { Router, Route, Redirect, IndexRedirect, hashHistory } from 'react-router';
 import AppList from './components/AppList';
 import DetailPage, { Participants, Activity, InviteCodes } from './components/detail';
 import Users from './components/Users';

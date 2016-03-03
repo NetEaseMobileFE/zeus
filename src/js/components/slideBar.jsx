@@ -13,7 +13,7 @@ class SlideBar extends Component {
       {
         link: '/appList',
         name: '报名列表',
-        other: ['/appList','/create','/match','/modification']
+        other: ['/appList', '/create', '/match', '/modification']
       }, {
         link: '/users',
         name: '管理员管理',
@@ -31,7 +31,7 @@ class SlideBar extends Component {
         <ul>
           {
             menu.map((elm, index) => (
-              <li styleName={ elm.other.filter((e)=>pathname.indexOf(e)===0).length && 'active'} key={index}>
+              <li styleName={ elm.other.filter((e) => pathname.indexOf(e) === 0).length && 'active'} key={index}>
                 <Link to={elm.link}>{elm.name}</Link>
               </li>
             ))

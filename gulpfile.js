@@ -14,11 +14,15 @@ webpackStream = require('webpack-stream');
 htmlreplace = require('gulp-html-replace');
 projectName = JSON.parse(fs.readFileSync('package.json', 'utf-8')).name;
 profile = JSON.parse(fs.readFileSync('.profile', 'utf-8'));
+if (gutil.env._.indexOf('test') >= 0) {
+  webpackConfig = require('./webpack.config.test');
+}
+if (gutil.env._.indexOf('deploy') >= 0) {
+  webpackConfig = require('./webpack.config.prod');
 
-webpackConfig = require('./webpack.config.prod');
+}
 webpackStats = null;
 process.env.NODE_ENV = 'production';
-
 gulp.task('clean', function(cb) {
   rimraf('dist', function(err) {
     if (err) {
@@ -70,3 +74,54 @@ gulp.task('test', ['f2e'], function(cb) {
     removeComments: true
   })).pipe(gulp.dest('dist'));
 });
+
+gulp.task('ftp', ['assets'], function(cb) {
+  var conn = createConnection(profile.img);
+})
+
+gulp.task('deploy', ['ftp'], function(cb) {
+  var apr, assetsNames, cssFile, jsFile;
+  assetsNames = webpackStats.assetsByChunkName;
+  assetsNames.app.forEach(function(item) {
+    if (item.match(/css$/)) {
+      cssFile = item;
+    }
+    if (item.match(/js$/)) {
+      jsFile = item;
+    }
+  })
+  apr = "http://img6.cache.netease.com/utf8/apps/" + projectName + "/";
+  return gulp.src('src/*.html').pipe(htmlreplace({
+    'css': apr + cssFile,
+    'bundle': apr + jsFile,
+    'vendor': apr + assetsNames.vendor[0]
+  })).pipe(fileInsert({
+    "/*webpackBootstrap*/": path.join('dist', assetsNames.webpackBootstrap[0])
+  })).pipe(htmlmin({
+    collapseWhitespace: true,
+    removeComments: true
+  })).pipe(gulp.dest('dist'));
+});
+
+function createConnection(ftpConfig) {
+  var options = {
+    host: ftpConfig.host,
+    port: ftpConfig.port,
+    user: ftpConfig.username,
+    password: ftpConfig.password,
+    parallel: 5
+  };
+
+  if ( ftpConfig.secure ) {
+    options.secure = true;
+    options.secureOptions = {
+      requestCert: true,
+      rejectUnauthorized: false
+    }
+  }
+
+  return vftp.create(options);
+}
+
+
+

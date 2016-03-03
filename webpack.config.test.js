@@ -3,12 +3,6 @@ var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-// Init configs
-var publishConfig = global.publish || {};
-var revision = publishConfig.revision ? publishConfig.revision + '/' : '';
-var publicPath = publishConfig.assetPath || '/static/';
-var hash = publishConfig.hash ? '.[chunkhash]' : '';
-
 var packageJson = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
 module.exports = {
   devtool: 'source-map-hidden',
@@ -19,17 +13,23 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'js/bundle.[chunkhash].js',
-    chunkFilename: 'js/[id].bundle.[chunkhash].js',
+    filename: 'js/bundle.js',
+    chunkFilename: 'js/[id].bundle.js',
     publicPath: '/static/'
   },
   plugins: [
     new webpack.IgnorePlugin(/^\.\/locale$/, [/moment$/]),
-  	new ExtractTextPlugin('css/app.[chunkhash].css'),
+    new ExtractTextPlugin('css/app.css'),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendor', 'webpackBootstrap'],
-      filename: 'js/[name].[chunkhash].js',
+      filename: 'js/[name].js',
       minChunks: Infinity
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'app',
+      children: true,
+      minChunks: 3,
+      filename: 'js/bundle.js'
     }),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.DefinePlugin({

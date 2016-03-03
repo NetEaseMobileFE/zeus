@@ -28,7 +28,7 @@ class OtherItems extends Component {
       emergencyName: { value: false, text: '紧急联系人' },
       emergencyPhone: { value: false, text: '紧急联系人电话' },
       takePartName: { value: false, text: '是否参加过其它马拉松项目' },
-      remark: { value: true, text: '备注' }
+      note: { value: true, text: '备注' }
     };
     this.addItems = [];
   }
@@ -107,7 +107,7 @@ class OtherItems extends Component {
       let [otherItems, requiredItems] = [extend({}, this.state.otherItems), {}];
       otherItems[target.value].value = target.checked;
       // 抽取 requiredItems
-      Object.keys(otherItems).map((elm)=> {
+      Object.keys(otherItems).map((elm) => {
         if (otherItems[elm].value) {
           extend(requiredItems, {
             [elm]: true
@@ -127,7 +127,7 @@ class OtherItems extends Component {
     let state = this.state;
     return (
       <ul styleName="other"
-        onBlur={this.updateAddItems.bind(this)}>
+          onBlur={this.updateAddItems.bind(this)}>
         {
           Object.keys(state.otherItems).map((elm, index)=>(
             <li key={`other-${index}`}>
@@ -136,20 +136,21 @@ class OtherItems extends Component {
                   <div className="input-group" styleName="ig">
                     <span className="input-group-label" styleName="igl">
                       <input type="checkbox" name="requiredItems"
-                           data-index={index} value={elm}
-                           onChange={this.updateRequiredItems.bind(this)}
-                           checked={state.otherItems[elm].value}/>
-                    </span>
+                             data-index={index} value={elm}
+                             onChange={this.updateRequiredItems.bind(this)}
+                             checked={state.otherItems[elm].value} />
+                                        </span>
                     <input className="input-group-field" styleName="igf"
-                         name={elm} type="text" data-index={index}
-                         onChange={this.updateRequiredItems.bind(this)}
-                         value={state.otherItems[elm].text} placeholder="请填写名称"/>
+                           name={elm} type="text" data-index={index}
+                           onChange={this.updateRequiredItems.bind(this)}
+                           value={state.otherItems[elm].text} placeholder="请填写名称" />
                   </div>) : (
                   <label>
                     <input type="checkbox" name="requiredItems"
-                         data-index={index} value={elm}
-                         onChange={this.updateRequiredItems.bind(this)}
-                         checked={state.otherItems[elm].value}/>
+                           data-index={index} value={elm}
+                           onChange={this.updateRequiredItems.bind(this)}
+                           checked={state.otherItems[elm].value}
+                    />
                     {state.otherItems[elm].text}
                   </label>)
               }

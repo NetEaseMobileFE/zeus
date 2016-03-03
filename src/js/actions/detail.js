@@ -5,14 +5,7 @@ import errorHandler from '../utils/errorHandler';
 
 // 获取活动详情
 export function loadDetail(id) {
-  return (dispatch, getState) => {
-    const detail = getState().details[id] || {};
-    // if (detail.id) {
-    //   return detail;
-    // }
-    // return ajax({
-    //   url: `http://localhost:3100/detail.json`
-    // })
+  return (dispatch) => {
     return ajax({
       url: 'http://baoming.ws.netease.com/admin/competition/get',
       body: { cid: id }

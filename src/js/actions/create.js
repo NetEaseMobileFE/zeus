@@ -1,49 +1,49 @@
 /**
  * Created by jruif on 16/2/14.
  */
-import {ADD_ITEM,REMOVE_ITEM,UPDATE_ITEM,UPDATE_FORM,RESET,MODIFICATION_INIT} from './actionType'
+import { ADD_ITEM, REMOVE_ITEM, UPDATE_ITEM, UPDATE_FORM, RESET, MODIFICATION_INIT } from './actionType';
 
-export function addItem(name,value){
+export function addItem(name, value) {
   return {
-    type:ADD_ITEM,
+    type: ADD_ITEM,
     name,
     value
-  }
+  };
 }
 
-export function removeItem(name,index){
+export function removeItem(name, index) {
   return {
-    type:REMOVE_ITEM,
+    type: REMOVE_ITEM,
     name,
     index
-  }
+  };
 }
 
-export function updateForm(name,value,index){
-  if (index !== void 0){
+export function updateForm(name, value, index) {
+  if (index !== void 0) {
     return {
-      type:UPDATE_ITEM,
+      type: UPDATE_ITEM,
       name,
       value,
       index
-    }
+    };
   }
   return {
-    type:UPDATE_FORM,
+    type: UPDATE_FORM,
     name,
     value
-  }
+  };
 }
 
-export function modificationInit(value){
+export function modificationInit(value) {
   return {
     type: MODIFICATION_INIT,
     value
-  }
+  };
 }
 
-export function reset(){
+export function reset() {
   return {
     type: RESET
-  }
+  };
 }

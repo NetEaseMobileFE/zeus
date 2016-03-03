@@ -33,10 +33,10 @@ export const EDIT_INFO = 'EDIT_INFO'; // 编辑报名人信息
 export const SAVE_INFO = 'SAVE_INFO'; // 保存报名人信息
 
 // 首页
-export const UPDATE_APP_LIST = "UPDATE_APP_LIST";
-export const UPDATE_PAGE = "UPDATE_PAGE";
-export const UPDATE_LIST_PARAM = "UPDATE_LIST_PARAM";
-export const UPDATE_DATA = "UPDATE_DATA";
+export const UPDATE_APP_LIST = 'UPDATE_APP_LIST';
+export const UPDATE_PAGE = 'UPDATE_PAGE';
+export const UPDATE_LIST_PARAM = 'UPDATE_LIST_PARAM';
+export const UPDATE_DATA = 'UPDATE_DATA';
 
 // 创建表单
 export const ADD_ITEM = 'ADD_ITEM';     // 添加 子元素

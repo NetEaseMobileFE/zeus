@@ -6,12 +6,10 @@ import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import ReactDOMServer from 'react-dom/server';
 import { connect } from 'react-redux';
-import { Router } from 'react-router'
 import CSSModules from 'react-css-modules';
 import extend from 'lodash.assign';
-import moment from 'moment';
 // action creator
-import { routeActions } from 'react-router-redux'
+import { routeActions } from 'react-router-redux';
 import * as createActions from '../actions/create';
 import * as Ajax from '../actions/fetch';
 import * as Modal from '../actions/modal';
@@ -35,15 +33,16 @@ class Create extends Component {
   constructor(props, context) {
     super(props, context);
     let { data } = this.props;
-    this.cache = {};  // 缓存: 避免无实际意义的点击 导致的更新视图
-    this.state = extend({},data,{is_submitting:false});   // 初始化 state
-    this.postUrl = '/save';   // 初始化 提交接口,完整接口是: '/admin/competition/save'
+    this.cache = {};    // 缓存: 避免无实际意义的点击 导致的更新视图
+    this.state = extend({}, data, { is_submitting: false });     // 初始化 state
+    this.postUrl = '/save';     // 初始化 提交接口,完整接口是: '/admin/competition/save'
     this.is_modification = false;   // 状态描述: 是修改
   }
+
   // 下面四个函数作用:
   // 文档: https://facebook.github.io/react/docs/component-specs.html#lifecycle-methods
-  componentWillMount(){
-    let { type,items } = this.props.data;
+  componentWillMount() {
+    let { type, items } = this.props.data;
     const { updateForm } = this.props.actions;
     this.types = {
       1: {
@@ -64,36 +63,36 @@ class Create extends Component {
         }]
       }
     };
-    if(items.length === 0){
-      updateForm('items',this.types[type].project);
+    if (items.length === 0) {
+      updateForm('items', this.types[type].project);
     }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     const { route } = this.props;
     const { ajax } = this.props.ajax;
     const { modificationInit } = this.props.actions;
     let self = this;
     // 根据路由判断是否为修改页
     // 是: 请求所要修改的数据,并回填
-    if( route.location.pathname.indexOf('modification')>-1 ){
+    if (route.location.pathname.indexOf('modification') > -1) {
       this.is_modification = true;
       ajax({
-        url:'/get',
-        body:{
-          cid:self.props.routeParams.id
+        url: '/get',
+        body: {
+          cid: self.props.routeParams.id
         }
-      },function(rs){
-        ['addItems','items','pictures','requiredItems'].map((elm)=>{
-          if(typeof rs.data[elm] === 'string' && !rs.data[elm].length){
-            if(elm === 'addItems' || elm === 'requiredItems'){
-              rs.data[elm] = "{}";
-            }else{
-              rs.data[elm] = "[]";
+      }, (rs) => {
+        ['addItems', 'items', 'pictures', 'requiredItems'].map((elm) => {
+          if (typeof rs.data[elm] === 'string' && !rs.data[elm].length) {
+            if (elm === 'addItems' || elm === 'requiredItems') {
+              rs.data[elm] = '{}';
+            } else {
+              rs.data[elm] = '[]';
             }
           }
-          extend(rs.data,{
-            [elm]:JSON.parse(rs.data[elm])
+          extend(rs.data, {
+            [elm]: JSON.parse(rs.data[elm])
           });
         });
         modificationInit(rs.data);
@@ -101,13 +100,15 @@ class Create extends Component {
       this.postUrl = '/update';
     }
   }
+
   // 组件{ 接受到新的prop时 }
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     let data = nextProps.data;
-    this.setState(extend({},data));
+    this.setState(extend({}, data));
   }
+
   // 组件{ 卸载时 }
-  componentWillUnmount(){
+  componentWillUnmount() {
     const { reset } = this.props.actions;
     reset();
   }
@@ -120,14 +121,14 @@ class Create extends Component {
       postUrl: '/admin/competition/imageUpload'
     };
   }
+
   // 图片上传 UI 配置
   uploadDjsConfig() {
-    var self = this;
     return {
-      paramName:'Filedata',
+      paramName: 'Filedata',
       addRemoveLinks: true,
       dictRemoveFile: '✘',
-      dictCancelUpload:'✘',
+      dictCancelUpload: '✘',
       dictDefaultMessage: '点击此处上传文件<br/>(拖拽上传只适用于 Chrome / Firefox / Safari 等最新版本)',
       previewTemplate: ReactDOMServer.renderToString(
         <div className="dz-preview dz-file-preview">
@@ -150,18 +151,18 @@ class Create extends Component {
           <input type="text" name="description"/>
         </div>
       )
-    }
+    };
   }
+
   // 上传组件 { 事件 }
   uploadEventHandlers() {
-    //[{"path": "pic1", "description": "introduce"},{"path": "pic2", "description": "introduce"}]
-    let [name, self] = ['pictures', this];
+    /*
+    * [{"path": "pic1", "description": "introduce"},{"path": "pic2", "description": "introduce"}]
+    * */
+    let [name] = ['pictures', this];
     const { addItem } = this.props.actions;
-    const { pictures } = this.state;
     return {
-      init(dp){
-      },
-      success(file, result){
+      success(file, result) {
         addItem(name, {
           path: result.data,
           description: ''
@@ -169,25 +170,25 @@ class Create extends Component {
         file.previewElement.getElementsByTagName('input')[0].dataset.path = result.data;
         this.removeFile(file);
       }
-    }
+    };
   }
+
   // { 移除 } 图片
-  removedPictures(path){
-    let index = null;
+  removedPictures(path) {
     const { removeItem } = this.props.actions;
-    this.state.pictures.map((elm, i)=> {
+    this.state.pictures.map((elm, i) => {
       if (elm.path === path) {
         removeItem('pictures', i);
-        index = i;
       }
     });
   }
+
   // { 更新 } 图片描述
   updateDescription(event) {
     event.stopPropagation();
     let target = event.target;
     const { updateForm } = this.props.actions;
-    this.state.pictures.map((elm, index)=> {
+    this.state.pictures.map((elm, index) => {
       if (elm.path === target.dataset.path) {
         updateForm('pictures', {
           [target.name]: target.value
@@ -195,6 +196,7 @@ class Create extends Component {
       }
     });
   }
+
   // { 切换 } 类型
   switchType(event) {
     let target = event.target;
@@ -202,6 +204,7 @@ class Create extends Component {
     updateForm(target.name, target.value);
     updateForm('items', this.types[target.value].project);
   }
+
   // input/textarea 等获得焦点时
   focusInput(event) {
     let target = event.target;
@@ -209,6 +212,7 @@ class Create extends Component {
       [target.name]: target.value
     });
   }
+
   // 失去焦点时,更新 store 中的 state 值
   updateValue(event) {
     const { updateForm } = this.props.actions;
@@ -220,56 +224,57 @@ class Create extends Component {
       updateForm(name, value);
     }
   }
+
   // @param { name }
   // @param { Moment } moment 实例
   updateTime(name, mom) {
     const { updateForm } = this.props.actions;
     let time = mom.valueOf();
     updateForm(name, time);
-    if(name === 'gameStart' && time && !this.state.gameEnd){
+    if (name === 'gameStart' && time && !this.state.gameEnd) {
       updateForm('gameEnd', time + 24 * 60 * 60 * 1000);
     }
   }
 
-  submitForm(event){
+  submitForm(event) {
     event.preventDefault();
-    let [self,addItems] = [this,this.state.addItems];
+    let [self, addItems] = [this, this.state.addItems];
     const { ajax } = self.props.ajax;
     const { reset } = self.props.actions;
-    const { success,error,modal_ok } = self.props.modal;
+    const { success, error, modal_ok } = self.props.modal;
     const { router } = self.props;
     this.setState({
-      is_submitting:true
+      is_submitting: true
     });
-    if( Object.keys(addItems).filter((elm)=>!addItems[elm]).length ){
+    if (Object.keys(addItems).filter((elm) => !addItems[elm]).length) {
       self.setState({
-        is_submitting:false
+        is_submitting: false
       });
       return error({
-        msg:'添加的报名信息不能为空'
+        msg: '添加的报名信息不能为空'
       });
     }
     ajax({
       url: this.postUrl,
-      method:'POST',
-      queryType:'create'
-    },function(result){
-      success(result,function(){
+      method: 'POST',
+      queryType: 'create'
+    }, (result) => {
+      success(result, () => {
         reset();
         modal_ok();
         router.push('/applist');
       });
-    }).then(()=>{
+    }).then(() => {
       // 防止撸管的手速重复提交
-      setTimeout(()=>{
+      setTimeout(() => {
         self.setState({
-          is_submitting:false
+          is_submitting: false
         });
-      },1500);
+      }, 1500);
     });
   }
 
-  updateStateValue(event){
+  updateStateValue(event) {
     let target = event.target;
     this.setState({
       [target.name]: target.value
@@ -277,7 +282,7 @@ class Create extends Component {
   }
 
   render() {
-    const { actions,data } = this.props;
+    const { actions, data } = this.props;
     let self = this;
     let curType = self.types[self.state.type];
     return (
@@ -287,18 +292,18 @@ class Create extends Component {
           <div className="shrink columns text-right"></div>
         </div>
         <form onBlur={this.updateValue.bind(this)}
-            onFocus={this.focusInput.bind(this)}
-            onChange={this.updateStateValue.bind(this)}>
+              onFocus={this.focusInput.bind(this)}
+              onChange={this.updateStateValue.bind(this)}>
           <div className="row">
             <div className="small-2 columns"></div>
             {
-              Object.keys(self.types).map((elm, index)=>(
+              Object.keys(self.types).map((elm, index) => (
                 <div className="small-2 columns" key={ index }>
                   <label className="align-spaced">
                     <input type="radio" name="type"
-                         value={ elm } data-text={ self.types[elm].text }
-                         checked={ +elm === +self.state.type }
-                         onChange={self.switchType.bind(self)}/>
+                           value={ elm } data-text={ self.types[elm].text }
+                           checked={ +elm === +self.state.type }
+                           onChange={self.switchType.bind(self)}/>
                     {self.types[elm].text}
                   </label>
                 </div>
@@ -311,7 +316,7 @@ class Create extends Component {
             </div>
             <div className="small-8 medium-8 columns">
               <input type="text" placeholder={`请填写${curType.text}名称`}
-                   name="name" value={self.state.name}/>
+                     name="name" value={self.state.name}/>
             </div>
           </div>
           <div className="row">
@@ -320,17 +325,17 @@ class Create extends Component {
             </div>
             <div className="small-8 medium-4 columns">
               <Datetime input={true} locale="zh-cn"
-                    inputProps={{placeholder:'起始日期',name:'signUpStart',readOnly:true}}
-                    value={data.signUpStart}
-                    onChange={this.updateTime.bind(this,'signUpStart')}
-                    onBlur={this.updateTime.bind(this,'signUpStart')}/>
+                        inputProps={{ placeholder: '起始日期', name: 'signUpStart', readOnly:true}}
+                        value={data.signUpStart}
+                        onChange={this.updateTime.bind(this, 'signUpStart')}
+                        onBlur={this.updateTime.bind(this, 'signUpStart')}/>
             </div>
             <div className="small-8 medium-4 columns">
               <Datetime input={true} locale="zh-cn"
-                    inputProps={{placeholder:'结束日期',name:'signUpEnd',readOnly:true}}
-                    value={data.signUpEnd}
-                    onChange={this.updateTime.bind(this,'signUpEnd')}
-                    onBlur={this.updateTime.bind(this,'signUpEnd')}/>
+                        inputProps={{ placeholder: '结束日期', name: 'signUpEnd', readOnly:true}}
+                        value={data.signUpEnd}
+                        onChange={this.updateTime.bind(this, 'signUpEnd')}
+                        onBlur={this.updateTime.bind(this, 'signUpEnd')}/>
             </div>
           </div>
           <div className="row">
@@ -339,17 +344,17 @@ class Create extends Component {
             </div>
             <div className="small-8 medium-4 columns">
               <Datetime input={true} locale="zh-cn"
-                    inputProps={{placeholder:'起始日期',name:'gameStart',readOnly:true}}
-                    value={data.gameStart}
-                    onChange={this.updateTime.bind(this,'gameStart')}
-                    onBlur={this.updateTime.bind(this,'gameStart')}/>
+                        inputProps={{ placeholder: '起始日期', name: 'gameStart', readOnly:true }}
+                        value={data.gameStart}
+                        onChange={this.updateTime.bind(this, 'gameStart')}
+                        onBlur={this.updateTime.bind(this, 'gameStart')}/>
             </div>
             <div className="small-8 medium-4 columns">
               <Datetime input={true} locale="zh-cn"
-                    inputProps={{placeholder:'结束日期',name:'gameEnd',readOnly:true}}
-                    value={data.gameEnd}
-                    onChange={this.updateTime.bind(this,'gameEnd')}
-                    onBlur={this.updateTime.bind(this,'gameEnd')}/>
+                        inputProps={{ placeholder: '结束日期', name: 'gameEnd', readOnly: true }}
+                        value={data.gameEnd}
+                        onChange={this.updateTime.bind(this,'gameEnd')}
+                        onBlur={this.updateTime.bind(this,'gameEnd')}/>
             </div>
           </div>
           <div className="row">
@@ -366,9 +371,9 @@ class Create extends Component {
               <label className="text-right middle" data-suffix=":">报名费用</label>
             </div>
             <ProjectCard project={data.items}
-                   actions={actions}
-                   type={self.state.type}
-                   isModification={this.is_modification}/>
+                         actions={actions}
+                         type={self.state.type}
+                         isModification={this.is_modification}/>
           </div>
           <div className="row">
             <div className="small-4 medium-2 columns">
@@ -376,7 +381,7 @@ class Create extends Component {
             </div>
             <div className="small-6 medium-6 columns">
               <input type="number" className="text-right"
-                   name="limitNum" value={self.state.limitNum}/>
+                     name="limitNum" value={self.state.limitNum}/>
             </div>
             <div className="small-2 medium-2 columns">
               <label className="middle">人</label>
@@ -404,25 +409,25 @@ class Create extends Component {
             </div>
             <div className="small-8 medium-8 columns" onBlur={self.updateDescription.bind(self)}>
               <DropzoneComponent config={this.uploadComponentConfig()}
-                         eventHandlers={this.uploadEventHandlers()}
-                         djsConfig={this.uploadDjsConfig()}/>
+                                 eventHandlers={this.uploadEventHandlers()}
+                                 djsConfig={this.uploadDjsConfig()}/>
               {
                 !!self.state.pictures.length && (
                   <div className="dropzone">
-                  {
-                    self.state.pictures.map((elm,index)=> (
-                      <div className="dz-preview dz-file-preview" key={`preview_${index}`}>
-                        <div className="dz-image">
-                          <img src={elm.path}/>
+                    {
+                      self.state.pictures.map((elm, index ) => (
+                        <div className="dz-preview dz-file-preview" key={`preview_${index}`}>
+                          <div className="dz-image">
+                            <img src={elm.path}/>
+                          </div>
+                          <input type="text" name="description"
+                                 defaultValue={elm.description}
+                                 data-path={elm.path}/>
+                          <a className="dz-remove" href="javascript:;"
+                             onClick={self.removedPictures.bind(self, elm.path)}>✘</a>
                         </div>
-                        <input type="text" name="description"
-                             defaultValue={elm.description}
-                             data-path={elm.path}/>
-                        <a className="dz-remove" href="javascript:undefined;"
-                           onClick={self.removedPictures.bind(self,elm.path)}>✘</a>
-                      </div>
-                    ))
-                  }
+                      ))
+                    }
                   </div>
                 )
               }
@@ -434,17 +439,18 @@ class Create extends Component {
             </div>
             <div className="small-8 medium-8 columns">
               <OtherItems actions={actions}
-                    requiredItems={data.requiredItems}
-                    addItems={data.addItems}/>
+                          requiredItems={data.requiredItems}
+                          addItems={data.addItems}/>
             </div>
           </div>
           {
-            !self.is_modification && ( <WYBinfo actions={actions} data={data}/> )
+            !self.is_modification && (<WYBinfo actions={actions} data={data}/>)
           }
           <div className="row" styleName="submit-button">
             <div className="small-2 columns"></div>
             <button type="submit" className="button small-2 columns"
-                onClick={self.submitForm.bind(self)} disabled={self.state.is_submitting}>提交</button>
+                    onClick={self.submitForm.bind(self)} disabled={self.state.is_submitting}>提交
+            </button>
           </div>
         </form>
       </div>

@@ -17,7 +17,7 @@ import ContentItem from './runningPlan/ContentItem.jsx';
 
 @CSSModules(styles, {
   allowMultiple: true
-}) 
+})
 class Training extends Component {
   constructor(props, context) {
     super(props, context);
@@ -83,7 +83,7 @@ class Training extends Component {
     let self = this;
     self.getDataById('/admin/runningPlan/listByCid', { cid }, (rs) => {
       updateValue('content', rs.data.map((elm) => extend({ is_editing: false }, elm)));
-    });
+    })
   }
 
   render() {
@@ -93,8 +93,8 @@ class Training extends Component {
         <ul className="menu expanded" styleName="menu top-menu">
           {
             data.topMenu.map((elm, index) => (
-              <li key={`top-menu-${index}`} onClick={ this.updateSubMenu.bind(this, elm.id)}
-                styleName={ +routeParams.id === elm.id && 'is-active'}>
+              <li key={`top-menu-${index}`} onClick={ this.updateSubMenu.bind(this,elm.id)}
+                  styleName={ +routeParams.id === elm.id && 'is-active'}>
                 <Link to={`training/${elm.id}`}>{elm.name}</Link>
               </li>
             ))
@@ -105,8 +105,8 @@ class Training extends Component {
             {
               data.content.map((elm, index) => (
                 <ContentItem key={`content-${routeParams.id}-${routeParams.cid}-${elm.id}`}
-                  content={elm} index={index}
-                  actions={actions} ajax={ajax.ajax}/>
+                             content={elm} index={index}
+                             actions={actions} ajax={ajax.ajax}/>
               ))
             }
           </div>
@@ -114,8 +114,8 @@ class Training extends Component {
             <ul className="menu vertical" styleName="menu">
               {
                 data.subMenu.map((elm, index) => (
-                  <li key={`sub-menu-${index}`} onClick={ this.updateContent.bind(this, elm.id)}
-                    styleName={ +routeParams.cid === +elm.id && 'is-active'}>
+                  <li key={`sub-menu-${index}`} onClick={ this.updateContent.bind(this,elm.id)}
+                      styleName={ +routeParams.cid === +elm.id && 'is-active'}>
                     <Link to={`training/${routeParams.id}/${elm.id}`}>{elm.name}</Link>
                   </li>
                 ))
@@ -124,18 +124,14 @@ class Training extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 Training.propTypes = {
   data: PropTypes.object,
   actions: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
-  router: PropTypes.object.isRequired,
-  routeParams: PropTypes.object.isRequired,
-  ajax: PropTypes.shape({
-    ajax: PropTypes.func.isRequired
-  })
+  router: PropTypes.object.isRequired
 };
 
 export default connect(

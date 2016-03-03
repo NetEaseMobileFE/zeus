@@ -19,11 +19,13 @@ const INIT_STATE = {
 export default function applyList(state = INIT_STATE, action) {
   switch (action.type) {
     case UPDATE_LIST_PARAM:
-      return extend({}, state, {
-        param: extend({}, state.param, {
-          [action.name]: action.value
-        })
-      });
+      return extend({}, state,
+        {
+          param: extend({}, state.param, {
+            [action.name]: action.value
+          })
+        }
+      );
     case UPDATE_APP_LIST:
       return extend({}, state, {
         data: action.value

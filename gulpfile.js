@@ -76,7 +76,10 @@ gulp.task('test', ['f2e'], function(cb) {
 });
 
 gulp.task('ftp', ['assets'], function(cb) {
-  var conn = createConnection(profile.img);
+  var conn = createConnection(profile.ftp.img);
+  return gulp.src(['dist/**/*'])
+    .pipe(gulpIgnore.exclude(['**/*.map', '**/{img,img/**}', '**/webpackBootstrap.*.js', '*.html']))
+    .pipe(conn.dest('/utf8/apps/' + projectName + '/'))
 })
 
 gulp.task('deploy', ['ftp'], function(cb) {

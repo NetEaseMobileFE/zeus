@@ -39,16 +39,23 @@ class Training extends Component {
     });
   }
 
+  getDataById(url, params, callback) {
+    let { ajax } = this.props.ajax;
+    return ajax({
+      url,
+      body: extend({}, params)
+    }, callback.bind(this));
+  }
+
   updateSubMenu(pid) {
     let { updateValue } = this.props.actions;
-    let { routeParams, router } = this.props;
+    let { routeParams } = this.props;
     let self = this;
     updateValue('content', []);
     self.getDataById('/admin/category/listByPid', { pid }, (rs) => {
       updateValue('subMenu', rs.data);
       if (rs.data.length) {
         if (!routeParams.cid) {
-          router.push(`/training/${pid}/${rs.data[0].id}`);
           return rs.data[0].id;
         }
         return routeParams.cid;
@@ -68,14 +75,6 @@ class Training extends Component {
     });
   }
 
-  getDataById(url, params, callback) {
-    let { ajax } = this.props.ajax;
-    return ajax({
-      url,
-      body: extend({}, params)
-    }, callback.bind(this));
-  }
-
   render() {
     let { data, routeParams, actions, ajax } = this.props;
     return (
@@ -85,7 +84,7 @@ class Training extends Component {
             data.topMenu.map((elm, index) => (
               <li key={`top-menu-${index}`} onClick={ this.updateSubMenu.bind(this, elm.id)}
                   styleName={ +routeParams.id === elm.id && 'is-active'}>
-                <Link to={`training/${elm.id}/${elm.id === 1 ? 4 : elm.id === 2 ? 7 : 13}`}>{elm.name}</Link>
+                <Link to={`training/${elm.id}`}>{elm.name}</Link>
               </li>
             ))
           }
@@ -105,7 +104,7 @@ class Training extends Component {
               {
                 data.subMenu.map((elm, index) => (
                   <li key={`sub-menu-${index}`} onClick={ this.updateContent.bind(this, elm.id)}
-                      styleName={ +routeParams.cid === +elm.id && 'is-active'}>
+                      styleName={ (routeParams.cid ? +routeParams.cid === +elm.id : index === 0) && 'is-active'}>
                     <Link to={`training/${routeParams.id}/${elm.id}`}>{elm.name}</Link>
                   </li>
                 ))

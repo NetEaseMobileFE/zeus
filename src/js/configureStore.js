@@ -9,7 +9,8 @@ import thunkMiddleware from 'redux-thunk';
 
 export default function configureStore(initialState) {
   const store = compose(
-    applyMiddleware(syncHistory(hashHistory), thunkMiddleware)
+    applyMiddleware(syncHistory(hashHistory), thunkMiddleware),
+    window.devToolsExtension ? window.devToolsExtension() : f => f
   )(createStore)(rootReducer, initialState);
   if (module.hot) {
     // Enable Webpack hot module replacement for reducers

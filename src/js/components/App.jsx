@@ -22,8 +22,7 @@ class App extends Component {
             {children}
           </section>
         </section>
-        <AlertModal modal={modal}
-             actions={modalAction}/>
+        <AlertModal modal={modal} actions={modalAction}/>
       </div>
     );
   }

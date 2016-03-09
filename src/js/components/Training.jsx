@@ -32,21 +32,9 @@ class Training extends Component {
       if (rs.data.length) {
         return routeParams.id || rs.data[0].id;
       }
-      updateValue('content', []);
     }).then((pid) => {
       if (pid !== void 0) {
-        return self.getDataById('/admin/category/listByPid', { pid }, (rs) => {
-          updateValue('subMenu', rs.data);
-          if (rs.data.length) {
-            return routeParams.cid || rs.data[0].id;
-          }
-        });
-      }
-    }).then((cid) => {
-      if (cid !== void 0) {
-        return self.getDataById('/admin/runningPlan/listByCid', { cid }, (rs) => {
-          updateValue('content', rs.data.map((elm) => extend({ is_editing: false }, elm)));
-        });
+        self.updateSubMenu(pid);
       }
     });
   }
@@ -63,17 +51,18 @@ class Training extends Component {
     let { updateValue } = this.props.actions;
     let { routeParams } = this.props;
     let self = this;
+    updateValue('content', []);
     self.getDataById('/admin/category/listByPid', { pid }, (rs) => {
       updateValue('subMenu', rs.data);
       if (rs.data.length) {
-        return routeParams.cid || rs.data[0].id;
+        if (!routeParams.cid) {
+          return rs.data[0].id;
+        }
+        return routeParams.cid;
       }
-      updateValue('content', []);
     }).then((cid) => {
       if (cid !== void 0) {
-        return self.getDataById('/admin/runningPlan/listByCid', { cid }, (rs) => {
-          updateValue('content', rs.data.map((elm) => extend({ is_editing: false }, elm)));
-        });
+        self.updateContent(cid);
       }
     });
   }
@@ -115,7 +104,7 @@ class Training extends Component {
               {
                 data.subMenu.map((elm, index) => (
                   <li key={`sub-menu-${index}`} onClick={ this.updateContent.bind(this, elm.id)}
-                      styleName={ +routeParams.cid === +elm.id && 'is-active'}>
+                      styleName={ (routeParams.cid ? +routeParams.cid === +elm.id : index === 0) && 'is-active'}>
                     <Link to={`training/${routeParams.id}/${elm.id}`}>{elm.name}</Link>
                   </li>
                 ))
@@ -129,6 +118,7 @@ class Training extends Component {
 }
 Training.propTypes = {
   data: PropTypes.object,
+  routeParams: PropTypes.object,
   actions: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
   router: PropTypes.object.isRequired,

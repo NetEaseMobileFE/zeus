@@ -56,7 +56,7 @@ export function ajax(opt, callback) {
         if (response.status >= 200 && response.status < 300 || response.status === 302) {
           return response.json();
         } else {
-          Promise.reject({
+          return Promise.reject({
             msg: '网络错误'
           });
         }
@@ -76,7 +76,7 @@ export function ajax(opt, callback) {
          "data": null
          }
          */
-        let msg;
+        let msg = result.msg;
         if (result.code === 1) {
           return result;
         } else if (result.code === 2) {
@@ -86,7 +86,7 @@ export function ajax(opt, callback) {
         } else if (result.code === -1) {
           msg = '您尚未登录,请登录!'
         }
-        Promise.reject({
+        return Promise.reject({
           msg,
           code: result.code
         });

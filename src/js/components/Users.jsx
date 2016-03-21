@@ -19,6 +19,8 @@ class Users extends Component {
     this.hideModal = this.hideModal.bind(this);
     this.handleAddClick = this.handleAddClick.bind(this);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
+    this.handlePageChangeClick = this.handlePageChangeClick.bind(this);
+    
   }
   componentDidMount() {
     this.props.fetchUsers();

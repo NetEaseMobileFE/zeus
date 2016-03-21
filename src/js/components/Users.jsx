@@ -20,7 +20,6 @@ class Users extends Component {
     this.handleAddClick = this.handleAddClick.bind(this);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
     this.handlePageChangeClick = this.handlePageChangeClick.bind(this);
-    
   }
   componentDidMount() {
     this.props.fetchUsers();
@@ -60,6 +59,7 @@ class Users extends Component {
 
   render() {
     const { users } = this.props;
+    debugger
     return (
       <div styleName="wrap">
         <a className="button small" onClick={this.handleAddClick}>添加新用户</a>
@@ -76,7 +76,7 @@ class Users extends Component {
           </thead>
           <tbody>
           {
-            users.data.map((user) => {
+            users.data.slice((users.current - 1) * this.RECORDS_PER_PAGE, users.current * this.RECORDS_PER_PAGE).map((user) => {
               return (<tr key={user.account}>
                 <td>{user.account}</td>
                 <td>{user.name}</td>

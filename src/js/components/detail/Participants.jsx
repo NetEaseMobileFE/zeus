@@ -7,7 +7,7 @@ import styles from '../../../css/modules/detail.scss';
 import STATE_MAP from '../../actions/states';
 import moment from 'moment';
 import Pagination from '../common/Pagination';
-import { loadParticipants, searchParticipants, clearSearchResults, deleteParticipant, fetchParticipantsCount, changeParticipantsPage, expandInfo, editInfo, saveInfo } from '../../actions/detail';
+import { loadParticipants, searchParticipants, clearSearchResults, downloadParticipants, deleteParticipant, fetchParticipantsCount, changeParticipantsPage, expandInfo, editInfo, saveInfo } from '../../actions/detail';
 
 @CSSModules(styles, {
   allowMultiple: true
@@ -22,6 +22,7 @@ export default class Participants extends Component {
     this.handleClearClick = this.handleClearClick.bind(this);
     this.handleSearchClick = this.handleSearchClick.bind(this);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
+    this.handleDownloadClick = this.handleDownloadClick.bind(this);
     this.handleChangePageClick = this.handleChangePageClick.bind(this);
   }
   componentDidMount() {
@@ -51,6 +52,10 @@ export default class Participants extends Component {
   handleClearClick() {
     this.props.clearSearchResults();
     this.refs.searchInput.value = '';
+  }
+  // 下载
+  handleDownloadClick() {
+    this.props.downloadParticipants(this.props.id);
   }
   // 翻页
   handleChangePageClick(next) {
@@ -118,6 +123,9 @@ export default class Participants extends Component {
             <div className="columns shrink">
               <a className="button" onClick={this.handleSearchClick}>搜索</a>  
             </div>
+            <div className="columns shrink">
+              <a className="button hollow" onClick={this.handleDownloadClick}>下载报名人信息</a>  
+            </div>
             {
               showResult && <div className="columns"><a className="button" onClick={this.handleClearClick}>返回全部</a></div>
             }
@@ -160,7 +168,7 @@ export default class Participants extends Component {
                         detail.state !== 7 && (!edit ? <a className={'shrink button warning' + (person.state === 10 ? ' disabled' : '')} onClick={this.handleEditClick.bind(this, person.id, i)}>编辑</a> : <a className="button success" onClick={this.handleSaveClick.bind(this, person.id, false)}>保存</a>)
                       }
                       {
-                        detail.state !== 7 && (!edit ? <a className={'shrink button alert' + ((person.state === 10 || person.state === 9) ? ' disabled' : '')} onClick={this.handleDeleteClick.bind(this, person.id)}>删除</a> : <a className="button secondary" onClick={this.handleSaveClick.bind(this, person.id, true)}>取消</a>)
+                        detail.state !== 7 && (!edit ? <a className={'shrink button alert' + ((person.state === 10) ? ' disabled' : '')} onClick={this.handleDeleteClick.bind(this, person.id)}>删除</a> : <a className="button secondary" onClick={this.handleSaveClick.bind(this, person.id, true)}>取消</a>)
                       }
                       { 
                         detail.state === 7 && person.state === 9 && (
@@ -297,6 +305,7 @@ Participants.propTypes = {
   deleteParticipant: PropTypes.func.isRequired, 
   searchParticipants: PropTypes.func.isRequired, 
   clearSearchResults: PropTypes.func.isRequired, 
+  downloadParticipants: PropTypes.func.isRequired, 
   changeParticipantsPage: PropTypes.func.isRequired,
   fetchParticipantsCount: PropTypes.func.isRequired,
 };
@@ -341,6 +350,7 @@ export default connect(mapStateToProps, {
   deleteParticipant,
   clearSearchResults,
   searchParticipants,
+  downloadParticipants,
   fetchParticipantsCount,
   changeParticipantsPage,
 })(Participants);

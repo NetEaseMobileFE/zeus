@@ -196,6 +196,13 @@ export function loadParticipants(id, pageNum) {
   };
 }
 
+// 下载报名人信息
+export function downloadParticipants(id) {
+  return () => {
+    window.open(`http://baoming.ws.netease.com/admin/competition/exportSignUp?cid=${id}`)
+  }
+}
+
 // 搜索报名人
 export function searchParticipants(id, condition) {
   return (dispatch) => {

@@ -59,7 +59,6 @@ class Users extends Component {
 
   render() {
     const { users } = this.props;
-    debugger
     return (
       <div styleName="wrap">
         <a className="button small" onClick={this.handleAddClick}>添加新用户</a>
